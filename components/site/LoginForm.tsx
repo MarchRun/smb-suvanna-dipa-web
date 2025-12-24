@@ -52,19 +52,34 @@ export default function LoginForm() {
             }
         } catch (err) {
             setError('An unexpected error occurred')
-            setLoading(false)
         }
     }
 
     return (
-        <div className="bg-gray-200 border-2 border-black p-6 sm:p-8 rounded">
-            <h3 className="text-xl sm:text-2xl font-bold text-center mb-6">
+        <div
+            className="p-6 sm:p-8 rounded-xl shadow-2xl border-4"
+            style={{
+                backgroundColor: 'white',
+                borderColor: 'var(--primary-500)'
+            }}
+        >
+            <h3
+                className="text-2xl sm:text-3xl font-bold text-center mb-6"
+                style={{ color: 'var(--primary-700)' }}
+            >
                 Gerbang Masuk
             </h3>
 
             {error && (
-                <div className="bg-red-100 border-2 border-red-600 text-red-700 px-4 py-3 rounded mb-4">
-                    <p className="text-sm">{error}</p>
+                <div
+                    className="border-2 px-4 py-3 rounded-lg mb-4"
+                    style={{
+                        backgroundColor: '#fee2e2',
+                        borderColor: '#dc2626',
+                        color: '#991b1b'
+                    }}
+                >
+                    <p className="text-sm font-semibold">{error}</p>
                 </div>
             )}
 
@@ -90,7 +105,11 @@ export default function LoginForm() {
                 />
 
                 <div className="text-right">
-                    <Link href="/forgot-password" className="text-sm text-gray-700 hover:text-black">
+                    <Link
+                        href="/forgot-password"
+                        className="text-sm font-semibold hover:underline transition-colors"
+                        style={{ color: 'var(--primary-600)' }}
+                    >
                         Lupa Password?
                     </Link>
                 </div>

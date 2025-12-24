@@ -4,6 +4,7 @@
  */
 
 import { updateSession } from '@/lib/supabase/middleware'
+import { createClient as createServiceClient } from '@supabase/supabase-js'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
@@ -12,25 +13,72 @@ export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl
 
     // Public routes (tidak perlu login)
-    const publicRoutes = ['/', '/tentang', '/aktivitas', '/kontak', '/login', '/forgot-password', '/reset-password']
-    const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route))
+    const publicRoutes = ['/', '/about', '/activities', '/contact', '/login', '/forgot-password', '/reset-password']
+    const isPublicRoute = publicRoutes.some(route => pathname === route || pathname.startsWith(route + '/'))
 
     // Jika public route, lewatkan
     if (isPublicRoute) {
         return supabaseResponse
     }
 
-    // Jika tidak ada user (belum login), redirect ke login
+    // Jika tidak ada user (belum login), redirect ke homepage
     if (!user) {
         const redirectUrl = request.nextUrl.clone()
-        redirectUrl.pathname = '/login'
-        redirectUrl.searchParams.set('redirect', pathname)
+        redirectUrl.pathname = '/'
         return NextResponse.redirect(redirectUrl)
     }
 
-    // TODO: Cek role-based access setelah profile table ready
+    // Fetch user role menggunakan service client
+    const serviceClient = createServiceClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+
+    const { data: profile } = await serviceClient
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+
+    if (!profile) {
+        // Jika profile tidak ada, redirect ke homepage dan signout
+        const redirectUrl = request.nextUrl.clone()
+        redirectUrl.pathname = '/'
+        return NextResponse.redirect(redirectUrl)
+    }
+
+    const role = profile.role
+
+    // Role-based route protection
+    if (pathname.startsWith('/student')) {
+        if (role !== 'siswa') {
+            return NextResponse.redirect(new URL(getRoleDashboard(role), request.url))
+        }
+    } else if (pathname.startsWith('/teacher')) {
+        if (role !== 'guru') {
+            return NextResponse.redirect(new URL(getRoleDashboard(role), request.url))
+        }
+    } else if (pathname.startsWith('/admin')) {
+        if (role !== 'admin') {
+            return NextResponse.redirect(new URL(getRoleDashboard(role), request.url))
+        }
+    }
 
     return supabaseResponse
+}
+
+// Helper function to get dashboard URL by role
+function getRoleDashboard(role: string): string {
+    switch (role) {
+        case 'siswa':
+            return '/student/dashboard'
+        case 'guru':
+            return '/teacher/dashboard'
+        case 'admin':
+            return '/admin/dashboard'
+        default:
+            return '/'
+    }
 }
 
 export const config = {
