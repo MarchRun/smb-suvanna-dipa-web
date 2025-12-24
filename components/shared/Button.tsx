@@ -13,6 +13,7 @@ interface ButtonProps {
     variant?: 'primary' | 'secondary'
     fullWidth?: boolean
     disabled?: boolean
+    className?: string
 }
 
 export default function Button({
@@ -21,7 +22,8 @@ export default function Button({
     type = 'button',
     variant = 'primary',
     fullWidth = false,
-    disabled = false
+    disabled = false,
+    className = ''
 }: ButtonProps) {
     const baseStyles = "px-4 py-2 sm:px-6 sm:py-3 font-medium border-2 transition-colors rounded disabled:opacity-50 disabled:cursor-not-allowed"
 
@@ -37,7 +39,7 @@ export default function Button({
             type={type}
             onClick={onClick}
             disabled={disabled}
-            className={`${baseStyles} ${variantStyles[variant]} ${widthStyle}`}
+            className={`${baseStyles} ${variantStyles[variant]} ${widthStyle} ${className}`}
         >
             {children}
         </button>
