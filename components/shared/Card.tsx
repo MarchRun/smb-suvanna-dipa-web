@@ -15,10 +15,16 @@ export default function Card({
     className = "",
     hoverable = false
 }: CardProps) {
-    const hoverStyles = hoverable ? "hover:border-black transition-colors" : ""
+    const hoverStyles = hoverable ? "hover:shadow-xl hover:scale-[1.02] transition-all duration-300" : ""
 
     return (
-        <div className={`bg-gray-300 border-2 border-gray-400 rounded p-4 sm:p-6 ${hoverStyles} ${className}`}>
+        <div
+            className={`rounded-lg p-4 sm:p-6 shadow-md ${hoverStyles} ${className}`}
+            style={{
+                backgroundColor: 'var(--bg-primary)',
+                border: '2px solid var(--primary-200)'
+            }}
+        >
             {children}
         </div>
     )

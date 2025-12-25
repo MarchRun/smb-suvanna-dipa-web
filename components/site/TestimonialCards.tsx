@@ -22,22 +22,37 @@ export default function TestimonialCards() {
     ]
 
     return (
-        <section className="bg-white py-12 sm:py-16">
+        <section
+            className="py-12 sm:py-16"
+            style={{ backgroundColor: 'var(--bg-secondary)' }}
+        >
             <div className="max-w-6xl mx-auto px-4">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black text-center mb-4">
+                <h2
+                    className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-4"
+                    style={{ color: 'var(--neutral-900)' }}
+                >
                     Testimoni
                 </h2>
-                <p className="text-base sm:text-lg text-gray-700 text-center mb-8 sm:mb-12 max-w-3xl mx-auto">
+                <p
+                    className="text-base sm:text-lg text-center mb-8 sm:mb-12 max-w-3xl mx-auto"
+                    style={{ color: 'var(--neutral-700)' }}
+                >
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer venenatis iaculis porttitor. In ut velit euismod, cursus lorem vel, aliquam erat. Donec ut pellentesque elit. Morbi ipsum nulla, porttitor lacinia feugiat vel, pharetra ac sem.
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
                     {testimonials.map((testimonial, index) => (
                         <Card key={index}>
-                            <h3 className="text-lg sm:text-xl font-bold text-black mb-3">
+                            <h3
+                                className="text-lg sm:text-xl font-bold mb-3"
+                                style={{ color: 'var(--neutral-900)' }}
+                            >
                                 {testimonial.name}
                             </h3>
-                            <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
+                            <p
+                                className="text-sm sm:text-base leading-relaxed"
+                                style={{ color: 'var(--neutral-700)' }}
+                            >
                                 {testimonial.text}
                             </p>
                         </Card>

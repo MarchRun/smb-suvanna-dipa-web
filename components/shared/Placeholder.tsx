@@ -23,8 +23,17 @@ export default function Placeholder({
     }
 
     return (
-        <div className={`bg-gray-300 border-2 border-gray-400 rounded flex items-center justify-center ${aspectRatioClasses[aspectRatio]} ${className}`}>
-            <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-600">
+        <div
+            className={`rounded flex items-center justify-center ${aspectRatioClasses[aspectRatio]} ${className}`}
+            style={{
+                backgroundColor: 'var(--bg-tertiary)',
+                border: '2px solid var(--primary-300)'
+            }}
+        >
+            <span
+                className="text-2xl sm:text-3xl md:text-4xl font-bold"
+                style={{ color: 'var(--primary-600)' }}
+            >
                 {text}
             </span>
         </div>

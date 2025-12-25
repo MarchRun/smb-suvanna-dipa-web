@@ -40,7 +40,20 @@ export default function Input({
                 onChange={onChange}
                 required={required}
                 disabled={disabled}
-                className="w-full px-3 py-2 sm:px-4 sm:py-2 bg-gray-300 border-2 border-gray-400 rounded focus:outline-none focus:border-black disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full px-4 py-2 sm:px-4 sm:py-2.5 rounded-full focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all placeholder:text-gray-500"
+                style={{
+                    backgroundColor: '#ffffff',
+                    border: '2px solid var(--primary-400)',
+                    color: 'var(--neutral-900)'
+                }}
+                onFocus={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--primary-600)'
+                    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(249, 115, 22, 0.1)'
+                }}
+                onBlur={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--primary-400)'
+                    e.currentTarget.style.boxShadow = 'none'
+                }}
             />
             {error && (
                 <p className="text-red-600 text-sm mt-1">{error}</p>

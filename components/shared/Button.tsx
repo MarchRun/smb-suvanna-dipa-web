@@ -13,6 +13,8 @@ interface ButtonProps {
     fullWidth?: boolean
     disabled?: boolean
     className?: string
+    noShadow?: boolean // Disable shadow effect
+    customStyle?: React.CSSProperties // Custom inline styles
 }
 
 export default function Button({
@@ -22,9 +24,11 @@ export default function Button({
     variant = 'primary',
     fullWidth = false,
     disabled = false,
-    className = ''
+    className = '',
+    noShadow = false,
+    customStyle = {}
 }: ButtonProps) {
-    const baseStyles = "px-4 py-2 sm:px-6 sm:py-3 font-semibold border-2 transition-all duration-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+    const baseStyles = "px-4 py-2 sm:px-6 sm:py-3 font-semibold border-2 transition-all duration-200 rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
 
     const variantStyles = {
         primary: "text-white border-transparent hover:shadow-lg hover:scale-105",
@@ -43,8 +47,12 @@ export default function Button({
                 disabled={disabled}
                 className={combinedClassName}
                 style={{
-                    background: disabled ? '#cbd5e1' : 'linear-gradient(135deg, var(--primary-500), var(--accent-500))',
-                    borderColor: disabled ? '#cbd5e1' : 'var(--primary-600)'
+                    backgroundColor: disabled ? '#cbd5e1' : 'var(--primary-500)', // Bright orange for default
+                    color: '#ffffff',
+                    opacity: disabled ? 0.6 : 1,
+                    cursor: disabled ? 'not-allowed' : 'pointer',
+                    boxShadow: disabled || noShadow ? 'none' : '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)', // Yellow glow (conditional)
+                    ...customStyle // Apply custom styles
                 }}
             >
                 {children}

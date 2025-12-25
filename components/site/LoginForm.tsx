@@ -57,18 +57,19 @@ export default function LoginForm() {
 
     return (
         <div
-            className="p-6 sm:p-8 rounded-xl shadow-2xl border-4"
+            className="p-6 sm:p-8 rounded-xl shadow-2xl border-4 transition-all duration-300 hover:scale-105"
             style={{
                 backgroundColor: 'white',
-                borderColor: 'var(--primary-500)'
+                borderColor: 'var(--primary-500)',
+                boxShadow: '0 0 30px rgba(249, 115, 22, 0.6)' // Bright orange glow
             }}
         >
-            <h3
+            <h2
                 className="text-2xl sm:text-3xl font-bold text-center mb-6"
-                style={{ color: 'var(--primary-700)' }}
+                style={{ color: 'var(--primary-600)' }}
             >
                 Gerbang Masuk
-            </h3>
+            </h2>
 
             {error && (
                 <div
@@ -114,7 +115,7 @@ export default function LoginForm() {
                     </Link>
                 </div>
 
-                <Button type="submit" fullWidth disabled={loading}>
+                <Button type="submit" fullWidth disabled={loading} noShadow>
                     {loading ? 'Logging in...' : 'Login'}
                 </Button>
             </form>

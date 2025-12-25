@@ -13,15 +13,26 @@ export default function CTASection() {
     const router = useRouter()
 
     return (
-        <section className="bg-gray-600 py-12 sm:py-16 md:py-20">
-            <div className="max-w-4xl mx-auto px-4 text-center">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6">
+        <section
+            className="py-12 sm:py-16 md:py-20"
+            style={{
+                backgroundColor: 'var(--bg-primary)' // Orange in light, dark blue in dark
+            }}
+        >
+            <div className="max-w-7xl mx-auto px-4 text-center">
+                <h2
+                    className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6"
+                    style={{ color: '#ffffff' }}
+                >
                     Bergabunglah Dengan Komunitas Kami
                 </h2>
-                <p className="text-base sm:text-lg text-gray-100 mb-6 sm:mb-8 max-w-2xl mx-auto">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer venenatis iaculis porttitor. In ut velit euismod, cursus lorem vel, aliquam erat. Donec ut pellentesque elit. Morbi ipsum nulla, porttitor lacinia feugiat vel, pharetra ac sem.
+                <p
+                    className="text-base sm:text-lg mb-6 sm:mb-8 mx-auto font-semibold px-4 sm:px-8 md:px-12"
+                    style={{ color: '#ffffff' }}
+                >
+                    Kami mengadakan berbagai kegiatan menarik dan bermakna untuk mengembangkan pemahaman Dharma dan mempererat tali persaudaraan. Dari kegiatan pembelajaran, meditasi, hingga bakti sosial, setiap aktivitas dirancang untuk menumbuhkan kebajikan dan kebahagiaan. Jelajahi aktivitas kami dan temukan cara untuk berkontribusi dalam membangun komunitas yang penuh kasih dan kebijaksanaan. Mari bersama-sama berproses menuju pencerahan.
                 </p>
-                <Button variant="secondary" onClick={() => router.push('/activities')}>
+                <Button variant="primary" onClick={() => router.push('/activities')} customStyle={{ backgroundColor: '#c2410c' }}>
                     Lihat Aktivitas Kami
                 </Button>
             </div>

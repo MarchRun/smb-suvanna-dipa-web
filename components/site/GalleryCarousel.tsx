@@ -27,12 +27,23 @@ export default function GalleryCarousel() {
     }
 
     return (
-        <section className="bg-gray-600 py-12 sm:py-16">
+        <section
+            className="py-12 sm:py-16 md:py-20"
+            style={{
+                backgroundColor: 'var(--bg-primary)' // Orange in light, dark blue in dark
+            }}
+        >
             <div className="max-w-6xl mx-auto px-4">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white text-center mb-4">
+                <h2
+                    className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-4"
+                    style={{ color: 'var(--bg-primary)' }}
+                >
                     Galeri Kegiatan SMB
                 </h2>
-                <p className="text-base sm:text-lg text-gray-100 text-center mb-8 sm:mb-12 max-w-3xl mx-auto">
+                <p
+                    className="text-base sm:text-lg text-center mb-8 sm:mb-12 max-w-3xl mx-auto"
+                    style={{ color: 'var(--neutral-100)' }}
+                >
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer venenatis iaculis porttitor. In ut velit euismod, cursus lorem vel, aliquam erat. Donec ut pellentesque elit. Morbi ipsum nulla, porttitor lacinia feugiat vel, pharetra ac sem.
                 </p>
 
@@ -45,7 +56,10 @@ export default function GalleryCarousel() {
                                 text="GAMBAR"
                                 aspectRatio="4:3"
                             />
-                            <p className="text-sm text-gray-300 text-center mt-2">
+                            <p
+                                className="text-sm text-center mt-2"
+                                style={{ color: 'var(--neutral-200)' }}
+                            >
                                 {images[(currentIndex - 1 + images.length) % images.length].caption}
                             </p>
                         </div>
@@ -55,10 +69,14 @@ export default function GalleryCarousel() {
                             {/* Previous Arrow */}
                             <button
                                 onClick={goToPrevious}
-                                className="absolute left-2 top-1/2 -translate-y-1/2 bg-gray-400 hover:bg-gray-500 w-10 h-10 rounded-full flex items-center justify-center z-10"
-                                aria-label="Previous"
+                                className="absolute left-2 top-1/2 -translate-y-1/2 p-3 rounded-full shadow-lg transition-all hover:scale-110"
+                                style={{
+                                    backgroundColor: 'var(--primary-500)', // Solid orange
+                                    color: 'white'
+                                }}
+                                aria-label="Previous image"
                             >
-                                <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                                 </svg>
                             </button>
@@ -67,17 +85,24 @@ export default function GalleryCarousel() {
                                 text="GAMBAR"
                                 aspectRatio="4:3"
                             />
-                            <p className="text-base sm:text-lg text-white font-medium text-center mt-3">
+                            <p
+                                className="text-base sm:text-lg font-medium text-center mt-3"
+                                style={{ color: 'var(--bg-primary)' }}
+                            >
                                 {images[currentIndex].caption}
                             </p>
 
                             {/* Next Arrow */}
                             <button
                                 onClick={goToNext}
-                                className="absolute right-2 top-1/2 -translate-y-1/2 bg-gray-400 hover:bg-gray-500 w-10 h-10 rounded-full flex items-center justify-center z-10"
-                                aria-label="Next"
+                                className="absolute right-2 top-1/2 -translate-y-1/2 p-3 rounded-full shadow-lg transition-all hover:scale-110"
+                                style={{
+                                    backgroundColor: 'var(--primary-500)', // Solid orange
+                                    color: 'white'
+                                }}
+                                aria-label="Next image"
                             >
-                                <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                 </svg>
                             </button>
@@ -89,7 +114,10 @@ export default function GalleryCarousel() {
                                 text="GAMBAR"
                                 aspectRatio="4:3"
                             />
-                            <p className="text-sm text-gray-300 text-center mt-2">
+                            <p
+                                className="text-sm text-center mt-2"
+                                style={{ color: 'var(--neutral-200)' }}
+                            >
                                 {images[(currentIndex + 1) % images.length].caption}
                             </p>
                         </div>

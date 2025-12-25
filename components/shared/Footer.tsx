@@ -1,27 +1,28 @@
 /**
- * Shared Footer Component - Warm Sunny Theme
- * Using CSS variables for colors
+ * Enhanced Footer - Matching Navbar Theme
+ * Simplified with animated gradient background
  */
 
 export default function Footer() {
     return (
         <footer
-            className="border-t-2 border-orange-300 shadow-inner"
+            className="py-8 border-t"
             style={{
-                background: 'linear-gradient(to top, var(--primary-50), var(--accent-50))',
-                color: 'var(--neutral-800)'
+                backgroundColor: 'var(--accent-200)', // Solid warm yellow/orange
+                borderColor: 'var(--primary-600)',
+                boxShadow: '0 -4px 12px rgba(217, 87, 20, 0.20), 0 -2px 4px rgba(217, 87, 20, 0.12)'
             }}
         >
-            <div className="max-w-6xl mx-auto px-4 py-8 sm:py-12">
+            <div className="max-w-6xl mx-auto px-4">
                 <div className="text-center">
                     <p
-                        className="text-xl sm:text-2xl font-bold mb-2"
-                        style={{ color: 'var(--primary-600)' }}
+                        className="text-base font-bold"
+                        style={{
+                            color: 'var(--primary-900)',
+                            textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
+                        }}
                     >
-                        SMB Suvanna Dipa
-                    </p>
-                    <p className="text-sm sm:text-base opacity-80">
-                        © {new Date().getFullYear()} Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                        © {new Date().getFullYear()} SMB Suvanna Dipa. All rights reserved.
                     </p>
                 </div>
             </div>
