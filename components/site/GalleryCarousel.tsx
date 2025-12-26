@@ -14,11 +14,11 @@ export default function GalleryCarousel() {
     const sectionRef = useRef<HTMLElement>(null)
 
     const images = [
-        { id: 1, src: '/images/slider-image1.png', caption: 'Kegiatan Waisak 2024' },
-        { id: 2, src: '/images/slider-image2.png', caption: 'Meditasi Pagi Hari' },
-        { id: 3, src: '/images/slider-image3.png', caption: 'Kelas Dhamma Remaja' },
-        { id: 4, src: '/images/slider-image4.png', caption: 'Perayaan Kathina' },
-        { id: 5, src: '/images/slider-image5.png', caption: 'Bakti Sosial' }
+        { id: 1, src: '/images/slider-image1.png', caption: 'Mulyono' },
+        { id: 2, src: '/images/slider-image2.png', caption: 'Terus Terang' },
+        { id: 3, src: '/images/slider-image3.png', caption: 'Sahroni' },
+        { id: 4, src: '/images/slider-image4.png', caption: 'Fufufafa' },
+        { id: 5, src: '/images/slider-image5.png', caption: 'Angkat Karung' }
     ]
 
     // Intersection Observer
@@ -64,7 +64,7 @@ export default function GalleryCarousel() {
                 ref={sectionRef}
                 className="py-12 sm:py-16 md:py-20 relative overflow-hidden"
                 style={{
-                    backgroundColor: 'var(--primary-500)'
+                    backgroundColor: 'var(--primary-900)' // Dark brown matching header text
                 }}
             >
                 {/* Top-left trapezoid - hidden on mobile */}
@@ -100,19 +100,11 @@ export default function GalleryCarousel() {
                 <div className="max-w-7xl mx-auto px-4 relative z-10 my-8">
                     {/* Section Title */}
                     <h2
-                        className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                        className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-10 sm:mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                         style={{ color: '#ffffff' }}
                     >
                         Galeri Kegiatan SMB
                     </h2>
-
-                    {/* Section Description */}
-                    <p
-                        className={`text-base sm:text-lg mb-8 sm:mb-12 text-justify transition-all duration-700 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                        style={{ color: '#ffffff' }}
-                    >
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus at tellus eget eros hendrerit mattis. Pellentesque orci magna, dignissim ut fringilla non, imperdiet et arcu.
-                    </p>
 
                     {/* Carousel Container */}
                     <div className="relative flex items-center justify-center gap-3 sm:gap-6">
@@ -134,93 +126,82 @@ export default function GalleryCarousel() {
 
                         {/* Slider Cards */}
                         <div className="flex items-center justify-center gap-3 sm:gap-6 overflow-hidden py-4">
-                            {/* Left Card - Semi-transparent, smaller */}
+                            {/* Left Card - Polaroid style with white frame */}
                             <div
                                 className="hidden md:block cursor-pointer card-side"
                                 onClick={goToPrevious}
                             >
                                 <div
-                                    className="w-64 lg:w-80 h-36 lg:h-44 rounded-2xl overflow-hidden relative"
+                                    className="overflow-hidden rounded-xl"
                                     style={{
-                                        backgroundColor: 'var(--primary-600)',
-                                        boxShadow: '0 10px 30px rgba(249, 115, 22, 0.4), 0 0 20px rgba(252, 211, 77, 0.2)'
+                                        backgroundColor: 'var(--primary-500)',
+                                        boxShadow: '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
                                     }}
                                 >
-                                    <Image
-                                        src={images[getIndex(-1)].src}
-                                        alt={images[getIndex(-1)].caption}
-                                        fill
-                                        className="object-cover"
-                                    />
-                                    {/* Caption Overlay */}
-                                    <div
-                                        className="absolute bottom-0 left-0 right-0 p-3"
-                                        style={{
-                                            background: 'linear-gradient(transparent, rgba(0,0,0,0.6))'
-                                        }}
-                                    >
-                                        <p className="text-white text-xs font-medium text-center opacity-90">
+                                    <div className="w-64 lg:w-72 h-40 lg:h-44 overflow-hidden relative">
+                                        <Image
+                                            src={images[getIndex(-1)].src}
+                                            alt={images[getIndex(-1)].caption}
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    </div>
+                                    <div className="px-2 py-2 bg-[var(--primary-500)]">
+                                        <p className="text-xs font-medium text-center text-white">
                                             {images[getIndex(-1)].caption}
                                         </p>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Center Card - Featured, larger */}
+                            {/* Center Card - Featured, polaroid style with white frame */}
                             <div className="z-10 card-center">
                                 <div
-                                    className="w-80 sm:w-96 md:w-[420px] lg:w-[520px] h-44 sm:h-52 md:h-56 lg:h-64 rounded-2xl overflow-hidden relative"
+                                    className="overflow-hidden rounded-xl"
                                     style={{
-                                        backgroundColor: 'var(--primary-600)',
-                                        boxShadow: '0 10px 30px rgba(249, 115, 22, 0.5), 0 0 40px rgba(252, 211, 77, 0.3)'
+                                        backgroundColor: 'var(--primary-500)',
+                                        boxShadow: '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
                                     }}
                                 >
-                                    <Image
-                                        src={images[currentIndex].src}
-                                        alt={images[currentIndex].caption}
-                                        fill
-                                        className="object-cover"
-                                    />
-                                    {/* Caption Overlay */}
-                                    <div
-                                        className="absolute bottom-0 left-0 right-0 p-4 sm:p-5"
-                                        style={{
-                                            background: 'linear-gradient(transparent, rgba(0,0,0,0.7))'
-                                        }}
-                                    >
-                                        <p className="text-white text-sm sm:text-base font-semibold text-center">
+                                    <div className="w-[480px] sm:w-[560px] md:w-[640px] lg:w-[720px] h-60 sm:h-64 md:h-72 lg:h-80 overflow-hidden relative">
+                                        <Image
+                                            src={images[currentIndex].src}
+                                            alt={images[currentIndex].caption}
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    </div>
+                                    <div className="px-3 py-3 sm:px-4 sm:py-3 bg-[var(--primary-500)]">
+
+                                        <p className="text-sm sm:text-base font-semibold text-center text-white">
                                             {images[currentIndex].caption}
                                         </p>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Right Card - Semi-transparent, smaller */}
+                            {/* Right Card - Polaroid style with white frame */}
                             <div
                                 className="hidden md:block cursor-pointer card-side"
                                 onClick={goToNext}
                             >
                                 <div
-                                    className="w-64 lg:w-80 h-36 lg:h-44 rounded-2xl overflow-hidden relative"
+                                    className="overflow-hidden rounded-xl"
                                     style={{
-                                        backgroundColor: 'var(--primary-600)',
-                                        boxShadow: '0 10px 30px rgba(249, 115, 22, 0.4), 0 0 20px rgba(252, 211, 77, 0.2)'
+                                        backgroundColor: 'var(--primary-500)',
+                                        boxShadow: '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
                                     }}
                                 >
-                                    <Image
-                                        src={images[getIndex(1)].src}
-                                        alt={images[getIndex(1)].caption}
-                                        fill
-                                        className="object-cover"
-                                    />
-                                    {/* Caption Overlay */}
-                                    <div
-                                        className="absolute bottom-0 left-0 right-0 p-3"
-                                        style={{
-                                            background: 'linear-gradient(transparent, rgba(0,0,0,0.6))'
-                                        }}
-                                    >
-                                        <p className="text-white text-xs font-medium text-center opacity-90">
+                                    <div className="w-64 lg:w-72 h-40 lg:h-44 overflow-hidden relative">
+                                        <Image
+                                            src={images[getIndex(1)].src}
+                                            alt={images[getIndex(1)].caption}
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    </div>
+                                    <div className="px-2 py-2 bg-[var(--primary-500)]">
+                                        <p className="text-xs font-medium text-center text-white">
                                             {images[getIndex(1)].caption}
                                         </p>
                                     </div>

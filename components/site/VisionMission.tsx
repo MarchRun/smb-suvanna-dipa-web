@@ -40,7 +40,7 @@ export default function VisionMission() {
                 ref={sectionRef}
                 className="py-16 sm:py-20 md:py-24 relative overflow-hidden"
                 style={{
-                    backgroundColor: 'var(--primary-500)' // Solid bright orange
+                    backgroundColor: 'var(--primary-900)' // Dark brown matching header text
                 }}
             >
                 {/* Top-left trapezoid - hidden on mobile */}
@@ -83,7 +83,7 @@ export default function VisionMission() {
                             <Card
                                 className="text-center h-full"
                                 customStyle={{
-                                    backgroundColor: '#c2410c', // Same as button
+                                    backgroundColor: 'var(--primary-500)', // Bright orange
                                     boxShadow: '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)', // Yellow glow like button
                                     border: 'none',
                                 }}
@@ -111,7 +111,7 @@ export default function VisionMission() {
                             <Card
                                 className="text-center h-full"
                                 customStyle={{
-                                    backgroundColor: '#c2410c', // Same as button
+                                    backgroundColor: 'var(--primary-500)', // Bright orange
                                     boxShadow: '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)', // Yellow glow like button
                                     border: 'none',
                                 }}

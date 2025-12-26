@@ -13,6 +13,7 @@ import Button from '@/components/shared/Button'
 export default function AboutPreview() {
     const router = useRouter()
     const [isVisible, setIsVisible] = useState(false)
+    const [isDarkMode, setIsDarkMode] = useState(false)
     const sectionRef = useRef<HTMLElement>(null)
 
     // Intersection Observer to detect when section is visible
@@ -42,13 +43,27 @@ export default function AboutPreview() {
         }
     }, [])
 
+    // Dark mode detection
+    useEffect(() => {
+        const checkDarkMode = () => {
+            setIsDarkMode(document.documentElement.classList.contains('dark'))
+        }
+        checkDarkMode()
+        const observer = new MutationObserver(checkDarkMode)
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        })
+        return () => observer.disconnect()
+    }, [])
+
     return (
         <>
             <section
                 ref={sectionRef}
                 className="py-12 sm:py-16 md:py-20 relative overflow-hidden"
                 style={{
-                    backgroundColor: 'var(--primary-500)' // Solid bright orange
+                    backgroundColor: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)' // Bright orange in dark mode, brownish in light
                 }}
             >
                 {/* Top-left trapezoid - hidden on mobile */}
@@ -94,7 +109,17 @@ export default function AboutPreview() {
                     >
                         Sekolah Minggu Buddha Suvanna Dipa merupakan wadah pembelajaran dan pengembangan spiritual bagi anak-anak dan remaja Buddhist. Kami berkomitmen untuk memberikan pendidikan Dharma yang berkualitas dalam suasana yang menyenangkan dan penuh kasih sayang. Melalui berbagai kegiatan, kami membantu siswa memahami ajaran Buddha dan menerapkannya dalam kehidupan sehari-hari. Bergabunglah dengan kami untuk menumbuhkan benih kebajikan dan kebijaksanaan sejak dini.
                     </p>
-                    <Button variant="primary" onClick={() => router.push('/about')} customStyle={{ backgroundColor: '#c2410c' }}>
+                    <Button
+                        variant="primary"
+                        onClick={() => router.push('/about')}
+                        customStyle={{
+                            backgroundColor: isDarkMode ? 'var(--primary-900)' : 'var(--primary-600)',
+                            color: '#ffffff',
+                            boxShadow: isDarkMode
+                                ? '0 0 30px rgba(124, 45, 18, 0.6)'
+                                : '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
+                        }}
+                    >
                         Selengkapnya Tentang Kami
                     </Button>
                 </div>

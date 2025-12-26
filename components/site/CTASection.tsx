@@ -13,6 +13,7 @@ import Button from '@/components/shared/Button'
 export default function CTASection() {
     const router = useRouter()
     const [isVisible, setIsVisible] = useState(false)
+    const [isDarkMode, setIsDarkMode] = useState(false)
     const sectionRef = useRef<HTMLElement>(null)
 
     // Intersection Observer to detect when section is visible
@@ -42,13 +43,27 @@ export default function CTASection() {
         }
     }, [])
 
+    // Dark mode detection
+    useEffect(() => {
+        const checkDarkMode = () => {
+            setIsDarkMode(document.documentElement.classList.contains('dark'))
+        }
+        checkDarkMode()
+        const observer = new MutationObserver(checkDarkMode)
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        })
+        return () => observer.disconnect()
+    }, [])
+
     return (
         <>
             <section
                 ref={sectionRef}
                 className="py-12 sm:py-16 md:py-20 relative overflow-hidden"
                 style={{
-                    backgroundColor: 'var(--primary-500)' // Solid bright orange
+                    backgroundColor: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)' // Dark brown matching header text
                 }}
             >
                 {/* Top-left trapezoid - hidden on mobile */}
@@ -94,7 +109,17 @@ export default function CTASection() {
                     >
                         Kami mengadakan berbagai kegiatan menarik dan bermakna untuk mengembangkan pemahaman Dharma dan mempererat tali persaudaraan. Dari kegiatan pembelajaran, meditasi, hingga bakti sosial, setiap aktivitas dirancang untuk menumbuhkan kebajikan dan kebahagiaan. Jelajahi aktivitas kami dan temukan cara untuk berkontribusi dalam membangun komunitas yang penuh kasih dan kebijaksanaan. Mari bersama-sama berproses menuju pencerahan.
                     </p>
-                    <Button variant="primary" onClick={() => router.push('/activities')} customStyle={{ backgroundColor: '#c2410c' }}>
+                    <Button
+                        variant="primary"
+                        onClick={() => router.push('/activities')}
+                        customStyle={{
+                            backgroundColor: isDarkMode ? 'var(--primary-900)' : 'var(--primary-600)',
+                            color: '#ffffff',
+                            boxShadow: isDarkMode
+                                ? '0 0 30px rgba(124, 45, 18, 0.6)'
+                                : '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
+                        }}
+                    >
                         Lihat Aktivitas Kami
                     </Button>
                 </div>

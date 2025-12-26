@@ -49,19 +49,11 @@ export default function AgendaCards() {
                 <div className="max-w-6xl mx-auto px-4">
                     {/* Section Title */}
                     <h2
-                        className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                        className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-10 sm:mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                         style={{ color: 'var(--primary-700)' }}
                     >
                         Agenda Tahunan Kegiatan SMB
                     </h2>
-
-                    {/* Section Description */}
-                    <p
-                        className={`text-base sm:text-lg leading-relaxed mb-8 sm:mb-12 text-justify transition-all duration-700 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                        style={{ color: 'var(--neutral-800)' }}
-                    >
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus at tellus eget eros hendrerit mattis. Pellentesque orci magna, dignissim ut fringilla non, imperdiet et arcu.
-                    </p>
 
                     {/* Cards Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">

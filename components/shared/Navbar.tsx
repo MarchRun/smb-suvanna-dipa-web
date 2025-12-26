@@ -77,7 +77,7 @@ export default function Navbar() {
                         href="/"
                         className="text-2xl sm:text-3xl lg:text-4xl tracking-wide transition-all duration-200 hover:scale-110 uppercase animate-fadeIn"
                         style={{
-                            color: 'var(--primary-900)',
+                            color: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)',
                             fontFamily: 'var(--font-brand)',
                             fontWeight: 900,
                             animationDelay: '0.8s' // Appears last
@@ -96,7 +96,7 @@ export default function Navbar() {
                                     href={link.href}
                                     className="relative px-4 py-2 text-lg transition-all duration-300 overflow-visible group animate-fadeInDown"
                                     style={{
-                                        color: isActive ? '#ffffff' : 'var(--primary-900)',
+                                        color: isActive ? '#ffffff' : (isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)'),
                                         fontWeight: isActive ? 800 : 700,
                                         textShadow: isActive ? '0 1px 2px rgba(0, 0, 0, 0.3)' : '0 1px 2px rgba(0, 0, 0, 0.15)',
                                         animationDelay: `${index * 0.1}s` // Stagger: 0s, 0.1s, 0.2s, 0.3s
@@ -108,7 +108,7 @@ export default function Navbar() {
                                             }`}
                                         style={{
                                             background: isActive
-                                                ? 'var(--primary-900)' // Dark brown solid for active
+                                                ? (isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)') // Bright orange in dark mode
                                                 : 'rgba(255, 255, 255, 0.5)' // Light semi-transparent for hover
                                         }}
                                     />
@@ -117,14 +117,13 @@ export default function Navbar() {
                             )
                         })}
 
-                        {/* Dark Mode Toggle */}
                         <button
                             onClick={() => setIsDarkMode(!isDarkMode)}
                             className="ml-2 p-2 rounded-full transition-all duration-300 hover:scale-110 animate-fadeInDown"
                             style={{
-                                color: 'var(--primary-900)',
-                                backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                                border: '3px solid var(--primary-900)', // Thick border matching icon color
+                                color: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)',
+                                backgroundColor: isDarkMode ? 'rgba(59, 130, 246, 0.2)' : 'rgba(255, 255, 255, 0.3)', // Light blue in dark mode
+                                border: `3px solid ${isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)'}`,
                                 animationDelay: '0.4s'
                             }}
                             aria-label="Toggle dark mode"
@@ -154,7 +153,7 @@ export default function Navbar() {
                         }}
                         className="md:hidden p-3 transition-all"
                         style={{
-                            color: 'var(--primary-900)'
+                            color: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)'
                         }}
                         aria-label="Toggle menu"
                     >

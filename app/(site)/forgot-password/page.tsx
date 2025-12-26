@@ -1,36 +1,43 @@
 /**
  * Forgot Password Page
  * User can request password reset email
+ * Styled to match login form design with cream background (light) / sky blue (dark)
  */
 
-import Card from '@/components/shared/Card'
+'use client'
+
+import { useState, useEffect } from 'react'
 import ForgotPasswordForm from '@/components/site/ForgotPasswordForm'
 
-export const metadata = {
-    title: 'Lupa Password - SMB Suvanna Dipa',
-    description: 'Reset password akun Anda'
-}
-
 export default function ForgotPasswordPage() {
+    const [isDarkMode, setIsDarkMode] = useState(false)
+
+    // Dark mode detection
+    useEffect(() => {
+        const checkDarkMode = () => {
+            setIsDarkMode(document.documentElement.classList.contains('dark'))
+        }
+        checkDarkMode()
+        const observer = new MutationObserver(checkDarkMode)
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        })
+        return () => observer.disconnect()
+    }, [])
+
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-            {/* Logo/Title */}
-            <div className="text-center mb-6 sm:mb-8">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
-                    SMB Suvanna Dipa
-                </h1>
+        <div
+            className="flex items-center justify-center p-4"
+            style={{
+                backgroundColor: isDarkMode ? '#BAE6FD' : '#FFEFD5', // Sky Blue in dark, Cream in light
+                minHeight: 'calc(100vh - 100px)' // Account for navbar
+            }}
+        >
+            {/* Form Card - Already has its own styling */}
+            <div className="w-full max-w-md animate-slideUpFade">
+                <ForgotPasswordForm />
             </div>
-
-            {/* Form Card */}
-            <Card className="w-full max-w-md">
-                <div className="space-y-4 sm:space-y-6">
-                    <h2 className="text-xl sm:text-2xl font-bold text-center">
-                        Lupa Password?
-                    </h2>
-
-                    <ForgotPasswordForm />
-                </div>
-            </Card>
         </div>
     )
 }

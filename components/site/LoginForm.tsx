@@ -6,7 +6,7 @@
 
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { login } from '@/actions/auth/login'
@@ -19,6 +19,21 @@ export default function LoginForm() {
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
+    const [isDarkMode, setIsDarkMode] = useState(false)
+
+    // Dark mode detection
+    useEffect(() => {
+        const checkDarkMode = () => {
+            setIsDarkMode(document.documentElement.classList.contains('dark'))
+        }
+        checkDarkMode()
+        const observer = new MutationObserver(checkDarkMode)
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        })
+        return () => observer.disconnect()
+    }, [])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -60,13 +75,13 @@ export default function LoginForm() {
             className="p-6 sm:p-8 rounded-xl shadow-2xl border-4 transition-all duration-300 hover:scale-105"
             style={{
                 backgroundColor: 'white',
-                borderColor: 'var(--primary-500)',
-                boxShadow: '0 0 30px rgba(249, 115, 22, 0.6)' // Bright orange glow
+                borderColor: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)',
+                boxShadow: isDarkMode ? '0 0 30px rgba(234, 88, 12, 0.6)' : '0 0 30px rgba(124, 45, 18, 0.6)'
             }}
         >
             <h2
                 className="text-2xl sm:text-3xl font-bold text-center mb-6"
-                style={{ color: 'var(--primary-600)' }}
+                style={{ color: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)' }}
             >
                 Gerbang Masuk
             </h2>
@@ -109,7 +124,7 @@ export default function LoginForm() {
                     <Link
                         href="/forgot-password"
                         className="text-sm font-semibold hover:underline transition-colors"
-                        style={{ color: 'var(--primary-600)' }}
+                        style={{ color: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)' }}
                     >
                         Lupa Password?
                     </Link>
