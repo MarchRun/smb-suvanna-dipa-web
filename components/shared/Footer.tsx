@@ -6,10 +6,9 @@
 export default function Footer() {
     return (
         <footer
-            className="py-8 border-t"
+            className="py-8"
             style={{
                 backgroundColor: 'var(--accent-200)', // Solid warm yellow/orange
-                borderColor: 'var(--primary-600)',
                 boxShadow: '0 -4px 12px rgba(217, 87, 20, 0.20), 0 -2px 4px rgba(217, 87, 20, 0.12)'
             }}
         >

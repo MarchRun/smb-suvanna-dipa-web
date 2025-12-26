@@ -8,21 +8,24 @@ interface CardProps {
     children: React.ReactNode
     className?: string
     hoverable?: boolean
+    customStyle?: React.CSSProperties
 }
 
 export default function Card({
     children,
     className = "",
-    hoverable = false
+    hoverable = false,
+    customStyle = {}
 }: CardProps) {
-    const hoverStyles = hoverable ? "hover:shadow-xl hover:scale-[1.02] transition-all duration-300" : ""
+    const hoverStyles = hoverable ? "hover:shadow-xl hover:scale-105 transition-all duration-300" : ""
 
     return (
         <div
-            className={`rounded-lg p-4 sm:p-6 shadow-md ${hoverStyles} ${className}`}
+            className={`rounded-2xl p-4 sm:p-6 shadow-md ${hoverStyles} ${className}`}
             style={{
                 backgroundColor: 'var(--bg-primary)',
-                border: '2px solid var(--primary-200)'
+                border: 'none',
+                ...customStyle
             }}
         >
             {children}

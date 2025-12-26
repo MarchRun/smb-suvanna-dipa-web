@@ -124,7 +124,8 @@ export default function Navbar() {
                             style={{
                                 color: 'var(--primary-900)',
                                 backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                                animationDelay: '0.4s' // After 4 nav links (0s, 0.1s, 0.2s, 0.3s)
+                                border: '3px solid var(--primary-900)', // Thick border matching icon color
+                                animationDelay: '0.4s'
                             }}
                             aria-label="Toggle dark mode"
                         >
@@ -201,7 +202,8 @@ export default function Navbar() {
                                 className="mt-2 px-4 py-3 rounded-2xl transition-all duration-300 flex items-center justify-center gap-3"
                                 style={{
                                     color: 'var(--primary-50)',
-                                    backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                    border: '3px solid var(--primary-50)' // Thick border matching icon color for mobile
                                 }}
                                 aria-label="Toggle dark mode"
                             >
