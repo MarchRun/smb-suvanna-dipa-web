@@ -1,6 +1,7 @@
 /**
  * Gallery Carousel Component
  * Elegant 5 image slider with featured center card
+ * With dark mode support
  */
 
 'use client'
@@ -11,6 +12,7 @@ import Image from 'next/image'
 export default function GalleryCarousel() {
     const [currentIndex, setCurrentIndex] = useState(0)
     const [isVisible, setIsVisible] = useState(false)
+    const [isDarkMode, setIsDarkMode] = useState(false)
     const sectionRef = useRef<HTMLElement>(null)
 
     const images = [
@@ -20,6 +22,20 @@ export default function GalleryCarousel() {
         { id: 4, src: '/images/slider-image4.png', caption: 'Fufufafa' },
         { id: 5, src: '/images/slider-image5.png', caption: 'Angkat Karung' }
     ]
+
+    // Dark mode detection
+    useEffect(() => {
+        const checkDarkMode = () => {
+            setIsDarkMode(document.documentElement.classList.contains('dark'))
+        }
+        checkDarkMode()
+        const observer = new MutationObserver(checkDarkMode)
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        })
+        return () => observer.disconnect()
+    }, [])
 
     // Intersection Observer
     useEffect(() => {
@@ -58,13 +74,22 @@ export default function GalleryCarousel() {
         return (currentIndex + offset + images.length) % images.length
     }
 
+    // Dynamic colors
+    const sectionBgColor = isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)' // Bright orange in dark, dark brown in light
+    const captionBgColor = isDarkMode ? 'var(--primary-900)' : 'var(--primary-500)' // Brownish in dark, bright in light
+    const captionShadow = isDarkMode
+        ? '0 0 30px rgba(124, 45, 18, 0.6)'
+        : '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
+    const buttonBgColor = isDarkMode ? 'rgba(255, 255, 255, 0.9)' : 'var(--primary-600)' // White bg in dark, bright orange in light
+    const buttonIconColor = isDarkMode ? 'var(--primary-600)' : '#ffffff' // Bright orange icon in dark, white in light
+
     return (
         <>
             <section
                 ref={sectionRef}
                 className="py-12 sm:py-16 md:py-20 relative overflow-hidden"
                 style={{
-                    backgroundColor: 'var(--primary-900)' // Dark brown matching header text
+                    backgroundColor: sectionBgColor
                 }}
             >
                 {/* Top-left trapezoid - hidden on mobile */}
@@ -113,8 +138,8 @@ export default function GalleryCarousel() {
                             onClick={goToPrevious}
                             className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full transition-all hover:scale-110 z-20 flex items-center justify-center"
                             style={{
-                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                                color: 'var(--primary-600)',
+                                backgroundColor: buttonBgColor,
+                                color: buttonIconColor,
                                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
                             }}
                             aria-label="Previous image"
@@ -126,7 +151,7 @@ export default function GalleryCarousel() {
 
                         {/* Slider Cards */}
                         <div className="flex items-center justify-center gap-3 sm:gap-6 overflow-hidden py-4">
-                            {/* Left Card - Polaroid style with white frame */}
+                            {/* Left Card - Polaroid style */}
                             <div
                                 className="hidden md:block cursor-pointer card-side"
                                 onClick={goToPrevious}
@@ -134,8 +159,8 @@ export default function GalleryCarousel() {
                                 <div
                                     className="overflow-hidden rounded-xl"
                                     style={{
-                                        backgroundColor: 'var(--primary-500)',
-                                        boxShadow: '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
+                                        backgroundColor: captionBgColor,
+                                        boxShadow: captionShadow
                                     }}
                                 >
                                     <div className="w-64 lg:w-72 h-40 lg:h-44 overflow-hidden relative">
@@ -146,7 +171,10 @@ export default function GalleryCarousel() {
                                             className="object-cover"
                                         />
                                     </div>
-                                    <div className="px-2 py-2 bg-[var(--primary-500)]">
+                                    <div
+                                        className="px-2 py-2"
+                                        style={{ backgroundColor: captionBgColor }}
+                                    >
                                         <p className="text-xs font-medium text-center text-white">
                                             {images[getIndex(-1)].caption}
                                         </p>
@@ -154,13 +182,13 @@ export default function GalleryCarousel() {
                                 </div>
                             </div>
 
-                            {/* Center Card - Featured, polaroid style with white frame */}
+                            {/* Center Card - Featured, polaroid style */}
                             <div className="z-10 card-center">
                                 <div
                                     className="overflow-hidden rounded-xl"
                                     style={{
-                                        backgroundColor: 'var(--primary-500)',
-                                        boxShadow: '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
+                                        backgroundColor: captionBgColor,
+                                        boxShadow: captionShadow
                                     }}
                                 >
                                     <div className="w-[480px] sm:w-[560px] md:w-[640px] lg:w-[720px] h-60 sm:h-64 md:h-72 lg:h-80 overflow-hidden relative">
@@ -171,8 +199,10 @@ export default function GalleryCarousel() {
                                             className="object-cover"
                                         />
                                     </div>
-                                    <div className="px-3 py-3 sm:px-4 sm:py-3 bg-[var(--primary-500)]">
-
+                                    <div
+                                        className="px-3 py-3 sm:px-4 sm:py-3"
+                                        style={{ backgroundColor: captionBgColor }}
+                                    >
                                         <p className="text-sm sm:text-base font-semibold text-center text-white">
                                             {images[currentIndex].caption}
                                         </p>
@@ -180,7 +210,7 @@ export default function GalleryCarousel() {
                                 </div>
                             </div>
 
-                            {/* Right Card - Polaroid style with white frame */}
+                            {/* Right Card - Polaroid style */}
                             <div
                                 className="hidden md:block cursor-pointer card-side"
                                 onClick={goToNext}
@@ -188,8 +218,8 @@ export default function GalleryCarousel() {
                                 <div
                                     className="overflow-hidden rounded-xl"
                                     style={{
-                                        backgroundColor: 'var(--primary-500)',
-                                        boxShadow: '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
+                                        backgroundColor: captionBgColor,
+                                        boxShadow: captionShadow
                                     }}
                                 >
                                     <div className="w-64 lg:w-72 h-40 lg:h-44 overflow-hidden relative">
@@ -200,7 +230,10 @@ export default function GalleryCarousel() {
                                             className="object-cover"
                                         />
                                     </div>
-                                    <div className="px-2 py-2 bg-[var(--primary-500)]">
+                                    <div
+                                        className="px-2 py-2"
+                                        style={{ backgroundColor: captionBgColor }}
+                                    >
                                         <p className="text-xs font-medium text-center text-white">
                                             {images[getIndex(1)].caption}
                                         </p>
@@ -214,8 +247,8 @@ export default function GalleryCarousel() {
                             onClick={goToNext}
                             className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full transition-all hover:scale-110 z-20 flex items-center justify-center"
                             style={{
-                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                                color: 'var(--primary-600)',
+                                backgroundColor: buttonBgColor,
+                                color: buttonIconColor,
                                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
                             }}
                             aria-label="Next image"

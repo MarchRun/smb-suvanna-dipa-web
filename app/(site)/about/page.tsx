@@ -1,6 +1,7 @@
 /**
  * About Page
  * 4-Section Layout: Header, Image+Description, Vision/Mission, Quote
+ * With dark mode support
  */
 
 'use client'
@@ -13,7 +14,22 @@ import Quote from '@/components/site/Quote'
 
 export default function AboutPage() {
     const [section2Visible, setSection2Visible] = useState(false)
+    const [isDarkMode, setIsDarkMode] = useState(false)
     const section2Ref = useRef<HTMLElement>(null)
+
+    // Dark mode detection
+    useEffect(() => {
+        const checkDarkMode = () => {
+            setIsDarkMode(document.documentElement.classList.contains('dark'))
+        }
+        checkDarkMode()
+        const observer = new MutationObserver(checkDarkMode)
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        })
+        return () => observer.disconnect()
+    }, [])
 
     // Intersection Observer for section 2 - refreshes on re-entry
     useEffect(() => {
@@ -36,9 +52,13 @@ export default function AboutPage() {
         }
     }, [])
 
+    // Dynamic colors
+    const bgColor = isDarkMode ? '#BAE6FD' : '#FFEFD5' // Sky blue in dark, cream in light
+    const textColor = isDarkMode ? '#ea580c' : '#7c2d12' // Bright orange in dark, brownish in light
+
     return (
         <>
-            {/* Section 1: Page Header with Cream Background */}
+            {/* Section 1: Page Header with dynamic background */}
             <PageHeader
                 title="Tentang SMB Suvanna Dipa"
             />
@@ -47,7 +67,7 @@ export default function AboutPage() {
             <section
                 ref={section2Ref}
                 className="pt-4 pb-12 sm:pb-16"
-                style={{ backgroundColor: 'var(--bg-secondary)' }}
+                style={{ backgroundColor: bgColor }}
             >
                 <div
                     className={`max-w-6xl mx-auto px-4 transition-all duration-700 ${section2Visible
@@ -70,7 +90,7 @@ export default function AboutPage() {
 
                     {/* Long Description */}
                     <div>
-                        <p className="text-base sm:text-lg leading-relaxed text-justify" style={{ color: 'var(--neutral-800)' }}>
+                        <p className="text-base sm:text-lg leading-relaxed text-justify" style={{ color: textColor }}>
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus at tellus eget eros hendrerit mattis. Pellentesque orci magna, dignissim ut fringilla non, imperdiet et arcu. Fusce cursus, orci eu mollis posuere, augue ipsum dignissim enim, sit amet mollis ipsum nisl eu ante. Aliquam in mauris feugiat, viverra enim quis, lobortis nunc. Maecenas ut tristique lacus, eu elementum ante. Integer sodio felis elit, vulgutate isneret nulla euismod, consectetur et massa sed. Integer euismod vulputate lacerat, placerat at sollicitudin in, igestas at odio. Quisque scelerisque elit amet risus porttitor. In imperdiet et fringilla. Donec condimentum pretium vitae augue laoreet lacus eu condimentum. Non risus vinia, mauris eros in sollicitudin sem. Nunc duis quam. Donec cursus lobortis tincus. Phasellus ac molestie nisl, a sollicitudin dolor.
                         </p>
                     </div>

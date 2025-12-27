@@ -1,7 +1,7 @@
 /**
  * Contact Cards Component
  * 4 contact information cards with Material Icons
- * Matches ProgramCards styling with animations
+ * With dark mode support
  */
 
 'use client'
@@ -11,6 +11,7 @@ import Card from '@/components/shared/Card'
 
 export default function ContactCards() {
     const [isVisible, setIsVisible] = useState(false)
+    const [isDarkMode, setIsDarkMode] = useState(false)
     const sectionRef = useRef<HTMLElement>(null)
 
     const contacts = [
@@ -36,6 +37,20 @@ export default function ContactCards() {
         }
     ]
 
+    // Dark mode detection
+    useEffect(() => {
+        const checkDarkMode = () => {
+            setIsDarkMode(document.documentElement.classList.contains('dark'))
+        }
+        checkDarkMode()
+        const observer = new MutationObserver(checkDarkMode)
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        })
+        return () => observer.disconnect()
+    }, [])
+
     // Intersection Observer
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -55,6 +70,13 @@ export default function ContactCards() {
             }
         }
     }, [])
+
+    // Dynamic colors
+    const bgColor = isDarkMode ? '#BAE6FD' : '#FFEFD5' // Sky blue in dark, cream in light
+    const cardBgColor = isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)' // Bright orange in dark, brownish in light
+    const cardShadow = isDarkMode
+        ? '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
+        : '0 0 30px rgba(124, 45, 18, 0.6)' // Brownish shadow in light
 
     // Material Icons as SVG
     const renderIcon = (iconType: string) => {
@@ -99,8 +121,8 @@ export default function ContactCards() {
         <>
             <section
                 ref={sectionRef}
-                className="py-12 sm:py-16"
-                style={{ backgroundColor: '#f5f5f5' }}
+                className="py-8 sm:py-10"
+                style={{ backgroundColor: bgColor }}
             >
                 <div className="max-w-7xl mx-auto px-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
@@ -113,8 +135,8 @@ export default function ContactCards() {
                                 <Card
                                     className="text-center h-full"
                                     customStyle={{
-                                        backgroundColor: 'var(--primary-500)',
-                                        boxShadow: '0 10px 30px rgba(249, 115, 22, 0.5), 0 0 40px rgba(252, 211, 77, 0.3)',
+                                        backgroundColor: cardBgColor,
+                                        boxShadow: cardShadow,
                                     }}
                                 >
                                     {/* Icon */}

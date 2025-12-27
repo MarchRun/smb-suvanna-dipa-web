@@ -162,7 +162,9 @@ export default function Hero() {
                                         className="flex-1 px-6 py-3 rounded-lg font-bold text-white transition-all duration-300 hover:scale-105"
                                         style={{
                                             backgroundColor: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)',
-                                            boxShadow: '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(124, 45, 18, 0.4)'
+                                            boxShadow: isDarkMode
+                                                ? '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
+                                                : '0 0 30px rgba(124, 45, 18, 0.6)'
                                         }}
                                     >
                                         Jelajahi
@@ -173,7 +175,9 @@ export default function Hero() {
                                         className="flex-1 px-6 py-3 rounded-lg font-bold text-white transition-all duration-300 hover:scale-105"
                                         style={{
                                             backgroundColor: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)',
-                                            boxShadow: '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(124, 45, 18, 0.4)'
+                                            boxShadow: isDarkMode
+                                                ? '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
+                                                : '0 0 30px rgba(124, 45, 18, 0.6)'
                                         }}
                                     >
                                         {showLoginForm ? 'Tutup' : 'Login'}

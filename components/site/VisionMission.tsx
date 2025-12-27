@@ -2,7 +2,7 @@
  * Vision & Mission Component
  * 2-column layout (Visi left, Misi right)
  * Stacks vertically on mobile
- * With gradient background and trapezoid decorations
+ * With gradient background, trapezoid decorations, and dark mode support
  */
 
 'use client'
@@ -12,7 +12,22 @@ import Card from '@/components/shared/Card'
 
 export default function VisionMission() {
     const [isVisible, setIsVisible] = useState(false)
+    const [isDarkMode, setIsDarkMode] = useState(false)
     const sectionRef = useRef<HTMLElement>(null)
+
+    // Dark mode detection
+    useEffect(() => {
+        const checkDarkMode = () => {
+            setIsDarkMode(document.documentElement.classList.contains('dark'))
+        }
+        checkDarkMode()
+        const observer = new MutationObserver(checkDarkMode)
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        })
+        return () => observer.disconnect()
+    }, [])
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -34,13 +49,19 @@ export default function VisionMission() {
         }
     }, [])
 
+    // Dynamic colors - in dark mode, use same color as buttons (brownish orange with brownish shadow)
+    const cardBgColor = isDarkMode ? 'var(--primary-900)' : 'var(--primary-500)' // Brownish in dark, bright orange in light
+    const cardShadow = isDarkMode
+        ? '0 0 30px rgba(124, 45, 18, 0.6)' // Brownish shadow in dark mode (same as buttons)
+        : '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)' // Yellow glow in light mode
+
     return (
         <>
             <section
                 ref={sectionRef}
                 className="py-16 sm:py-20 md:py-24 relative overflow-hidden"
                 style={{
-                    backgroundColor: 'var(--primary-900)' // Dark brown matching header text
+                    backgroundColor: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)' // Bright orange in dark, dark brown in light
                 }}
             >
                 {/* Top-left trapezoid - hidden on mobile */}
@@ -83,8 +104,8 @@ export default function VisionMission() {
                             <Card
                                 className="text-center h-full"
                                 customStyle={{
-                                    backgroundColor: 'var(--primary-500)', // Bright orange
-                                    boxShadow: '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)', // Yellow glow like button
+                                    backgroundColor: cardBgColor,
+                                    boxShadow: cardShadow,
                                     border: 'none',
                                 }}
                             >
@@ -111,8 +132,8 @@ export default function VisionMission() {
                             <Card
                                 className="text-center h-full"
                                 customStyle={{
-                                    backgroundColor: 'var(--primary-500)', // Bright orange
-                                    boxShadow: '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)', // Yellow glow like button
+                                    backgroundColor: cardBgColor,
+                                    boxShadow: cardShadow,
                                     border: 'none',
                                 }}
                             >

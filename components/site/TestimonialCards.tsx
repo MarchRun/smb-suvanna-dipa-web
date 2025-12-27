@@ -1,6 +1,7 @@
 /**
  * Testimonial Cards Component
  * 3 testimonial cards with hover effects
+ * With dark mode support
  */
 
 'use client'
@@ -10,6 +11,7 @@ import Card from '@/components/shared/Card'
 
 export default function TestimonialCards() {
     const [isVisible, setIsVisible] = useState(false)
+    const [isDarkMode, setIsDarkMode] = useState(false)
     const sectionRef = useRef<HTMLElement>(null)
 
     const testimonials = [
@@ -26,6 +28,20 @@ export default function TestimonialCards() {
             text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus at tellus eget eros hendrerit mattis. Pellentesque orci magna, dignissim ut fringilla non, imperdiet et arcu. Fusce cursus, orci eu mollis posuere, augue ipsum dignissim enim, sit amet mollis ipsum nisl eu ante.'
         }
     ]
+
+    // Dark mode detection
+    useEffect(() => {
+        const checkDarkMode = () => {
+            setIsDarkMode(document.documentElement.classList.contains('dark'))
+        }
+        checkDarkMode()
+        const observer = new MutationObserver(checkDarkMode)
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        })
+        return () => observer.disconnect()
+    }, [])
 
     // Intersection Observer
     useEffect(() => {
@@ -47,18 +63,26 @@ export default function TestimonialCards() {
         }
     }, [])
 
+    // Dynamic colors
+    const bgColor = isDarkMode ? '#BAE6FD' : '#FFEFD5' // Sky blue in dark, cream in light
+    const titleColor = isDarkMode ? '#ea580c' : '#7c2d12' // Bright orange in dark, brownish in light
+    const cardBgColor = isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)' // Bright orange in dark, brownish in light
+    const cardShadow = isDarkMode
+        ? '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
+        : '0 0 30px rgba(124, 45, 18, 0.6)' // Brownish shadow in light
+
     return (
         <>
             <section
                 ref={sectionRef}
                 className="py-12 sm:py-16"
-                style={{ backgroundColor: 'var(--bg-secondary)' }}
+                style={{ backgroundColor: bgColor }}
             >
                 <div className="max-w-6xl mx-auto px-4">
                     {/* Section Title */}
                     <h2
                         className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-10 sm:mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                        style={{ color: 'var(--primary-700)' }}
+                        style={{ color: titleColor }}
                     >
                         Testimoni
                     </h2>
@@ -72,14 +96,14 @@ export default function TestimonialCards() {
                                 style={{ animationDelay: `${index * 0.15}s` }}
                             >
                                 <Card
-                                    className="text-center h-full"
+                                    className="h-full"
                                     customStyle={{
-                                        backgroundColor: 'var(--primary-500)',
-                                        boxShadow: '0 10px 30px rgba(249, 115, 22, 0.5), 0 0 40px rgba(252, 211, 77, 0.3)',
+                                        backgroundColor: cardBgColor,
+                                        boxShadow: cardShadow,
                                     }}
                                 >
                                     <h3
-                                        className="text-lg sm:text-xl font-bold mb-3"
+                                        className="text-lg sm:text-xl font-bold mb-3 text-left"
                                         style={{ color: '#ffffff' }}
                                     >
                                         {testimonial.name}

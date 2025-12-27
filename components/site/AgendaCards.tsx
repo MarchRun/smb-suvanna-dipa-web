@@ -1,6 +1,7 @@
 /**
  * Agenda Cards Component
  * 4 yearly activity cards with hover effects
+ * With dark mode support
  */
 
 'use client'
@@ -10,6 +11,7 @@ import Card from '@/components/shared/Card'
 
 export default function AgendaCards() {
     const [isVisible, setIsVisible] = useState(false)
+    const [isDarkMode, setIsDarkMode] = useState(false)
     const sectionRef = useRef<HTMLElement>(null)
 
     const activities = [
@@ -18,6 +20,20 @@ export default function AgendaCards() {
         { title: 'Asadha' },
         { title: 'Magha Puja' }
     ]
+
+    // Dark mode detection
+    useEffect(() => {
+        const checkDarkMode = () => {
+            setIsDarkMode(document.documentElement.classList.contains('dark'))
+        }
+        checkDarkMode()
+        const observer = new MutationObserver(checkDarkMode)
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        })
+        return () => observer.disconnect()
+    }, [])
 
     // Intersection Observer
     useEffect(() => {
@@ -39,18 +55,26 @@ export default function AgendaCards() {
         }
     }, [])
 
+    // Dynamic colors
+    const bgColor = isDarkMode ? '#BAE6FD' : '#FFEFD5' // Sky blue in dark, cream in light
+    const titleColor = isDarkMode ? '#ea580c' : '#7c2d12' // Bright orange in dark, brownish in light
+    const cardBgColor = isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)' // Bright orange in dark, brownish in light
+    const cardShadow = isDarkMode
+        ? '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
+        : '0 0 30px rgba(124, 45, 18, 0.6)' // Brownish shadow in light
+
     return (
         <>
             <section
                 ref={sectionRef}
-                className="py-12 sm:py-16"
-                style={{ backgroundColor: 'var(--bg-secondary)' }}
+                className="pt-2 pb-6 sm:pb-8"
+                style={{ backgroundColor: bgColor }}
             >
                 <div className="max-w-6xl mx-auto px-4">
                     {/* Section Title */}
                     <h2
-                        className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-10 sm:mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                        style={{ color: 'var(--primary-700)' }}
+                        className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                        style={{ color: titleColor }}
                     >
                         Agenda Tahunan Kegiatan SMB
                     </h2>
@@ -66,8 +90,8 @@ export default function AgendaCards() {
                                 <Card
                                     className="text-center h-full"
                                     customStyle={{
-                                        backgroundColor: 'var(--primary-500)',
-                                        boxShadow: '0 10px 30px rgba(249, 115, 22, 0.5), 0 0 40px rgba(252, 211, 77, 0.3)',
+                                        backgroundColor: cardBgColor,
+                                        boxShadow: cardShadow,
                                     }}
                                 >
                                     <h3

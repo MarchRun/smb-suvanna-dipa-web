@@ -76,7 +76,9 @@ export default function LoginForm() {
             style={{
                 backgroundColor: 'white',
                 borderColor: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)',
-                boxShadow: isDarkMode ? '0 0 30px rgba(234, 88, 12, 0.6)' : '0 0 30px rgba(124, 45, 18, 0.6)'
+                boxShadow: isDarkMode
+                    ? '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
+                    : '0 0 30px rgba(124, 45, 18, 0.6)'
             }}
         >
             <h2

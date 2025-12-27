@@ -1,8 +1,7 @@
 /**
  * Shared Page Header Component
  * Reusable page title and subtitle for all pages
- * Now includes section wrapper with cream background
- * With typewriter animation for title that refreshes on scroll
+ * With typewriter animation and dark mode support
  */
 
 'use client'
@@ -23,6 +22,7 @@ export default function PageHeader({
     const [displayedTitle, setDisplayedTitle] = useState('')
     const [showCursor, setShowCursor] = useState(true)
     const [isVisible, setIsVisible] = useState(false)
+    const [isDarkMode, setIsDarkMode] = useState(false)
     const sectionRef = useRef<HTMLElement>(null)
 
     const alignmentClass = {
@@ -30,6 +30,20 @@ export default function PageHeader({
         center: 'text-center',
         right: 'text-right'
     }
+
+    // Dark mode detection
+    useEffect(() => {
+        const checkDarkMode = () => {
+            setIsDarkMode(document.documentElement.classList.contains('dark'))
+        }
+        checkDarkMode()
+        const observer = new MutationObserver(checkDarkMode)
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        })
+        return () => observer.disconnect()
+    }, [])
 
     // Intersection Observer to track visibility
     useEffect(() => {
@@ -78,24 +92,28 @@ export default function PageHeader({
         return () => clearInterval(typingInterval)
     }, [title, isVisible])
 
+    // Dynamic colors
+    const titleColor = isDarkMode ? '#ea580c' : '#7c2d12' // Bright orange in dark, brownish in light
+    const bgColor = isDarkMode ? '#BAE6FD' : '#FFEFD5' // Sky blue in dark, cream in light
+
     return (
         <>
             <section
                 ref={sectionRef}
                 className="py-8 sm:py-10"
-                style={{ backgroundColor: '#FFEFD5' }} // Cream background matching Program Cards
+                style={{ backgroundColor: bgColor }}
             >
                 <div className="max-w-7xl mx-auto px-4">
                     <div className={alignmentClass[align]}>
                         <h1
                             className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4"
-                            style={{ color: '#7c2d12' }} // SMB Suvanna Dipa color
+                            style={{ color: titleColor }}
                         >
                             {displayedTitle}
                             <span
                                 className="inline-block w-1 ml-1"
                                 style={{
-                                    backgroundColor: showCursor ? '#7c2d12' : 'transparent',
+                                    backgroundColor: showCursor ? titleColor : 'transparent',
                                     height: '1em',
                                     verticalAlign: 'text-bottom'
                                 }}
@@ -104,7 +122,7 @@ export default function PageHeader({
                         {subtitle && (
                             <p
                                 className="text-sm sm:text-base md:text-lg px-4"
-                                style={{ color: 'var(--neutral-800)' }}
+                                style={{ color: titleColor }}
                             >
                                 {subtitle}
                             </p>

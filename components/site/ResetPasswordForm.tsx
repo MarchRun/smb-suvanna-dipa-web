@@ -1,12 +1,12 @@
 /**
  * Reset Password Form Component
  * Allows users to set new password after clicking email link
- * Styled to match LoginForm design
+ * Styled to match LoginForm and ForgotPasswordForm with dark mode support
  */
 
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Input from '@/components/shared/Input'
 import Button from '@/components/shared/Button'
@@ -36,9 +36,30 @@ export default function ResetPasswordForm() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
+    const [isDarkMode, setIsDarkMode] = useState(false)
+
+    // Dark mode detection
+    useEffect(() => {
+        const checkDarkMode = () => {
+            setIsDarkMode(document.documentElement.classList.contains('dark'))
+        }
+        checkDarkMode()
+        const observer = new MutationObserver(checkDarkMode)
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        })
+        return () => observer.disconnect()
+    }, [])
 
     const passwordStrength = password ? calculatePasswordStrength(password) : null
     const passwordsMatch = password === confirmPassword && confirmPassword !== ''
+
+    // Dynamic colors based on dark mode
+    const primaryColor = isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)'
+    const borderGlow = isDarkMode
+        ? '0 0 30px rgba(234, 88, 12, 0.6)'
+        : '0 0 30px rgba(124, 45, 18, 0.6)'
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -78,13 +99,13 @@ export default function ResetPasswordForm() {
             className="p-6 sm:p-8 rounded-xl shadow-2xl border-4 transition-all duration-300 hover:scale-105"
             style={{
                 backgroundColor: 'white',
-                borderColor: 'var(--primary-500)',
-                boxShadow: '0 0 30px rgba(249, 115, 22, 0.6)' // Bright orange glow
+                borderColor: primaryColor,
+                boxShadow: borderGlow
             }}
         >
             <h2
                 className="text-2xl sm:text-3xl font-bold text-center mb-6"
-                style={{ color: 'var(--primary-600)' }}
+                style={{ color: primaryColor }}
             >
                 Reset Password
             </h2>
@@ -93,7 +114,7 @@ export default function ResetPasswordForm() {
                 {/* Helper Text */}
                 <p
                     className="text-sm sm:text-base leading-relaxed font-medium"
-                    style={{ color: 'var(--neutral-700)' }}
+                    style={{ color: primaryColor }}
                 >
                     Masukkan password baru Anda. Pastikan password minimal 8 karakter.
                 </p>
@@ -128,7 +149,7 @@ export default function ResetPasswordForm() {
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
                             className="absolute right-3 top-9 transition-colors"
-                            style={{ color: 'var(--neutral-500)' }}
+                            style={{ color: primaryColor }}
                         >
                             {showPassword ? (
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -174,7 +195,7 @@ export default function ResetPasswordForm() {
                         type="button"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                         className="absolute right-3 top-9 transition-colors"
-                        style={{ color: 'var(--neutral-500)' }}
+                        style={{ color: primaryColor }}
                     >
                         {showConfirmPassword ? (
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
