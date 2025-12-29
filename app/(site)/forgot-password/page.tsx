@@ -7,7 +7,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import ForgotPasswordForm from '@/components/site/ForgotPasswordForm'
+import ForgotPasswordForm from '@/components/auth/ForgotPasswordForm'
 
 export default function ForgotPasswordPage() {
     const [isDarkMode, setIsDarkMode] = useState(false)

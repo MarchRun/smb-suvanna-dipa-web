@@ -9,8 +9,8 @@
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import PageHeader from '@/components/shared/PageHeader'
-import VisionMission from '@/components/site/VisionMission'
-import Quote from '@/components/site/Quote'
+import VisionMission from '@/components/about/VisionMission'
+import Quote from '@/components/about/Quote'
 
 export default function AboutPage() {
     const [section2Visible, setSection2Visible] = useState(false)

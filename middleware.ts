@@ -13,7 +13,8 @@ export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl
 
     // Public routes (tidak perlu login)
-    const publicRoutes = ['/', '/about', '/activities', '/contact', '/login', '/forgot-password', '/reset-password']
+    // TODO: Remove dashboard routes from public after testing
+    const publicRoutes = ['/', '/about', '/activities', '/contact', '/login', '/forgot-password', '/reset-password', '/student/dashboard', '/teacher/dashboard', '/admin/dashboard']
     const isPublicRoute = publicRoutes.some(route => pathname === route || pathname.startsWith(route + '/'))
 
     // Jika public route, lewatkan

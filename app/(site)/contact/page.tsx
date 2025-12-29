@@ -8,7 +8,7 @@
 
 import { useState, useEffect } from 'react'
 import PageHeader from '@/components/shared/PageHeader'
-import ContactCards from '@/components/site/ContactCards'
+import ContactCards from '@/components/contact/ContactCards'
 
 export default function ContactPage() {
     const [isDarkMode, setIsDarkMode] = useState(false)

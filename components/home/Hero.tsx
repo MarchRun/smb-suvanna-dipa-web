@@ -7,7 +7,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import LoginForm from './LoginForm'
+import LoginForm from '@/components/auth/LoginForm'
 import BubbleEffect from './BubbleEffect'
 
 export default function Hero() {

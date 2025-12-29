@@ -4,9 +4,9 @@
  */
 
 import PageHeader from '@/components/shared/PageHeader'
-import AgendaCards from '@/components/site/AgendaCards'
-import GalleryCarousel from '@/components/site/GalleryCarousel'
-import TestimonialCards from '@/components/site/TestimonialCards'
+import AgendaCards from '@/components/activities/AgendaCards'
+import GalleryCarousel from '@/components/activities/GalleryCarousel'
+import TestimonialCards from '@/components/activities/TestimonialCards'
 
 export default function ActivitiesPage() {
     return (

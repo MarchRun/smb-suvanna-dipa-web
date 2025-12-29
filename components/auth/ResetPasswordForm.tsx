@@ -8,6 +8,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import Input from '@/components/shared/Input'
 import Button from '@/components/shared/Button'
 import { resetPassword } from '@/actions/auth/password'
@@ -28,7 +29,12 @@ function calculatePasswordStrength(password: string): { score: number; label: st
     return { score, label: 'Kuat', color: 'bg-green-500' }
 }
 
-export default function ResetPasswordForm() {
+interface ResetPasswordFormProps {
+    token: string
+    email?: string
+}
+
+export default function ResetPasswordForm({ token, email }: ResetPasswordFormProps) {
     const router = useRouter()
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
@@ -36,6 +42,7 @@ export default function ResetPasswordForm() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
+    const [success, setSuccess] = useState(false)
     const [isDarkMode, setIsDarkMode] = useState(false)
 
     // Dark mode detection
@@ -58,7 +65,7 @@ export default function ResetPasswordForm() {
     // Dynamic colors based on dark mode
     const primaryColor = isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)'
     const borderGlow = isDarkMode
-        ? '0 0 30px rgba(234, 88, 12, 0.6)'
+        ? '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
         : '0 0 30px rgba(124, 45, 18, 0.6)'
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -79,11 +86,14 @@ export default function ResetPasswordForm() {
         setLoading(true)
 
         try {
-            const result = await resetPassword(password)
+            const result = await resetPassword(token, password)
 
             if (result.success) {
-                // Redirect to homepage with success message
-                router.push('/?reset=success')
+                setSuccess(true)
+                // Redirect to homepage after 3 seconds
+                setTimeout(() => {
+                    router.push('/')
+                }, 3000)
             } else {
                 setError(result.error || 'Gagal mereset password')
             }
@@ -92,6 +102,62 @@ export default function ResetPasswordForm() {
         } finally {
             setLoading(false)
         }
+    }
+
+    // Success state
+    if (success) {
+        return (
+            <div
+                className="p-6 sm:p-8 rounded-xl shadow-2xl border-4 transition-all duration-300"
+                style={{
+                    backgroundColor: 'white',
+                    borderColor: primaryColor,
+                    boxShadow: borderGlow
+                }}
+            >
+                <div className="space-y-4 sm:space-y-6 text-center">
+                    {/* Success Icon */}
+                    <div className="flex justify-center">
+                        <div
+                            className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center"
+                            style={{
+                                backgroundColor: '#d1fae5',
+                                border: '3px solid #10b981'
+                            }}
+                        >
+                            <svg className="w-8 h-8 sm:w-10 sm:h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    {/* Success Message */}
+                    <div className="space-y-2">
+                        <h3
+                            className="text-lg sm:text-xl font-bold"
+                            style={{ color: primaryColor }}
+                        >
+                            Password Berhasil Direset!
+                        </h3>
+                        <p
+                            className="text-sm sm:text-base leading-relaxed font-medium"
+                            style={{ color: primaryColor }}
+                        >
+                            Password Anda telah berhasil diubah. Anda akan dialihkan ke halaman utama dalam beberapa detik...
+                        </p>
+                    </div>
+
+                    {/* Back to Login */}
+                    <Link
+                        href="/"
+                        className="inline-block text-sm sm:text-base font-bold hover:underline transition-all"
+                        style={{ color: primaryColor }}
+                    >
+                        ← Kembali ke Halaman Beranda
+                    </Link>
+                </div>
+            </div>
+        )
     }
 
     return (
@@ -104,11 +170,18 @@ export default function ResetPasswordForm() {
             }}
         >
             <h2
-                className="text-2xl sm:text-3xl font-bold text-center mb-6"
+                className="text-2xl sm:text-3xl font-bold text-center mb-4"
                 style={{ color: primaryColor }}
             >
                 Reset Password
             </h2>
+
+            {/* Show email if available */}
+            {email && (
+                <p className="text-center text-sm mb-4" style={{ color: primaryColor }}>
+                    Reset password untuk: <strong>{email}</strong>
+                </p>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                 {/* Helper Text */}

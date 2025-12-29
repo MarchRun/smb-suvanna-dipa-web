@@ -191,7 +191,7 @@ export default function GalleryCarousel() {
                                         boxShadow: captionShadow
                                     }}
                                 >
-                                    <div className="w-[480px] sm:w-[560px] md:w-[640px] lg:w-[720px] h-60 sm:h-64 md:h-72 lg:h-80 overflow-hidden relative">
+                                    <div className="w-[320px] sm:w-[560px] md:w-[640px] lg:w-[720px] h-48 sm:h-64 md:h-72 lg:h-80 overflow-hidden relative rounded-t-xl">
                                         <Image
                                             src={images[currentIndex].src}
                                             alt={images[currentIndex].caption}
@@ -200,7 +200,7 @@ export default function GalleryCarousel() {
                                         />
                                     </div>
                                     <div
-                                        className="px-3 py-3 sm:px-4 sm:py-3"
+                                        className="px-3 py-3 sm:px-4 sm:py-3 rounded-b-xl"
                                         style={{ backgroundColor: captionBgColor }}
                                     >
                                         <p className="text-sm sm:text-base font-semibold text-center text-white">

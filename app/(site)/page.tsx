@@ -3,10 +3,10 @@
  * Assembles all homepage sections
  */
 
-import Hero from '@/components/site/Hero'
-import AboutPreview from '@/components/site/AboutPreview'
-import ProgramCards from '@/components/site/ProgramCards'
-import CTASection from '@/components/site/CTASection'
+import Hero from '@/components/home/Hero'
+import AboutPreview from '@/components/home/AboutPreview'
+import ProgramCards from '@/components/home/ProgramCards'
+import CTASection from '@/components/home/CTASection'
 
 export default function HomePage() {
     return (
