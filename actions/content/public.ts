@@ -6,29 +6,22 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import type { ActionResponse } from '@/types'
-
-interface PublicContent {
-    id: number
-    section: string
-    title: string
-    content: any // JSONB
-    images: string[] | null
-    updated_by: string | null
-}
+import type { ActionResponse, PublicContent } from '@/types'
 
 /**
- * Fetch content by section
+ * Fetch content by section (kategori)
  */
 export async function getContentBySection(
-    section: string
+    kategori: string
 ): Promise<ActionResponse<PublicContent | null>> {
     const supabase = await createClient()
 
     const { data, error } = await supabase
         .from('public_content')
         .select('*')
-        .eq('section', section)
+        .eq('kategori_konten', kategori)
+        .eq('status_publikasi', true)
+        .order('urutan_konten', { ascending: true })
         .single()
 
     if (error) {
@@ -54,7 +47,8 @@ export async function getAllPublicContent(): Promise<ActionResponse<PublicConten
     const { data, error } = await supabase
         .from('public_content')
         .select('*')
-        .order('id', { ascending: true })
+        .eq('status_publikasi', true)
+        .order('urutan_konten', { ascending: true })
 
     if (error) {
         return {

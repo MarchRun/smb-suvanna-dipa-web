@@ -2,6 +2,7 @@
  * Dashboard Sidebar Component
  * Navigation sidebar with role title, menu items, and logout
  * Used across all dashboard types (Siswa, Pembina, Admin)
+ * Light mode matches public page navbar
  */
 
 'use client'
@@ -41,11 +42,11 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
         return () => observer.disconnect()
     }, [])
 
-    // Colors based on dark mode
-    const sidebarBg = isDarkMode ? '#1e293b' : '#d1d5db'
-    const roleHeaderBg = isDarkMode ? '#0f172a' : '#9ca3af'
-    const textColor = isDarkMode ? '#ea580c' : '#7c2d12'
-    const activeItemBg = isDarkMode ? 'rgba(234, 88, 12, 0.2)' : 'rgba(124, 45, 18, 0.15)'
+    // Colors based on dark mode - light mode uses CSS variables
+    const sidebarBg = isDarkMode ? '#1e293b' : 'var(--accent-100)'
+    const roleHeaderBg = isDarkMode ? '#0f172a' : 'var(--accent-200)'
+    const textColor = isDarkMode ? '#ea580c' : 'var(--primary-900)'
+    const borderColor = isDarkMode ? '#374151' : '#9ca3af'
     const hoverItemBg = isDarkMode ? 'rgba(234, 88, 12, 0.1)' : 'rgba(124, 45, 18, 0.08)'
 
     const handleLogout = async () => {
@@ -64,31 +65,39 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
                 />
             )}
 
-            {/* Sidebar */}
+            {/* Sidebar - Full height of viewport */}
             <aside
-                className={`fixed lg:static top-0 left-0 h-full w-64 z-50 transform transition-transform duration-300 ease-in-out flex flex-col
+                className={`fixed lg:static top-0 left-0 w-64 z-50 transform transition-transform duration-300 ease-in-out flex flex-col
                     ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
-                style={{ backgroundColor: sidebarBg }}
+                style={{
+                    backgroundColor: sidebarBg,
+                    height: '100vh',
+                    minHeight: '100vh'
+                }}
             >
-                {/* Role Header */}
+                {/* Role Header - with FULL border box (all 4 sides) */}
                 <div
-                    className="h-16 flex items-center justify-center border-l-4"
+                    className="h-16 flex items-center justify-center shrink-0"
                     style={{
                         backgroundColor: roleHeaderBg,
-                        borderLeftColor: textColor
+                        border: `3px solid ${textColor}`
                     }}
                 >
                     <h2
-                        className="text-xl font-bold"
-                        style={{ color: isDarkMode ? '#ffffff' : '#1f2937' }}
+                        className="text-xl tracking-wide uppercase"
+                        style={{
+                            color: isDarkMode ? '#ffffff' : 'var(--primary-900)',
+                            fontFamily: 'var(--font-brand)',
+                            fontWeight: 900
+                        }}
                     >
                         {role}
                     </h2>
                 </div>
 
-                {/* Navigation Menu */}
-                <nav className="flex-1 py-4 overflow-y-auto">
-                    <ul className="space-y-1 px-3">
+                {/* Navigation Menu - flex-1 to take remaining space */}
+                <nav className="flex-1 py-6 overflow-y-auto">
+                    <ul className="space-y-2 px-4">
                         {menuItems.map((item) => {
                             const isActive = pathname === item.href
                             return (
@@ -96,11 +105,13 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
                                     <Link
                                         href={item.href}
                                         onClick={onClose}
-                                        className="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 font-medium"
+                                        className="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200"
                                         style={{
-                                            backgroundColor: isActive ? activeItemBg : 'transparent',
-                                            color: textColor,
-                                            borderLeft: isActive ? `3px solid ${textColor}` : '3px solid transparent'
+                                            // Active: SMB color background, white text
+                                            backgroundColor: isActive ? textColor : 'transparent',
+                                            color: isActive ? '#ffffff' : textColor,
+                                            fontWeight: 700,
+                                            fontSize: '1rem'
                                         }}
                                         onMouseEnter={(e) => {
                                             if (!isActive) {
@@ -124,14 +135,23 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
                     </ul>
                 </nav>
 
-                {/* Logout Button */}
-                <div className="p-3 border-t" style={{ borderColor: isDarkMode ? '#374151' : '#9ca3af' }}>
+                {/* Logout Button - At absolute bottom with FULL border box */}
+                <div
+                    className="shrink-0 p-4"
+                    style={{
+                        border: `3px solid ${textColor}`,
+                        backgroundColor: isDarkMode ? '#0f172a' : 'var(--accent-200)'
+                    }}
+                >
                     <button
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 font-medium"
-                        style={{ color: '#dc2626' }}
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200"
+                        style={{
+                            color: textColor,
+                            fontWeight: 700
+                        }}
                         onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = 'rgba(220, 38, 38, 0.1)'
+                            e.currentTarget.style.backgroundColor = hoverItemBg
                         }}
                         onMouseLeave={(e) => {
                             e.currentTarget.style.backgroundColor = 'transparent'

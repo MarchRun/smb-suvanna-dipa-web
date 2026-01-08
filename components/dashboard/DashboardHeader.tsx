@@ -2,44 +2,66 @@
  * Dashboard Header Component
  * Top header bar with logo, dark mode toggle
  * Used across all dashboard types (Siswa, Pembina, Admin)
+ * Light mode matches public page navbar
  */
 
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 
 interface DashboardHeaderProps {
+    role: 'Siswa' | 'Pembina' | 'Admin'
     onMenuToggle?: () => void
     showMenuButton?: boolean
 }
 
-export default function DashboardHeader({ onMenuToggle, showMenuButton = true }: DashboardHeaderProps) {
+export default function DashboardHeader({ role, onMenuToggle, showMenuButton = true }: DashboardHeaderProps) {
     const [isDarkMode, setIsDarkMode] = useState(false)
 
-    // Dark mode detection and toggle
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
+    // Get dashboard path based on role
+    const getDashboardPath = () => {
+        switch (role) {
+            case 'Admin': return '/admin/dashboard'
+            case 'Pembina': return '/teacher/dashboard'
+            case 'Siswa': return '/student/dashboard'
+            default: return '/'
         }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
+    }
+
+    // Load and sync dark mode
+    useEffect(() => {
+        const savedMode = localStorage.getItem('darkMode')
+        if (savedMode) {
+            setIsDarkMode(savedMode === 'true')
+            if (savedMode === 'true') {
+                document.documentElement.classList.add('dark')
+            }
+        }
     }, [])
 
+    // Toggle dark mode (matching Navbar behavior)
     const toggleDarkMode = () => {
-        document.documentElement.classList.toggle('dark')
-        setIsDarkMode(!isDarkMode)
+        const newMode = !isDarkMode
+        setIsDarkMode(newMode)
+        if (newMode) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+        localStorage.setItem('darkMode', newMode.toString())
     }
+
+    const textColor = isDarkMode ? '#ea580c' : 'var(--primary-900)'
 
     return (
         <header
             className="h-16 flex items-center justify-between px-4 md:px-6 shadow-md sticky top-0 z-40"
             style={{
-                backgroundColor: isDarkMode ? '#1e293b' : '#FFEFD5'
+                backgroundColor: isDarkMode ? '#1e293b' : 'var(--accent-200)',
+                boxShadow: isDarkMode
+                    ? '0 4px 12px rgba(0, 0, 0, 0.3)'
+                    : '0 4px 12px rgba(217, 87, 20, 0.20), 0 2px 4px rgba(217, 87, 20, 0.12)'
             }}
         >
             {/* Left: Menu button (mobile) + Logo */}
@@ -54,42 +76,49 @@ export default function DashboardHeader({ onMenuToggle, showMenuButton = true }:
                         <svg
                             className="w-6 h-6"
                             fill="none"
-                            stroke={isDarkMode ? '#ea580c' : '#7c2d12'}
+                            stroke={textColor}
                             viewBox="0 0 24 24"
+                            strokeWidth={3}
                         >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
                 )}
 
-                {/* Logo/Title */}
-                <h1
-                    className="text-lg md:text-xl font-bold"
-                    style={{ color: isDarkMode ? '#ea580c' : '#7c2d12' }}
+                {/* Logo/Title - Navigates to role's dashboard */}
+                <Link
+                    href={getDashboardPath()}
+                    className="text-xl md:text-2xl tracking-wide transition-all duration-200 hover:scale-110 uppercase"
+                    style={{
+                        color: textColor,
+                        fontFamily: 'var(--font-brand)',
+                        fontWeight: 900
+                    }}
                 >
-                    SMB Suvanna Dipa
-                </h1>
+                    SMB SUVANNA DIPA
+                </Link>
             </div>
 
-            {/* Right: Dark Mode Toggle */}
+            {/* Right: Dark Mode Toggle - Matching Navbar style */}
             <button
                 onClick={toggleDarkMode}
                 className="p-2 rounded-full transition-all duration-300 hover:scale-110"
                 style={{
-                    backgroundColor: isDarkMode ? '#374151' : '#ffffff',
-                    border: `2px solid ${isDarkMode ? '#ea580c' : '#7c2d12'}`
+                    color: textColor,
+                    backgroundColor: isDarkMode ? 'rgba(59, 130, 246, 0.2)' : 'rgba(255, 255, 255, 0.3)',
+                    border: `3px solid ${textColor}`
                 }}
                 aria-label="Toggle dark mode"
             >
                 {isDarkMode ? (
-                    // Sun icon
-                    <svg className="w-5 h-5" fill="#fbbf24" viewBox="0 0 24 24">
-                        <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
+                    /* Moon icon for dark mode */
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
                     </svg>
                 ) : (
-                    // Moon icon
-                    <svg className="w-5 h-5" fill="#7c2d12" viewBox="0 0 24 24">
-                        <path fillRule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clipRule="evenodd" />
+                    /* Sun icon for light mode */
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
                     </svg>
                 )}
             </button>

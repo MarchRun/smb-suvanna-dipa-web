@@ -61,6 +61,7 @@ export default function DashboardLayout({ role, menuItems, children }: Dashboard
             <div className="flex-1 flex flex-col min-h-screen lg:ml-0">
                 {/* Header */}
                 <DashboardHeader
+                    role={role}
                     onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
                     showMenuButton={true}
                 />

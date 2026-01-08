@@ -3,16 +3,13 @@
  */
 
 // User Role Type
-export type UserRole = 'admin' | 'guru' | 'siswa'
+export type UserRole = 'admin' | 'pembina' | 'siswa'
 
 // Order Status
 export type OrderStatus = 'pending' | 'approved' | 'rejected'
 
-// Material Status  
-export type MaterialStatus = 'hidden' | 'visible'
-
 // Content Section
-export type ContentSection = 'hero' | 'about' | 'activities' | 'testimonials' | 'gallery'
+export type ContentSection = 'agenda' | 'gallery' | 'testimonial'
 
 // Server Action Response Type
 export type ActionResponse<T = unknown> = {
@@ -24,129 +21,118 @@ export type ActionResponse<T = unknown> = {
 // Profile
 export interface Profile {
     id: string
-    full_name: string | null
+    nama_lengkap: string | null
     email: string | null
-    phone: string | null
-    gender: string | null
-    birth_date: string | null
-    address: string | null
-    profile_picture: string | null
-    role: UserRole
-    points: number
-    class_id: number | null
-    created_at: string
-    updated_at: string
+    nomor_telepon: string | null
+    jenis_kelamin: string | null
+    tanggal_lahir: string | null
+    alamat_rumah: string | null
+    url_foto_profil: string | null
+    peran: UserRole
+    saldo_poin: number | null
+    id_kelas: number | null
+    dibuat_pada: string
+    dimodifikasi_pada: string
 }
 
 // Class
 export interface Class {
     id: number
-    name: string
-    description: string | null
-    teacher_id: string | null
-    created_at: string
+    nama_kelas: string
+    id_wali_kelas: string | null
+    dibuat_pada: string
+    dimodifikasi_pada: string | null
 }
 
 // Schedule
 export interface Schedule {
     id: number
-    name: string
-    description: string | null
-    event_date: string
-    location: string | null
-    created_by: string | null
-    created_at: string
-    updated_at: string
+    nama_kegiatan: string
+    deskripsi: string | null
+    tanggal_kegiatan: string
+    lokasi: string | null
+    id_kelas: number | null
+    dibuat_oleh: string | null
+    dibuat_pada: string
+    dimodifikasi_pada: string | null
 }
 
-// Product
+// Product (Hadiah)
 export interface Product {
     id: number
-    name: string
-    description: string | null
-    price: number
-    stock: number
-    image_url: string | null
-    created_at: string
-    updated_at: string
+    nama_hadiah: string
+    harga_hadiah: number
+    stok_hadiah: number
+    url_gambar_hadiah: string | null
+    dibuat_pada: string
+    dimodifikasi_pada: string | null
 }
 
-// Product Order
+// Product Order (Pesanan Hadiah)
 export interface ProductOrder {
     id: number
-    user_id: string
-    product_id: number
-    quantity: number
-    total_points: number
+    id_siswa: string
+    id_hadiah: number
+    total_poin: number
     status: OrderStatus
-    created_at: string
-    updated_at: string
+    dibuat_pada: string
+    dimodifikasi_pada: string | null
 }
 
-// Point History
+// Point History (Riwayat Poin)
 export interface PointHistory {
     id: number
-    user_id: string
-    amount: number
-    reason: string
-    given_by: string | null
-    order_id: number | null
-    created_at: string
+    id_pengguna: string
+    jumlah_poin: number
+    keterangan_poin: string
+    diberikan_oleh: string | null
+    id_pesanan: number | null
+    dibuat_pada: string
 }
 
-// Public Content
+// Public Content (Konten Publik)
 export interface PublicContent {
     id: number
-    section: ContentSection
-    title: string | null
-    content: Record<string, any> | null
-    images: string[] | null
-    updated_by: string | null
-    updated_at: string
+    kategori_konten: ContentSection
+    judul_konten: string | null
+    isi_konten: Record<string, any> | null
+    gambar: string[] | null
+    urutan_konten: number
+    status_publikasi: boolean
+    id_pengguna: string | null
+    dimodifikasi_pada: string | null
 }
 
-// Material
-export interface Material {
-    id: number
-    title: string
-    content: string | null
-    class_id: number | null
-    author_id: string | null
-    attachments: Record<string, any> | null
-    scheduled_for: string | null
-    status: MaterialStatus
-    created_at: string
-    updated_at: string
+// Password Reset Token
+export interface PasswordResetToken {
+    id: string
+    id_pengguna: string
+    email: string
+    token: string
+    kadaluarsa_pada: string
+    sudah_digunakan: boolean
+    dibuat_pada: string
 }
 
 // Extended Types with Relations
-export interface ClassWithTeacher extends Class {
-    teacher: {
-        full_name: string
+export interface ClassWithWaliKelas extends Class {
+    wali_kelas: {
+        nama_lengkap: string
     } | null
 }
 
 export interface ProfileWithClass extends Profile {
-    class: {
-        name: string
+    kelas: {
+        nama_kelas: string
     } | null
 }
 
 export interface OrderWithDetails extends ProductOrder {
-    profile: {
-        full_name: string
+    siswa: {
+        nama_lengkap: string
     } | null
-    product: {
-        name: string
-        price: number
-    } | null
-}
-
-export interface MaterialWithAuthor extends Material {
-    author: {
-        full_name: string
-    } | null
-    class: {
-        name: string
+    hadiah: {
+        nama_hadiah: string
+        harga_hadiah: number
     } | null
 }
