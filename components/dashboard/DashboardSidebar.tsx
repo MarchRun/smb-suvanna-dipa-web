@@ -77,7 +77,7 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
             >
                 {/* Role Header - with FULL border box (all 4 sides) */}
                 <div
-                    className="h-16 flex items-center justify-center shrink-0"
+                    className="h-20 flex items-center justify-center shrink-0"
                     style={{
                         backgroundColor: roleHeaderBg,
                         border: `3px solid ${textColor}`

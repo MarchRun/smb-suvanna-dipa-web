@@ -9,19 +9,19 @@ import { createClient } from '@/lib/supabase/server'
 import type { ActionResponse, PublicContent } from '@/types'
 
 /**
- * Fetch content by section (kategori)
+ * Fetch content by section
  */
 export async function getContentBySection(
-    kategori: string
+    section: string
 ): Promise<ActionResponse<PublicContent | null>> {
     const supabase = await createClient()
 
     const { data, error } = await supabase
         .from('public_content')
         .select('*')
-        .eq('kategori_konten', kategori)
-        .eq('status_publikasi', true)
-        .order('urutan_konten', { ascending: true })
+        .eq('section', section)
+        .eq('is_published', true)
+        .order('display_order', { ascending: true })
         .single()
 
     if (error) {
@@ -47,8 +47,8 @@ export async function getAllPublicContent(): Promise<ActionResponse<PublicConten
     const { data, error } = await supabase
         .from('public_content')
         .select('*')
-        .eq('status_publikasi', true)
-        .order('urutan_konten', { ascending: true })
+        .eq('is_published', true)
+        .order('display_order', { ascending: true })
 
     if (error) {
         return {

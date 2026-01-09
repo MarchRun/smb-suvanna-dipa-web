@@ -56,7 +56,7 @@ export default function DashboardHeader({ role, onMenuToggle, showMenuButton = t
 
     return (
         <header
-            className="h-16 flex items-center justify-between px-4 md:px-6 shadow-md sticky top-0 z-40"
+            className="h-20 flex items-center justify-between px-4 md:px-6 shadow-md sticky top-0 z-40"
             style={{
                 backgroundColor: isDarkMode ? '#1e293b' : 'var(--accent-200)',
                 boxShadow: isDarkMode

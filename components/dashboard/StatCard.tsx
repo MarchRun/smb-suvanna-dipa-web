@@ -2,6 +2,7 @@
  * Stat Card Component
  * Displays a statistic with title and value
  * Used for dashboard widgets (Status Presensi, Jumlah Siswa, etc.)
+ * Color matches textColor from theme
  */
 
 'use client'
@@ -13,9 +14,10 @@ interface StatCardProps {
     value: string | number
     icon?: React.ReactNode
     className?: string
+    loading?: boolean
 }
 
-export default function StatCard({ title, value, icon, className = '' }: StatCardProps) {
+export default function StatCard({ title, value, icon, className = '', loading = false }: StatCardProps) {
     const [isDarkMode, setIsDarkMode] = useState(false)
 
     // Dark mode detection
@@ -32,7 +34,8 @@ export default function StatCard({ title, value, icon, className = '' }: StatCar
         return () => observer.disconnect()
     }, [])
 
-    const cardBg = isDarkMode ? '#374151' : '#6b7280'
+    // Card background matches textColor (orange/brown)
+    const cardBg = isDarkMode ? '#ea580c' : 'var(--primary-900)'
     const textColor = '#ffffff'
 
     return (
@@ -41,31 +44,35 @@ export default function StatCard({ title, value, icon, className = '' }: StatCar
             style={{
                 backgroundColor: cardBg,
                 boxShadow: isDarkMode
-                    ? '0 4px 15px rgba(0, 0, 0, 0.3)'
-                    : '0 4px 15px rgba(0, 0, 0, 0.15)'
+                    ? '0 4px 15px rgba(234, 88, 12, 0.3)'
+                    : '0 4px 15px rgba(124, 45, 18, 0.3)'
             }}
         >
             {/* Icon (optional) */}
             {icon && (
-                <div className="mb-3 text-white/80">
+                <div className="mb-3 text-white/80 text-center">
                     {icon}
                 </div>
             )}
 
-            {/* Title */}
+            {/* Title - Centered, Bold */}
             <h3
-                className="text-sm md:text-base font-medium mb-2"
+                className="text-sm md:text-base font-bold mb-2 text-center"
                 style={{ color: textColor }}
             >
                 {title}
             </h3>
 
-            {/* Value */}
+            {/* Value - Centered */}
             <p
-                className="text-2xl md:text-3xl font-bold"
+                className="text-2xl md:text-3xl font-bold text-center"
                 style={{ color: textColor }}
             >
-                {value}
+                {loading ? (
+                    <span className="inline-block w-16 h-8 bg-white/20 rounded animate-pulse" />
+                ) : (
+                    value
+                )}
             </p>
         </div>
     )
