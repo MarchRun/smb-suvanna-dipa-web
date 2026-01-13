@@ -8,6 +8,8 @@
 import { useState, useEffect } from 'react'
 import DashboardLayout from '@/components/dashboard/DashboardLayout'
 import StatCard from '@/components/dashboard/StatCard'
+import { getTeacherDashboardStats, type TeacherDashboardStats } from '@/actions/teacher/stats'
+import { getCurrentUserProfile } from '@/actions/auth/profile'
 
 // Menu items for Pembina
 const pembinaMenuItems = [
@@ -19,6 +21,9 @@ const pembinaMenuItems = [
 
 export default function TeacherDashboardPage() {
     const [isDarkMode, setIsDarkMode] = useState(false)
+    const [stats, setStats] = useState<TeacherDashboardStats | null>(null)
+    const [userName, setUserName] = useState<string>('')
+    const [loading, setLoading] = useState(true)
 
     // Dark mode detection
     useEffect(() => {
@@ -34,39 +39,84 @@ export default function TeacherDashboardPage() {
         return () => observer.disconnect()
     }, [])
 
+    // Fetch stats and user profile from database
+    useEffect(() => {
+        async function fetchData() {
+            setLoading(true)
+
+            // Fetch stats
+            const statsResult = await getTeacherDashboardStats()
+            if (statsResult.success && statsResult.data) {
+                setStats(statsResult.data)
+            }
+
+            // Fetch user profile
+            const profileResult = await getCurrentUserProfile()
+            if (profileResult.success && profileResult.data) {
+                setUserName(profileResult.data.full_name || 'Pembina')
+            }
+
+            setLoading(false)
+        }
+        fetchData()
+    }, [])
+
     const textColor = isDarkMode ? '#ea580c' : '#7c2d12'
 
     return (
         <DashboardLayout role="Pembina" menuItems={pembinaMenuItems}>
-            {/* Greeting */}
-            <h1
-                className="text-2xl md:text-3xl font-bold mb-6"
-                style={{ color: textColor }}
-            >
-                Halo, <span className="text-gray-700 dark:text-gray-300">&lt;Nama Pembina&gt;</span>
-            </h1>
+            <div className="p-6 md:p-8">
+                {/* Greeting with real user name */}
+                <h1
+                    className="text-2xl md:text-3xl font-bold mb-6"
+                    style={{ color: textColor }}
+                >
+                    Halo, <span className="text-gray-700 dark:text-gray-300">
+                        {loading ? '...' : userName}
+                    </span>
+                </h1>
 
-            {/* Stat Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
-                <StatCard title="Jumlah Presensi" value="85%" />
-                <StatCard title="Kelas Sekolah Minggu" value="Kelas A" />
-                <StatCard title="Jumlah Siswa" value="25" />
-            </div>
+                {/* Stat Cards - Real data from database */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
+                    <StatCard
+                        title="Jumlah Presensi"
+                        value="-"
+                        loading={loading}
+                    />
+                    <StatCard
+                        title="Kelas Sekolah Minggu"
+                        value={stats?.className || '-'}
+                        loading={loading}
+                    />
+                    {/* Card 3: Full width on mobile, centered on tablet (2-col grid), normal on desktop */}
+                    <div className="sm:col-span-2 sm:flex sm:justify-center lg:col-span-1 lg:block">
+                        <div className="sm:w-1/2 lg:w-full">
+                            <StatCard
+                                title="Jumlah Siswa"
+                                value={stats?.studentCount ?? 0}
+                                loading={loading}
+                            />
+                        </div>
+                    </div>
+                </div>
 
-            {/* Widget Informasi */}
-            <div
-                className="rounded-xl p-6 md:p-8"
-                style={{
-                    backgroundColor: isDarkMode ? '#374151' : '#6b7280',
-                    minHeight: '300px'
-                }}
-            >
-                <h2 className="text-xl md:text-2xl font-bold text-white text-center italic">
-                    WIDGET INFORMASI
-                </h2>
-                <p className="text-white/70 text-center mt-4">
-                    Area untuk menampilkan informasi penting, daftar siswa, atau konten lainnya.
-                </p>
+                {/* Widget Informasi - Matching chart widget styling */}
+                <div
+                    className="rounded-xl p-6 md:p-8"
+                    style={{
+                        backgroundColor: textColor,
+                        boxShadow: isDarkMode
+                            ? '0 4px 15px rgba(234, 88, 12, 0.3)'
+                            : '0 4px 15px rgba(124, 45, 18, 0.3)'
+                    }}
+                >
+                    <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-2">
+                        WIDGET INFORMASI
+                    </h2>
+                    <p className="text-white/70 text-center mb-6" style={{ fontSize: '1rem' }}>
+                        Area untuk menampilkan informasi penting, daftar siswa, atau konten lainnya.
+                    </p>
+                </div>
             </div>
         </DashboardLayout>
     )

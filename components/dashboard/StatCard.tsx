@@ -55,9 +55,9 @@ export default function StatCard({ title, value, icon, className = '', loading =
                 </div>
             )}
 
-            {/* Title - Centered, Bold */}
+            {/* Title - Centered, Bold, Same size as value */}
             <h3
-                className="text-sm md:text-base font-bold mb-2 text-center"
+                className="text-2xl md:text-3xl font-bold mb-2 text-center"
                 style={{ color: textColor }}
             >
                 {title}

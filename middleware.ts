@@ -56,7 +56,7 @@ export async function middleware(request: NextRequest) {
             return NextResponse.redirect(new URL(getRoleDashboard(role), request.url))
         }
     } else if (pathname.startsWith('/teacher')) {
-        if (role !== 'guru') {
+        if (role !== 'pembina') {
             return NextResponse.redirect(new URL(getRoleDashboard(role), request.url))
         }
     } else if (pathname.startsWith('/admin')) {
@@ -73,7 +73,7 @@ function getRoleDashboard(role: string): string {
     switch (role) {
         case 'siswa':
             return '/student/dashboard'
-        case 'guru':
+        case 'pembina':
             return '/teacher/dashboard'
         case 'admin':
             return '/admin/dashboard'

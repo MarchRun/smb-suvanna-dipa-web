@@ -68,52 +68,62 @@ export default function AdminDashboardPage() {
 
     return (
         <DashboardLayout role="Admin" menuItems={adminMenuItems}>
-            {/* Greeting with real user name */}
-            <h1
-                className="text-2xl md:text-3xl font-bold mb-6"
-                style={{ color: textColor }}
-            >
-                Halo, <span className="text-gray-700 dark:text-gray-300">
-                    {loading ? '...' : userName}
-                </span>
-            </h1>
+            <div className="p-6 md:p-8">
+                {/* Greeting with real user name */}
+                <h1
+                    className="text-2xl md:text-3xl font-bold mb-6"
+                    style={{ color: textColor }}
+                >
+                    Halo, <span className="text-gray-700 dark:text-gray-300">
+                        {loading ? '...' : userName}
+                    </span>
+                </h1>
 
-            {/* Stat Cards - Real-time data from Supabase */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
-                <StatCard
-                    title="Jumlah Siswa"
-                    value={stats?.totalSiswa ?? 0}
-                    loading={loading}
-                />
-                <StatCard
-                    title="Jumlah Kelas"
-                    value={stats?.totalKelas ?? 0}
-                    loading={loading}
-                />
-                <StatCard
-                    title="Jumlah Pembina"
-                    value={stats?.totalPembina ?? 0}
-                    loading={loading}
-                />
-            </div>
+                {/* Stat Cards - Real-time data from Supabase */}
+                {/* All cards same size, third card centered when wrapping */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
+                    <StatCard
+                        title="Jumlah Siswa"
+                        value={stats?.totalSiswa ?? 0}
+                        loading={loading}
+                    />
+                    <StatCard
+                        title="Jumlah Kelas"
+                        value={stats?.totalKelas ?? 0}
+                        loading={loading}
+                    />
+                    {/* Card 3: Full width on mobile, centered on tablet (2-col grid), normal on desktop */}
+                    <div className="sm:col-span-2 sm:flex sm:justify-center lg:col-span-1 lg:block">
+                        <div className="sm:w-1/2 lg:w-full">
+                            <StatCard
+                                title="Jumlah Pembina"
+                                value={stats?.totalPembina ?? 0}
+                                loading={loading}
+                            />
+                        </div>
+                    </div>
+                </div>
 
-            {/* Grafik Widget - Color matches textColor */}
-            <div
-                className="rounded-xl p-6 md:p-8"
-                style={{
-                    backgroundColor: textColor,
-                    minHeight: '300px'
-                }}
-            >
-                <h2 className="text-xl md:text-2xl font-bold text-white text-center">
-                    GRAFIK JUMLAH PENGUNJUNG
-                </h2>
-                <p className="text-white/70 text-center mt-2 text-sm">
-                    Statistik pengunjung halaman publik (Beranda, Tentang, Aktivitas, Kontak)
-                </p>
+                {/* Grafik Widget - Matching StatCard styling */}
+                <div
+                    className="rounded-xl p-6 md:p-8"
+                    style={{
+                        backgroundColor: textColor,
+                        boxShadow: isDarkMode
+                            ? '0 4px 15px rgba(234, 88, 12, 0.3)'
+                            : '0 4px 15px rgba(124, 45, 18, 0.3)'
+                    }}
+                >
+                    <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-2">
+                        GRAFIK JUMLAH PENGUNJUNG
+                    </h2>
+                    <p className="text-white/70 text-center mb-6" style={{ fontSize: '1rem' }}>
+                        Statistik pengunjung halaman publik (Beranda, Tentang, Aktivitas, Kontak)
+                    </p>
 
-                {/* Visitor Chart */}
-                <VisitorChart days={7} />
+                    {/* Visitor Chart */}
+                    <VisitorChart days={7} />
+                </div>
             </div>
         </DashboardLayout>
     )

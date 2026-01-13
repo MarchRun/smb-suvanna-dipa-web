@@ -57,18 +57,24 @@ export default function DashboardLayout({ role, menuItems, children }: Dashboard
                 onClose={() => setSidebarOpen(false)}
             />
 
-            {/* Main Content Area */}
-            <div className="flex-1 flex flex-col min-h-screen lg:ml-0">
-                {/* Header */}
-                <DashboardHeader
-                    role={role}
-                    onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
-                    showMenuButton={true}
-                />
+            {/* Main Content Area - with blur effect when mobile sidebar is open */}
+            <div
+                className={`flex-1 flex flex-col min-h-screen lg:ml-0 transition-all duration-300 ${sidebarOpen ? 'lg:blur-none blur-sm pointer-events-none lg:pointer-events-auto' : ''
+                    }`}
+            >
+                {/* Header - Sticky */}
+                <div className="sticky top-0 z-40">
+                    <DashboardHeader
+                        role={role}
+                        onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
+                        showMenuButton={true}
+                        blurred={sidebarOpen}
+                    />
+                </div>
 
-                {/* Content */}
+                {/* Content - Scrollable */}
                 <main
-                    className="flex-1 p-4 md:p-6 lg:p-8 overflow-auto"
+                    className="flex-1 overflow-auto"
                     style={{ backgroundColor: contentBg }}
                 >
                     {children}

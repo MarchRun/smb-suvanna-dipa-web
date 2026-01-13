@@ -137,3 +137,6 @@ export interface OrderWithDetails extends ProductOrder {
         price: number
     } | null
 }
+
+// Type Alias for backward compatibility
+export type UserProfile = Profile

@@ -55,7 +55,7 @@ export default function LoginForm() {
                 case 'siswa':
                     router.push('/student/dashboard')
                     break
-                case 'guru':
+                case 'pembina':
                     router.push('/teacher/dashboard')
                     break
                 case 'admin':
