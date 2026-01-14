@@ -127,7 +127,17 @@ export async function getUserById(id: string): Promise<ActionResponse<Profile | 
             .eq('id', id)
             .single()
 
-        if (error) throw error
+        if (error) {
+            if (error.code === 'PGRST116') {
+                // User not found
+                return {
+                    success: false,
+                    error: 'Pengguna tidak ditemukan',
+                    data: null
+                }
+            }
+            throw error
+        }
 
         return {
             success: true,

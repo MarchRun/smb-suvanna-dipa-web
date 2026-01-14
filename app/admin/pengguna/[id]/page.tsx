@@ -5,7 +5,7 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { use, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/dashboard/DashboardLayout'
 import { getUserById } from '@/actions/admin/users'
@@ -19,7 +19,8 @@ const adminMenuItems = [
     { label: 'Profil', href: '/admin/profil' },
 ]
 
-export default function UserDetailPage({ params }: { params: { id: string } }) {
+export default function UserDetailPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = use(params)
     const router = useRouter()
     const [isDarkMode, setIsDarkMode] = useState(false)
     const [user, setUser] = useState<Profile | null>(null)
@@ -42,12 +43,12 @@ export default function UserDetailPage({ params }: { params: { id: string } }) {
     // Fetch user
     useEffect(() => {
         loadUser()
-    }, [params.id])
+    }, [id])
 
     const loadUser = async () => {
         setLoading(true)
         try {
-            const result = await getUserById(params.id)
+            const result = await getUserById(id)
             if (result.success && result.data) {
                 setUser(result.data)
             } else {
@@ -67,18 +68,31 @@ export default function UserDetailPage({ params }: { params: { id: string } }) {
     return (
         <DashboardLayout role="Admin" menuItems={adminMenuItems}>
             <div className="p-6 md:p-8">
-                {/* Title */}
-                <h1
-                    className="text-2xl md:text-3xl font-bold mb-8"
-                    style={{ color: textColor }}
-                >
-                    Detail Pengguna
-                </h1>
+                {/* Header with Title and Back Button */}
+                <div className="flex justify-between items-center mb-8">
+                    <h1
+                        className="text-2xl md:text-3xl font-bold"
+                        style={{ color: textColor }}
+                    >
+                        Detail Pengguna
+                    </h1>
+
+                    <button
+                        onClick={() => router.push('/admin/pengguna')}
+                        className="px-6 py-3 rounded-xl font-bold text-white transition-all duration-200 hover:opacity-90 flex items-center gap-2"
+                        style={{ backgroundColor: textColor }}
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        Kembali
+                    </button>
+                </div>
 
                 {loading ? (
                     <div className="text-center py-12 text-gray-500">Loading...</div>
                 ) : user ? (
-                    <div className="max-w-4xl">
+                    <div className="max-w-4xl mx-auto">
                         {/* Profile Picture */}
                         <div className="flex justify-center mb-8">
                             <div
@@ -214,20 +228,6 @@ export default function UserDetailPage({ params }: { params: { id: string } }) {
                             >
                                 {user.address || '-'}
                             </div>
-                        </div>
-
-                        {/* Back Button */}
-                        <div className="flex justify-end">
-                            <button
-                                onClick={() => router.push('/admin/pengguna')}
-                                className="px-6 py-3 rounded-xl font-bold text-white transition-all duration-200 hover:opacity-90 flex items-center gap-2"
-                                style={{ backgroundColor: textColor }}
-                            >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                                </svg>
-                                Kembali
-                            </button>
                         </div>
                     </div>
                 ) : (
