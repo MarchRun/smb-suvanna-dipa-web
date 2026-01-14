@@ -1,96 +1,145 @@
 /**
- * Next.js Middleware untuk Route Protection
- * Proteksi routes berdasarkan authentication & role
+ * Middleware
+ * Handles authentication, authorization, and security
  */
 
-import { updateSession } from '@/lib/supabase/middleware'
-import { createClient as createServiceClient } from '@supabase/supabase-js'
+import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { applySecurityHeaders } from '@/lib/security/headers'
+import { createClient } from '@supabase/supabase-js'
 
 export async function middleware(request: NextRequest) {
-    const { supabaseResponse, user } = await updateSession(request)
+    let response = NextResponse.next({
+        request: {
+            headers: request.headers,
+        },
+    })
 
-    const { pathname } = request.nextUrl
+    // Apply security headers
+    const securityHeaders = applySecurityHeaders(new Headers())
+    securityHeaders.forEach((value, key) => {
+        response.headers.set(key, value)
+    })
 
-    // Public routes (tidak perlu login)
-    // TODO: Remove dashboard routes from public after testing
-    const publicRoutes = ['/', '/about', '/activities', '/contact', '/login', '/forgot-password', '/reset-password', '/student/dashboard', '/teacher/dashboard', '/admin/dashboard']
-    const isPublicRoute = publicRoutes.some(route => pathname === route || pathname.startsWith(route + '/'))
-
-    // Jika public route, lewatkan
-    if (isPublicRoute) {
-        return supabaseResponse
-    }
-
-    // Jika tidak ada user (belum login), redirect ke homepage
-    if (!user) {
-        const redirectUrl = request.nextUrl.clone()
-        redirectUrl.pathname = '/'
-        return NextResponse.redirect(redirectUrl)
-    }
-
-    // Fetch user role menggunakan service client
-    const serviceClient = createServiceClient(
+    const supabase = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+            cookies: {
+                getAll() {
+                    return request.cookies.getAll()
+                },
+                setAll(cookiesToSet) {
+                    cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
+                    response = NextResponse.next({
+                        request,
+                    })
+                    cookiesToSet.forEach(({ name, value, options }) =>
+                        response.cookies.set(name, value, options)
+                    )
+                },
+            },
+        }
     )
 
-    const { data: profile } = await serviceClient
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single()
+    const { data: { user } } = await supabase.auth.getUser()
 
-    if (!profile) {
-        // Jika profile tidak ada, redirect ke homepage dan signout
-        const redirectUrl = request.nextUrl.clone()
-        redirectUrl.pathname = '/'
-        return NextResponse.redirect(redirectUrl)
+    const publicRoutes = [
+        '/',
+        '/about',
+        '/activities',
+        '/contact',
+        '/forgot-password',
+        '/reset-password'
+    ]
+
+    const path = request.nextUrl.pathname
+    const isPublicRoute = publicRoutes.some(route => path === route || path.startsWith('/api/'))
+
+    if (!user && !isPublicRoute) {
+        return NextResponse.redirect(new URL('/', request.url))
     }
 
-    const role = profile.role
+    if (user) {
+        // Use admin client to bypass RLS
+        const supabaseAdmin = createClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.SUPABASE_SERVICE_ROLE_KEY!,
+            {
+                auth: {
+                    autoRefreshToken: false,
+                    persistSession: false
+                }
+            }
+        )
 
-    // Role-based route protection
-    if (pathname.startsWith('/student')) {
-        if (role !== 'siswa') {
-            return NextResponse.redirect(new URL(getRoleDashboard(role), request.url))
+        const { data: profile, error: profileError } = await supabaseAdmin
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .single()
+
+        if (profileError || !profile || !profile.role) {
+            await supabase.auth.signOut()
+            return NextResponse.redirect(new URL('/', request.url))
         }
-    } else if (pathname.startsWith('/teacher')) {
-        if (role !== 'pembina') {
-            return NextResponse.redirect(new URL(getRoleDashboard(role), request.url))
+
+        const userRole = profile.role
+
+        // Redirect authenticated users from homepage to their dashboard
+        if (path === '/') {
+            const dashboards = {
+                'admin': '/admin/dashboard',
+                'pembina': '/teacher/dashboard',
+                'siswa': '/student/dashboard'
+            }
+
+            const dashboardUrl = dashboards[userRole as keyof typeof dashboards]
+            if (dashboardUrl) {
+                return NextResponse.redirect(new URL(dashboardUrl, request.url))
+            }
         }
-    } else if (pathname.startsWith('/admin')) {
-        if (role !== 'admin') {
-            return NextResponse.redirect(new URL(getRoleDashboard(role), request.url))
+
+        // Role-based access control
+        if (path.startsWith('/admin')) {
+            if (userRole !== 'admin') {
+                const redirectMap = {
+                    'pembina': '/teacher/dashboard',
+                    'siswa': '/student/dashboard'
+                }
+                const redirectUrl = redirectMap[userRole as keyof typeof redirectMap] || '/'
+                return NextResponse.redirect(new URL(redirectUrl, request.url))
+            }
+        }
+
+        if (path.startsWith('/teacher')) {
+            if (userRole !== 'pembina') {
+                const redirectMap = {
+                    'admin': '/admin/dashboard',
+                    'siswa': '/student/dashboard'
+                }
+                const redirectUrl = redirectMap[userRole as keyof typeof redirectMap] || '/'
+                return NextResponse.redirect(new URL(redirectUrl, request.url))
+            }
+        }
+
+        if (path.startsWith('/student')) {
+            if (userRole !== 'siswa') {
+                const redirectMap = {
+                    'admin': '/admin/dashboard',
+                    'pembina': '/teacher/dashboard'
+                }
+                const redirectUrl = redirectMap[userRole as keyof typeof redirectMap] || '/'
+                return NextResponse.redirect(new URL(redirectUrl, request.url))
+            }
         }
     }
 
-    return supabaseResponse
-}
-
-// Helper function to get dashboard URL by role
-function getRoleDashboard(role: string): string {
-    switch (role) {
-        case 'siswa':
-            return '/student/dashboard'
-        case 'pembina':
-            return '/teacher/dashboard'
-        case 'admin':
-            return '/admin/dashboard'
-        default:
-            return '/'
-    }
+    return response
 }
 
 export const config = {
     matcher: [
-        /*
-         * Match all request paths except:
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico (favicon file)
-         * - public folder
-         */
         '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
     ],
 }

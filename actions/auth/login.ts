@@ -9,6 +9,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createClient as createServiceClient } from '@supabase/supabase-js'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { isValidEmail, sanitizeHtml } from '@/lib/security/sanitize'
 import type { ActionResponse } from '@/types'
 
 interface LoginData {
@@ -19,9 +20,26 @@ interface LoginData {
 export async function login(data: LoginData): Promise<ActionResponse<{ role: string }>> {
     const supabase = await createClient()
 
+    // Sanitize and validate input
+    const email = data.email.toLowerCase().trim()
+
+    if (!isValidEmail(email)) {
+        return {
+            success: false,
+            error: 'Format email tidak valid'
+        }
+    }
+
+    if (!data.password || data.password.length < 6) {
+        return {
+            success: false,
+            error: 'Password minimal 6 karakter'
+        }
+    }
+
     // Attempt to sign in
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email: data.email,
+        email: email,
         password: data.password,
     })
 

@@ -9,6 +9,7 @@
 import { useState, useEffect } from 'react'
 import DashboardHeader from './DashboardHeader'
 import DashboardSidebar, { MenuItem } from './DashboardSidebar'
+import SessionTimeoutProvider from '@/components/providers/SessionTimeoutProvider'
 
 interface DashboardLayoutProps {
     role: 'Siswa' | 'Pembina' | 'Admin'
@@ -48,38 +49,40 @@ export default function DashboardLayout({ role, menuItems, children }: Dashboard
     const contentBg = isDarkMode ? '#0f172a' : '#f5f5f5'
 
     return (
-        <div className="min-h-screen flex">
-            {/* Sidebar */}
-            <DashboardSidebar
-                role={role}
-                menuItems={menuItems}
-                isOpen={sidebarOpen}
-                onClose={() => setSidebarOpen(false)}
-            />
+        <SessionTimeoutProvider>
+            <div className="min-h-screen flex">
+                {/* Sidebar */}
+                <DashboardSidebar
+                    role={role}
+                    menuItems={menuItems}
+                    isOpen={sidebarOpen}
+                    onClose={() => setSidebarOpen(false)}
+                />
 
-            {/* Main Content Area - with blur effect when mobile sidebar is open */}
-            <div
-                className={`flex-1 flex flex-col min-h-screen lg:ml-0 transition-all duration-300 ${sidebarOpen ? 'lg:blur-none blur-sm pointer-events-none lg:pointer-events-auto' : ''
-                    }`}
-            >
-                {/* Header - Sticky */}
-                <div className="sticky top-0 z-40">
-                    <DashboardHeader
-                        role={role}
-                        onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
-                        showMenuButton={true}
-                        blurred={sidebarOpen}
-                    />
-                </div>
-
-                {/* Content - Scrollable */}
-                <main
-                    className="flex-1 overflow-auto"
-                    style={{ backgroundColor: contentBg }}
+                {/* Main Content Area - with blur effect when mobile sidebar is open */}
+                <div
+                    className={`flex-1 flex flex-col min-h-screen lg:ml-0 transition-all duration-300 ${sidebarOpen ? 'lg:blur-none blur-sm pointer-events-none lg:pointer-events-auto' : ''
+                        }`}
                 >
-                    {children}
-                </main>
+                    {/* Header - Sticky */}
+                    <div className="sticky top-0 z-40">
+                        <DashboardHeader
+                            role={role}
+                            onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
+                            showMenuButton={true}
+                            blurred={sidebarOpen}
+                        />
+                    </div>
+
+                    {/* Content - Scrollable */}
+                    <main
+                        className="flex-1 overflow-auto"
+                        style={{ backgroundColor: contentBg }}
+                    >
+                        {children}
+                    </main>
+                </div>
             </div>
-        </div>
+        </SessionTimeoutProvider>
     )
 }

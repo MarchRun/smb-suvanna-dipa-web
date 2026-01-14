@@ -1,27 +1,23 @@
 /**
- * Login Form Component (for visitor landing page)
+ * Login Form Component
  * Connected to Supabase Auth via server action
- * Wireframe style with responsive layout
  */
 
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { login } from '@/actions/auth/login'
 import Input from '@/components/shared/Input'
 import Button from '@/components/shared/Button'
 
 export default function LoginForm() {
-    const router = useRouter()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
     const [isDarkMode, setIsDarkMode] = useState(false)
 
-    // Dark mode detection
     useEffect(() => {
         const checkDarkMode = () => {
             setIsDarkMode(document.documentElement.classList.contains('dark'))
@@ -49,24 +45,21 @@ export default function LoginForm() {
                 return
             }
 
-            // Redirect based on role
             const role = result.data?.role
-            switch (role) {
-                case 'siswa':
-                    router.push('/student/dashboard')
-                    break
-                case 'pembina':
-                    router.push('/teacher/dashboard')
-                    break
-                case 'admin':
-                    router.push('/admin/dashboard')
-                    break
-                default:
-                    setError('Invalid user role')
-                    setLoading(false)
+            let redirectUrl = '/'
+
+            if (role === 'siswa') {
+                redirectUrl = '/student/dashboard'
+            } else if (role === 'pembina') {
+                redirectUrl = '/teacher/dashboard'
+            } else if (role === 'admin') {
+                redirectUrl = '/admin/dashboard'
             }
+
+            window.location.href = redirectUrl
         } catch (err) {
             setError('An unexpected error occurred')
+            setLoading(false)
         }
     }
 

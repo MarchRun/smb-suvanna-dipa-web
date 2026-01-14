@@ -11,6 +11,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { getCurrentUserProfile } from '@/actions/auth/profile'
+import { createClient } from '@/lib/supabase/client'
 
 export interface MenuItem {
     label: string
@@ -148,9 +149,16 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
     const hoverItemBg = isDarkMode ? 'rgba(234, 88, 12, 0.1)' : 'rgba(124, 45, 18, 0.08)'
 
     const handleLogout = async () => {
-        // TODO: Implement logout logic
-        console.log('Logout clicked')
-        window.location.href = '/'
+        try {
+            const supabase = createClient()
+            await supabase.auth.signOut()
+            // Hard reload to clear all state
+            window.location.href = '/'
+        } catch (error) {
+            console.error('Logout error:', error)
+            // Force redirect anyway
+            window.location.href = '/'
+        }
     }
 
     return (
