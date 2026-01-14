@@ -58,20 +58,9 @@ export default function UserTable({
         )
     }
 
-    const getRoleBadgeStyle = (role: string) => {
-        switch (role) {
-            case 'pembina':
-                return 'bg-blue-500 text-white'
-            case 'siswa':
-                return 'bg-green-500 text-white'
-            default:
-                return 'bg-gray-500 text-white'
-        }
-    }
-
     if (isLoading) {
         return (
-            <div className="rounded-xl overflow-hidden border-2" style={{ borderColor: 'var(--primary-900)' }}>
+            <div className="overflow-hidden border-2" style={{ borderColor: 'var(--primary-900)' }}>
                 <div className="animate-pulse p-8">
                     <div className="h-10 rounded mb-4" style={{ backgroundColor: 'var(--primary-900)', opacity: 0.3 }}></div>
                     {[1, 2, 3, 4, 5].map((i) => (
@@ -84,7 +73,7 @@ export default function UserTable({
 
     if (users.length === 0) {
         return (
-            <div className="rounded-xl border-2 p-8 text-center" style={{ borderColor: 'var(--primary-900)' }}>
+            <div className="border-2 p-8 text-center" style={{ borderColor: 'var(--primary-900)' }}>
                 <p className="text-gray-500 dark:text-gray-400">
                     Tidak ada data pengguna
                 </p>
@@ -96,7 +85,7 @@ export default function UserTable({
     const borderColor = 'var(--primary-900)'
 
     return (
-        <div className="rounded-xl overflow-hidden border-2" style={{ borderColor }}>
+        <div className="overflow-hidden border-2" style={{ borderColor }}>
             <table className="w-full border-collapse">
                 <thead>
                     <tr style={{ backgroundColor: headerBg }}>
@@ -106,7 +95,7 @@ export default function UserTable({
                             No
                         </th>
                         <th
-                            className="px-4 py-3 text-left text-sm font-bold text-white cursor-pointer hover:bg-white/10 transition-colors border-r-2 border-white/30"
+                            className="px-4 py-3 text-left text-sm font-bold text-white cursor-pointer transition-colors border-r-2 border-white/30 hover:brightness-110"
                             onClick={() => handleSort('full_name')}
                         >
                             <div className="flex items-center gap-2">
@@ -115,7 +104,7 @@ export default function UserTable({
                             </div>
                         </th>
                         <th
-                            className="px-4 py-3 text-center text-sm font-bold text-white cursor-pointer hover:bg-white/10 transition-colors border-r-2 border-white/30 w-32"
+                            className="px-4 py-3 text-center text-sm font-bold text-white cursor-pointer transition-colors border-r-2 border-white/30 w-32 hover:brightness-110"
                             onClick={() => handleSort('role')}
                         >
                             <div className="flex items-center justify-center gap-2">
@@ -145,24 +134,16 @@ export default function UserTable({
                                 className="px-4 py-4 border-r-2"
                                 style={{ borderColor }}
                             >
-                                <div className="flex items-center gap-3">
-                                    <div
-                                        className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm"
-                                        style={{ backgroundColor: headerBg }}
-                                    >
-                                        {user.full_name?.charAt(0)?.toUpperCase() || '?'}
-                                    </div>
-                                    <span className="font-medium text-gray-900 dark:text-white">
-                                        {user.full_name || '-'}
-                                    </span>
-                                </div>
+                                <span className="font-medium text-gray-900 dark:text-white">
+                                    {user.full_name || '-'}
+                                </span>
                             </td>
                             <td
                                 className="px-4 py-4 text-center border-r-2"
                                 style={{ borderColor }}
                             >
-                                <span className={`px-3 py-1 rounded-full text-xs font-bold capitalize ${getRoleBadgeStyle(user.role)}`}>
-                                    {user.role}
+                                <span className="font-medium text-gray-900 dark:text-white capitalize">
+                                    {user.role || '-'}
                                 </span>
                             </td>
                             <td className="px-4 py-4">

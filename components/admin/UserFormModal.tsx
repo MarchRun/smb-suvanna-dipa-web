@@ -5,7 +5,9 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { uploadProfilePicture } from '@/actions/profile/uploadPicture'
+import FileUpload from '@/components/shared/FileUpload'
 import type { Profile, Class, UserRole } from '@/types'
 
 export interface UserFormData {
@@ -18,6 +20,7 @@ export interface UserFormData {
     address: string
     role: UserRole
     class_id: number | null
+    profile_picture: string
 }
 
 interface UserFormModalProps {
@@ -48,11 +51,16 @@ export default function UserFormModal({
         birth_date: '',
         address: '',
         role: 'siswa',
-        class_id: null
+        class_id: null,
+        profile_picture: ''
     })
 
     const [errors, setErrors] = useState<Partial<Record<keyof UserFormData, string>>>({})
     const [showPassword, setShowPassword] = useState(false)
+    const [selectedFile, setSelectedFile] = useState<File | null>(null)
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+    const [uploadingPicture, setUploadingPicture] = useState(false)
+    const fileInputRef = useRef<HTMLInputElement>(null)
 
     // Reset form when modal opens
     useEffect(() => {
@@ -66,9 +74,13 @@ export default function UserFormModal({
                 birth_date: initialData?.birth_date || '',
                 address: initialData?.address || '',
                 role: initialData?.role || 'siswa',
-                class_id: initialData?.class_id || null
+                class_id: initialData?.class_id || null,
+                profile_picture: initialData?.profile_picture || ''
             })
             setErrors({})
+            setSelectedFile(null)
+            setPreviewUrl(initialData?.profile_picture || null)
+            setUploadingPicture(false)
         }
     }, [isOpen, initialData])
 
@@ -83,6 +95,18 @@ export default function UserFormModal({
             document.body.style.overflow = 'unset'
         }
     }, [isOpen])
+
+    const handleFileSelect = (file: File | null) => {
+        setSelectedFile(file)
+
+        if (file) {
+            // Create preview URL
+            const url = URL.createObjectURL(file)
+            setPreviewUrl(url)
+        } else {
+            setPreviewUrl(initialData?.profile_picture || null)
+        }
+    }
 
     const validate = (): boolean => {
         const newErrors: Partial<Record<keyof UserFormData, string>> = {}
@@ -116,6 +140,26 @@ export default function UserFormModal({
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         if (validate()) {
+            // Upload file if selected
+            if (selectedFile) {
+                setUploadingPicture(true)
+
+                // Create FormData for upload
+                const fileFormData = new FormData()
+                fileFormData.append('file', selectedFile)
+
+                const uploadResult = await uploadProfilePicture(fileFormData)
+                setUploadingPicture(false)
+
+                if (uploadResult.success && uploadResult.data) {
+                    // Update formData with uploaded URL (data is the publicUrl string)
+                    formData.profile_picture = uploadResult.data
+                } else {
+                    alert(uploadResult.error || 'Gagal mengupload foto profil')
+                    return
+                }
+            }
+
             await onSubmit(formData)
         }
     }
@@ -135,8 +179,8 @@ export default function UserFormModal({
             />
 
             {/* Modal */}
-            <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                <div className="p-6">
+            <div className="relative bg-white dark:bg-gray-800 shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden rounded-2xl">
+                <div className="p-6 max-h-[90vh] overflow-y-auto">
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
                         {mode === 'create' ? 'Tambah Pengguna' : 'Edit Pengguna'}
                     </h2>
@@ -225,6 +269,16 @@ export default function UserFormModal({
                             </div>
                         </div>
 
+                        {/* Foto Profil */}
+                        <FileUpload
+                            label="Foto Profil"
+                            onFileSelect={handleFileSelect}
+                            previewUrl={previewUrl}
+                            accept="image/jpeg,image/png"
+                            maxSize={1 * 1024 * 1024}
+                            helperText="Format: JPEG, PNG. Maksimal 1MB."
+                        />
+
                         {/* Alamat Rumah */}
                         <div>
                             <label className={labelClass}>Alamat Rumah</label>
@@ -305,11 +359,11 @@ export default function UserFormModal({
                             </button>
                             <button
                                 type="submit"
-                                disabled={isLoading}
+                                disabled={isLoading || uploadingPicture}
                                 className="flex-1 px-6 py-3 rounded-xl font-bold text-white transition-all duration-200 disabled:opacity-50"
                                 style={{ backgroundColor: 'var(--primary-900)' }}
                             >
-                                {isLoading ? 'Menyimpan...' : (mode === 'create' ? 'Tambah' : 'Konfirmasi Perubahan')}
+                                {uploadingPicture ? 'Mengupload Foto...' : isLoading ? 'Menyimpan...' : (mode === 'create' ? 'Tambah' : 'Konfirmasi Perubahan')}
                             </button>
                         </div>
                     </form>

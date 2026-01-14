@@ -55,8 +55,6 @@ export async function getDashboardStats(): Promise<ActionResponse<DashboardStats
             throw kelasError
         }
 
-        console.log('Stats fetched:', { siswaCount, kelasCount, pembinaCount })
-
         return {
             success: true,
             data: {

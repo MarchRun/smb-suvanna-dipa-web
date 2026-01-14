@@ -107,9 +107,9 @@ export default function ProfileEditModal({ isOpen, onClose, currentData, onSucce
             return
         }
 
-        // Validate file size (max 2MB)
-        if (file.size > 2 * 1024 * 1024) {
-            setError('Ukuran file terlalu besar. Maksimal 2MB.')
+        // Validate file size (max 1MB)
+        if (file.size > 1 * 1024 * 1024) {
+            setError('Ukuran file terlalu besar. Maksimal 1MB.')
             return
         }
 

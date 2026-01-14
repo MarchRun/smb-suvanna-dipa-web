@@ -33,7 +33,6 @@ export async function getTeacherDashboardStats(): Promise<ActionResponse<Teacher
         // Get teacher's profile using their auth user id
         // Note: profiles.id is the same as auth.users.id (foreign key)
         // Use admin client to bypass RLS
-        console.log('🔍 Teacher fetching stats for user ID:', user.id)
 
         const { data: profile, error: profileError } = await supabaseAdmin
             .from('profiles')
@@ -42,29 +41,61 @@ export async function getTeacherDashboardStats(): Promise<ActionResponse<Teacher
             .single()
 
         if (profileError || !profile) {
-            console.error('Profile error:', profileError)
             throw new Error('Profile not found')
         }
 
-        console.log('✅ Profile found:', profile.id)
 
-        // Get class where this teacher is the wali kelas (teacher_id references profiles.id)
-        const { data: classData, error: classError } = await supabaseAdmin
+        // Try to get class data - check both methods:
+        // 1. Teacher is wali kelas (classes.teacher_id)
+        // 2. Teacher has class_id in their profile
+
+        let classData: { id: number; name: string } | null = null
+
+        // Method 1: Check if teacher is wali kelas
+        const { data: waliklasData, error: waliklasError } = await supabaseAdmin
             .from('classes')
-            .select('id, name, teacher_id')
+            .select('id, name')
             .eq('teacher_id', profile.id)
-            .single()
+            .maybeSingle()
 
-        if (classError) {
-            // Teacher might not have a class assigned yet
-            console.log('No class found for teacher:', classError)
-            return {
-                success: true,
-                data: {
-                    className: null,
-                    studentCount: 0
+        if (waliklasData) {
+            classData = waliklasData
+        } else {
+            // Method 2: Check if teacher has class_id in profile
+            const { data: teacherProfile, error: teacherProfileError } = await supabaseAdmin
+                .from('profiles')
+                .select('class_id')
+                .eq('id', profile.id)
+                .single()
+
+            if (teacherProfileError || !teacherProfile?.class_id) {
+                return {
+                    success: true,
+                    data: {
+                        className: null,
+                        studentCount: 0
+                    }
                 }
             }
+
+            // Get class data by class_id
+            const { data: assignedClass, error: assignedClassError } = await supabaseAdmin
+                .from('classes')
+                .select('id, name')
+                .eq('id', teacherProfile.class_id)
+                .single()
+
+            if (assignedClassError || !assignedClass) {
+                return {
+                    success: true,
+                    data: {
+                        className: null,
+                        studentCount: 0
+                    }
+                }
+            }
+
+            classData = assignedClass
         }
 
         // Count students in this class

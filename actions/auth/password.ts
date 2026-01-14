@@ -38,11 +38,10 @@ export async function requestPasswordReset(email: string): Promise<ActionRespons
 
         // If user doesn't exist, still return success (security)
         if (!user) {
-            console.log('Password reset requested for non-existent email:', normalizedEmail)
             return { success: true }
         }
 
-        console.log('Found user for password reset:', user.id, user.email)
+
 
         // 2. Generate secure token
         const token = randomUUID()
@@ -71,7 +70,7 @@ export async function requestPasswordReset(email: string): Promise<ActionRespons
             return { success: true } // Still return success for security
         }
 
-        console.log('Created reset token for user:', user.id)
+
 
         // 5. Generate reset link
         const resetLink = `${APP_URL}/reset-password?token=${token}`
@@ -88,7 +87,7 @@ export async function requestPasswordReset(email: string): Promise<ActionRespons
         if (!emailResult.success) {
             console.error('Failed to send reset email:', emailResult.error)
         } else {
-            console.log('Reset email sent successfully to:', user.email)
+
         }
 
         return { success: true }
@@ -160,7 +159,7 @@ export async function resetPassword(token: string, newPassword: string): Promise
             .update({ used: true })
             .eq('id', tokenData.id)
 
-        console.log('Password reset successful for user:', tokenData.user_id)
+
 
         return { success: true }
 

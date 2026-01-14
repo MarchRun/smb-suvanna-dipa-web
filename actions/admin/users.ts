@@ -33,6 +33,7 @@ export interface CreateUserData {
     address?: string
     role: UserRole
     class_id?: number | null
+    profile_picture?: string
 }
 
 // Update user data
@@ -45,6 +46,7 @@ export interface UpdateUserData {
     role?: UserRole
     class_id?: number | null
     password?: string // Optional - only if changing password
+    profile_picture?: string
 }
 
 /**
@@ -168,7 +170,8 @@ export async function createUser(data: CreateUserData): Promise<ActionResponse<P
                 birth_date: data.birth_date || null,
                 address: data.address || null,
                 role: data.role,
-                class_id: data.class_id || null
+                class_id: data.class_id || null,
+                profile_picture: data.profile_picture || null
             })
             .eq('id', authData.user.id)
             .select()
@@ -206,6 +209,7 @@ export async function updateUser(id: string, data: UpdateUserData): Promise<Acti
         if (data.address !== undefined) updateData.address = data.address
         if (data.role !== undefined) updateData.role = data.role
         if (data.class_id !== undefined) updateData.class_id = data.class_id
+        if (data.profile_picture !== undefined) updateData.profile_picture = data.profile_picture
 
         // Update profile
         const { data: profile, error: profileError } = await supabase
@@ -269,6 +273,56 @@ export async function deleteUser(id: string): Promise<ActionResponse<null>> {
  * Get users for Excel export (with filters)
  */
 export async function getUsersForExport(filters?: UserFilters): Promise<ActionResponse<Profile[]>> {
-    // Same as getUsers but can include more fields for export
-    return getUsers(filters)
+    const supabase = createAdminClient()
+
+    try {
+        let query = supabase
+            .from('profiles')
+            .select('*, classes(id, name)')
+
+        // Apply role filter (only siswa and pembina for this list)
+        if (filters?.role && filters.role !== 'all') {
+            query = query.eq('role', filters.role)
+        } else {
+            // By default, show only siswa and pembina (not admin)
+            query = query.in('role', ['siswa', 'pembina'])
+        }
+
+        // Apply class filter
+        if (filters?.classId) {
+            query = query.eq('class_id', filters.classId)
+        }
+
+        // Apply gender filter
+        if (filters?.gender) {
+            query = query.eq('gender', filters.gender)
+        }
+
+        // Apply search filter
+        if (filters?.search) {
+            query = query.or(`full_name.ilike.%${filters.search}%,email.ilike.%${filters.search}%`)
+        }
+
+        // Sort by name
+        query = query.order('full_name', { ascending: true })
+
+        const { data, error } = await query
+
+        if (error) {
+            console.error('Error fetching users for export:', error)
+            throw error
+        }
+
+        return {
+            success: true,
+            data: data || []
+        }
+    } catch (error) {
+        console.error('Error in getUsersForExport:', error)
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : 'Gagal mengambil data pengguna',
+            data: []
+        }
+    }
 }

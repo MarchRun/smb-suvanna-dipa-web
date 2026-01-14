@@ -97,24 +97,24 @@ export default function AdminProfilPage() {
                         {/* Profile Fields (Read-Only) */}
                         <div className="space-y-4 max-w-4xl mx-auto">
                             {/* Row 1: Nama & Phone */}
-                            <div className="flex flex-col md:flex-row gap-4">
-                                <div className="w-full md:w-[calc(50%-0.5rem)]">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
                                     <label className="block text-sm font-semibold mb-2" style={{ color: textColor }}>
                                         Nama Lengkap :
                                     </label>
                                     <div
-                                        className="w-full px-4 py-3 rounded-lg italic text-gray-600"
+                                        className="w-full px-4 py-3 rounded-lg italic text-gray-600 min-h-[48px] flex items-center"
                                         style={{ backgroundColor: bgColor }}
                                     >
                                         {profile?.full_name || ''}
                                     </div>
                                 </div>
-                                <div className="w-full md:w-[calc(50%-0.5rem)]">
+                                <div>
                                     <label className="block text-sm font-semibold mb-2" style={{ color: textColor }}>
                                         Nomor Telepon :
                                     </label>
                                     <div
-                                        className="w-full px-4 py-3 rounded-lg italic text-gray-600"
+                                        className="w-full px-4 py-3 rounded-lg italic text-gray-600 min-h-[48px] flex items-center"
                                         style={{ backgroundColor: bgColor }}
                                     >
                                         {profile?.phone || ''}
@@ -123,24 +123,24 @@ export default function AdminProfilPage() {
                             </div>
 
                             {/* Row 2: Gender & Birth Date */}
-                            <div className="flex flex-col md:flex-row gap-4">
-                                <div className="w-full md:w-[calc(50%-0.5rem)]">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
                                     <label className="block text-sm font-semibold mb-2" style={{ color: textColor }}>
                                         Jenis Kelamin :
                                     </label>
                                     <div
-                                        className="w-full px-4 py-3 rounded-lg italic text-gray-600"
+                                        className="w-full px-4 py-3 rounded-lg italic text-gray-600 min-h-[48px] flex items-center"
                                         style={{ backgroundColor: bgColor }}
                                     >
                                         {profile?.gender || ''}
                                     </div>
                                 </div>
-                                <div className="w-full md:w-[calc(50%-0.5rem)]">
+                                <div>
                                     <label className="block text-sm font-semibold mb-2" style={{ color: textColor }}>
                                         Tanggal Lahir :
                                     </label>
                                     <div
-                                        className="w-full px-4 py-3 rounded-lg italic text-gray-600"
+                                        className="w-full px-4 py-3 rounded-lg italic text-gray-600 min-h-[48px] flex items-center"
                                         style={{ backgroundColor: bgColor }}
                                     >
                                         {profile?.birth_date || ''}

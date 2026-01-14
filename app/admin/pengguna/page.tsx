@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/dashboard/DashboardLayout'
 import UserTable from '@/components/admin/UserTable'
 import FilterModal, { type FilterValues } from '@/components/shared/FilterModal'
+import ExportFilterModal from '@/components/shared/ExportFilterModal'
 import UserFormModal, { type UserFormData } from '@/components/admin/UserFormModal'
 import ConfirmDialog from '@/components/shared/ConfirmDialog'
 import { getUsers, getUserById, createUser, updateUser, deleteUser, type UserFilters, type UserSort } from '@/actions/admin/users'
@@ -39,6 +40,7 @@ export default function PenggunaPage() {
 
     // Modal states
     const [filterModalOpen, setFilterModalOpen] = useState(false)
+    const [exportModalOpen, setExportModalOpen] = useState(false)
     const [formModalOpen, setFormModalOpen] = useState(false)
     const [formMode, setFormMode] = useState<'create' | 'edit'>('create')
     const [editingUser, setEditingUser] = useState<Profile | null>(null)
@@ -140,7 +142,8 @@ export default function PenggunaPage() {
                 birth_date: data.birth_date || undefined,
                 address: data.address || undefined,
                 role: data.role,
-                class_id: data.class_id
+                class_id: data.class_id,
+                profile_picture: data.profile_picture || undefined
             })
 
             if (result.success) {
@@ -158,7 +161,8 @@ export default function PenggunaPage() {
                 address: data.address || undefined,
                 role: data.role,
                 class_id: data.class_id,
-                password: data.password || undefined
+                password: data.password || undefined,
+                profile_picture: data.profile_picture || undefined
             })
 
             if (result.success) {
@@ -199,130 +203,140 @@ export default function PenggunaPage() {
 
     return (
         <DashboardLayout role="Admin" menuItems={adminMenuItems}>
-            {/* Page Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                <h1
-                    className="text-2xl md:text-3xl font-bold"
-                    style={{ color: textColor }}
-                >
-                    Daftar Pengguna
-                </h1>
-
-                <div className="flex gap-3">
-                    {/* Export Excel Button - Same style as Tambah */}
-                    <button
-                        onClick={() => router.push('/admin/pengguna/export')}
-                        className="px-5 py-2.5 rounded-xl font-bold text-white transition-all duration-200 hover:opacity-90"
-                        style={{ backgroundColor: textColor }}
+            <div className="p-6 md:p-8">
+                {/* Page Header */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                    <h1
+                        className="text-2xl md:text-3xl font-bold"
+                        style={{ color: textColor }}
                     >
-                        Unduh Excel
-                    </button>
+                        Daftar Pengguna
+                    </h1>
 
-                    {/* Add User Button */}
-                    <button
-                        onClick={handleAddClick}
-                        className="px-5 py-2.5 rounded-xl font-bold text-white transition-all duration-200 hover:opacity-90"
-                        style={{ backgroundColor: textColor }}
-                    >
-                        Tambah Pengguna
-                    </button>
+                    <div className="flex gap-3">
+                        {/* Export Excel Button - Same style as Tambah */}
+                        <button
+                            onClick={() => setExportModalOpen(true)}
+                            className="px-5 py-2.5 rounded-xl font-bold text-white transition-all duration-200 hover:opacity-90"
+                            style={{ backgroundColor: textColor }}
+                        >
+                            Unduh Excel
+                        </button>
+
+                        {/* Add User Button */}
+                        <button
+                            onClick={handleAddClick}
+                            className="px-5 py-2.5 rounded-xl font-bold text-white transition-all duration-200 hover:opacity-90"
+                            style={{ backgroundColor: textColor }}
+                        >
+                            Tambah Pengguna
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            {/* Search Bar and Filter Button */}
-            <div className="flex gap-4 mb-6">
-                {/* Rounded Search Input */}
-                <div className="flex-1 relative">
-                    <input
-                        type="text"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        placeholder="Cari Pengguna..."
-                        className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-gray-300 dark:border-gray-600 
+                {/* Search Bar and Filter Button */}
+                <div className="flex gap-4 mb-6">
+                    {/* Rounded Search Input */}
+                    <div className="flex-1 relative">
+                        <input
+                            type="text"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            placeholder="Cari Pengguna..."
+                            className="w-full pl-12 pr-4 py-3 rounded-full border-2 border-gray-300 dark:border-gray-600 
                                  bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                                  focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent
                                  transition-all duration-200"
-                    />
-                    <svg
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                         />
-                    </svg>
+                        <svg
+                            className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                            />
+                        </svg>
+                    </div>
+
+                    {/* Filter Button */}
+                    <button
+                        onClick={() => setFilterModalOpen(true)}
+                        className="px-6 py-3 rounded-full font-bold text-white transition-all duration-200 hover:opacity-90 flex items-center gap-2"
+                        style={{ backgroundColor: textColor }}
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                        </svg>
+                        Filter
+                    </button>
                 </div>
 
-                {/* Filter Button */}
-                <button
-                    onClick={() => setFilterModalOpen(true)}
-                    className="px-6 py-3 rounded-full font-bold text-white transition-all duration-200 hover:opacity-90 flex items-center gap-2"
-                    style={{ backgroundColor: textColor }}
-                >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                    </svg>
-                    Filter
-                </button>
+                {/* Users Table */}
+                <UserTable
+                    users={users}
+                    onSort={setSort}
+                    currentSort={sort}
+                    onView={handleView}
+                    onEdit={handleEditClick}
+                    onDelete={handleDeleteClick}
+                    isLoading={loading}
+                />
+
+                {/* Filter Modal */}
+                <FilterModal
+                    isOpen={filterModalOpen}
+                    onClose={() => setFilterModalOpen(false)}
+                    onApply={handleFilterApply}
+                    classes={classes}
+                    initialValues={filters}
+                />
+
+                {/* User Form Modal (Add/Edit) */}
+                <UserFormModal
+                    isOpen={formModalOpen}
+                    onClose={() => setFormModalOpen(false)}
+                    mode={formMode}
+                    initialData={editingUser ? {
+                        full_name: editingUser.full_name || '',
+                        email: editingUser.email || '',
+                        phone: editingUser.phone || '',
+                        gender: editingUser.gender || '',
+                        birth_date: editingUser.birth_date || '',
+                        address: editingUser.address || '',
+                        role: editingUser.role || 'siswa',
+                        class_id: editingUser.class_id || null,
+                        profile_picture: editingUser.profile_picture || ''
+                    } : undefined}
+                    classes={classes}
+                    onSubmit={handleFormSubmit}
+                    isLoading={formLoading}
+                />
+
+                {/* Delete Confirmation Dialog */}
+                <ConfirmDialog
+                    isOpen={deleteDialog.isOpen}
+                    title="Hapus Pengguna"
+                    message={`Apakah Anda yakin ingin menghapus ${deleteDialog.user?.full_name || 'pengguna ini'}? Tindakan ini tidak dapat dibatalkan.`}
+                    confirmLabel="Hapus"
+                    cancelLabel="Batal"
+                    variant="danger"
+                    isLoading={deleteDialog.isLoading}
+                    onConfirm={handleDeleteConfirm}
+                    onCancel={() => setDeleteDialog({ isOpen: false, user: null, isLoading: false })}
+                />
+
+                {/* Export Filter Modal */}
+                <ExportFilterModal
+                    isOpen={exportModalOpen}
+                    onClose={() => setExportModalOpen(false)}
+                    classes={classes}
+                />
             </div>
-
-            {/* Users Table */}
-            <UserTable
-                users={users}
-                onSort={setSort}
-                currentSort={sort}
-                onView={handleView}
-                onEdit={handleEditClick}
-                onDelete={handleDeleteClick}
-                isLoading={loading}
-            />
-
-            {/* Filter Modal */}
-            <FilterModal
-                isOpen={filterModalOpen}
-                onClose={() => setFilterModalOpen(false)}
-                onApply={handleFilterApply}
-                classes={classes}
-                initialValues={filters}
-            />
-
-            {/* User Form Modal (Add/Edit) */}
-            <UserFormModal
-                isOpen={formModalOpen}
-                onClose={() => setFormModalOpen(false)}
-                mode={formMode}
-                initialData={editingUser ? {
-                    full_name: editingUser.full_name || '',
-                    email: editingUser.email || '',
-                    phone: editingUser.phone || '',
-                    gender: editingUser.gender || '',
-                    birth_date: editingUser.birth_date || '',
-                    address: editingUser.address || '',
-                    role: editingUser.role || 'siswa',
-                    class_id: editingUser.class_id || null
-                } : undefined}
-                classes={classes}
-                onSubmit={handleFormSubmit}
-                isLoading={formLoading}
-            />
-
-            {/* Delete Confirmation Dialog */}
-            <ConfirmDialog
-                isOpen={deleteDialog.isOpen}
-                title="Hapus Pengguna"
-                message={`Apakah Anda yakin ingin menghapus ${deleteDialog.user?.full_name || 'pengguna ini'}? Tindakan ini tidak dapat dibatalkan.`}
-                confirmLabel="Hapus"
-                cancelLabel="Batal"
-                variant="danger"
-                isLoading={deleteDialog.isLoading}
-                onConfirm={handleDeleteConfirm}
-                onCancel={() => setDeleteDialog({ isOpen: false, user: null, isLoading: false })}
-            />
         </DashboardLayout>
     )
 }
