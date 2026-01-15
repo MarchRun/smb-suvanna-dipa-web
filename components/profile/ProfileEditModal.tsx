@@ -1,7 +1,6 @@
 /**
- * Profile Edit Modal Component
- * Reusable modal for editing profile across all dashboard roles
- * Features: animations, consistent styling, file upload with validation
+ * Profile Edit Modal - Using UniversalForm
+ * Migrated to use universal form component with consistent styling
  */
 
 'use client'
@@ -9,9 +8,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { updateProfile, type ProfileUpdateData } from '@/actions/profile/update'
 import { uploadProfilePicture, deleteOldProfilePicture } from '@/actions/profile/uploadPicture'
+import UniversalForm, { FieldConfig } from '@/components/shared/UniversalForm'
+import Modal from '@/components/shared/Modal'
 import { useDarkMode } from '@/hooks/useDarkMode'
-import Select from '@/components/shared/Select'
-import Textarea from '@/components/shared/Textarea'
 
 interface ProfileEditModalProps {
     isOpen: boolean
@@ -30,75 +29,82 @@ interface ProfileEditModalProps {
 export default function ProfileEditModal({ isOpen, onClose, currentData, onSuccess }: ProfileEditModalProps) {
     const isDarkMode = useDarkMode()
     const [loading, setLoading] = useState(false)
-    const [error, setError] = useState('')
     const [uploadingPicture, setUploadingPicture] = useState(false)
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
     const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-    const [isVisible, setIsVisible] = useState(false)
-    const [isAnimating, setIsAnimating] = useState(false)
+    const [profilePictureUrl, setProfilePictureUrl] = useState(currentData.profile_picture || '')
+    const [error, setError] = useState('')
     const fileInputRef = useRef<HTMLInputElement>(null)
 
-    const [formData, setFormData] = useState<ProfileUpdateData>({
-        full_name: currentData.full_name || '',
-        phone: currentData.phone || '',
-        gender: (currentData.gender as 'Laki-laki' | 'Perempuan') || undefined,
-        birth_date: currentData.birth_date || '',
-        address: currentData.address || '',
-        profile_picture: currentData.profile_picture || ''
-    })
-
-    // Handle open/close animations
+    // Reset when modal opens
     useEffect(() => {
         if (isOpen) {
-            setIsVisible(true)
-            // Small delay to trigger animation
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    setIsAnimating(true)
-                })
-            })
-        } else {
-            setIsAnimating(false)
-            // Wait for animation to complete before hiding
-            const timer = setTimeout(() => {
-                setIsVisible(false)
-            }, 200)
-            return () => clearTimeout(timer)
-        }
-    }, [isOpen])
-
-    // Reset form when modal opens - pre-fill with current data
-    useEffect(() => {
-        if (isOpen) {
-            setFormData({
-                full_name: currentData.full_name || '',
-                phone: currentData.phone || '',
-                gender: (currentData.gender as 'Laki-laki' | 'Perempuan') || undefined,
-                birth_date: currentData.birth_date || '',
-                address: currentData.address || '',
-                profile_picture: currentData.profile_picture || ''
-            })
-            setError('')
+            setProfilePictureUrl(currentData.profile_picture || '')
             setSelectedFile(null)
             setPreviewUrl(null)
+            setError('')
         }
     }, [isOpen, currentData])
 
-    // Handle file selection for profile picture
+    // Profile form fields
+    const profileFields: FieldConfig[] = [
+        {
+            name: 'full_name',
+            type: 'text',
+            label: 'Nama Lengkap',
+            placeholder: 'Masukkan nama lengkap',
+            required: true
+        },
+        {
+            name: 'phone',
+            type: 'tel',
+            label: 'Nomor Telepon',
+            placeholder: 'Contoh: 081234567890',
+            required: true
+        },
+        {
+            name: 'gender',
+            type: 'select',
+            label: 'Jenis Kelamin',
+            required: true,
+            options: [
+                { value: '', label: 'Pilih...' },
+                { value: 'Laki-laki', label: 'Laki-laki' },
+                { value: 'Perempuan', label: 'Perempuan' }
+            ]
+        },
+        {
+            name: 'birth_date',
+            type: 'date',
+            label: 'Tanggal Lahir',
+            required: true
+        },
+        {
+            name: 'address',
+            type: 'textarea',
+            label: 'Alamat Rumah',
+            placeholder: 'Masukkan alamat lengkap',
+            required: true,
+            rows: 4,
+            columnSpan: 2
+        }
+    ]
+
+    // Handle file selection
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
         if (!file) return
 
-        // Validate file type - only jpg, jpeg, png (no webp)
+        // Validate file type
         const validTypes = ['image/jpeg', 'image/jpg', 'image/png']
         if (!validTypes.includes(file.type)) {
-            setError('Format file tidak valid. Gunakan JPEG atau PNG.')
+            setError('Format tidak valid. Gunakan JPEG atau PNG.')
             return
         }
 
-        // Validate file size (max 1MB)
-        if (file.size > 1 * 1024 * 1024) {
-            setError('Ukuran file terlalu besar. Maksimal 1MB.')
+        // Validate file size (max 2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            setError('Ukuran file terlalu besar. Maksimal 2MB.')
             return
         }
 
@@ -131,24 +137,32 @@ export default function ProfileEditModal({ isOpen, onClose, currentData, onSucce
                 return
             }
 
-            // Update form data with new picture URL
-            setFormData(prev => ({ ...prev, profile_picture: result.data }))
+            setProfilePictureUrl(result.data || '')
             setSelectedFile(null)
             setPreviewUrl(null)
-            setUploadingPicture(false)
         } catch (err) {
             setError('Gagal upload foto profil')
+        } finally {
             setUploadingPicture(false)
         }
     }
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setError('')
+    // Handle form submit
+    const handleSubmit = async (data: Record<string, any>) => {
         setLoading(true)
+        setError('')
 
         try {
-            const result = await updateProfile(formData)
+            const profileData: ProfileUpdateData = {
+                full_name: data.full_name,
+                phone: data.phone,
+                gender: data.gender as 'Laki-laki' | 'Perempuan',
+                birth_date: data.birth_date,
+                address: data.address,
+                profile_picture: profilePictureUrl
+            }
+
+            const result = await updateProfile(profileData)
 
             if (!result.success) {
                 setError(result.error || 'Gagal mengupdate profil')
@@ -156,12 +170,11 @@ export default function ProfileEditModal({ isOpen, onClose, currentData, onSucce
                 return
             }
 
-            // Success
             setLoading(false)
             onSuccess()
             onClose()
         } catch (err) {
-            setError('Terjadi kesalahan yang tidak terduga')
+            setError('Terjadi kesalahan')
             setLoading(false)
         }
     }
@@ -172,193 +185,100 @@ export default function ProfileEditModal({ isOpen, onClose, currentData, onSucce
         }
     }
 
-    if (!isVisible) return null
+    const initialData = {
+        full_name: currentData.full_name || '',
+        phone: currentData.phone || '',
+        gender: currentData.gender || '',
+        birth_date: currentData.birth_date || '',
+        address: currentData.address || ''
+    }
 
     const textColor = isDarkMode ? '#ea580c' : '#7c2d12'
 
-    // Common input styles matching wireframe - ORANGE BORDERS
-    const inputStyle = `w-full px-4 py-3 rounded-xl border-2 border-orange-800 dark:border-orange-600 bg-white text-gray-800
-        focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200
-        disabled:opacity-50 disabled:cursor-not-allowed 
-        dark:bg-gray-700 dark:text-white dark:focus:border-orange-500`
-
     return (
-        <>
-            {/* Backdrop with animation */}
-            <div
-                className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-opacity duration-200 ${isAnimating ? 'opacity-100' : 'opacity-0'
-                    }`}
-                onClick={handleClose}
-            />
-
-            {/* Modal with animation */}
-            <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-                <div
-                    className={`bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden transition-all duration-200 ${isAnimating
-                        ? 'opacity-100 scale-100 translate-y-0'
-                        : 'opacity-0 scale-95 translate-y-4'
-                        }`}
-                    onClick={(e) => e.stopPropagation()}
+        <Modal
+            isOpen={isOpen}
+            onClose={handleClose}
+            size="lg"
+            showCloseButton={false}
+        >
+            <div className="p-6 md:p-8">
+                {/* Title */}
+                <h2
+                    className="text-2xl md:text-3xl font-bold mb-6"
+                    style={{ color: textColor }}
                 >
-                    {/* Scrollable content inside */}
-                    <div className="max-h-[90vh] overflow-y-auto p-6 md:p-8">
-                        {/* Title */}
-                        <h2
-                            className="text-2xl md:text-3xl font-bold mb-6"
-                            style={{ color: textColor }}
-                        >
-                            Edit Profil
-                        </h2>
+                    Edit Profil
+                </h2>
 
-                        {/* Error Message */}
-                        {error && (
-                            <div className="mb-4 p-4 bg-red-100 border-2 border-red-500 rounded-lg text-red-700">
-                                {error}
-                            </div>
-                        )}
-
-                        {/* Form */}
-                        <form onSubmit={handleSubmit} className="space-y-5">
-                            {/* Row 1: Nama & Phone */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-semibold mb-2" style={{ color: textColor }}>
-                                        Nama Lengkap
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className={inputStyle}
-                                        value={formData.full_name}
-                                        onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                                        disabled={loading}
-                                        placeholder="Masukkan nama lengkap"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-semibold mb-2" style={{ color: textColor }}>
-                                        Nomor Telepon
-                                    </label>
-                                    <input
-                                        type="tel"
-                                        className={inputStyle}
-                                        value={formData.phone}
-                                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                        disabled={loading}
-                                        placeholder="Contoh: 081234567890"
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Row 2: Gender & Birth Date */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <Select
-                                    label="Jenis Kelamin"
-                                    value={formData.gender || ''}
-                                    onChange={(value) => setFormData({ ...formData, gender: value as 'Laki-laki' | 'Perempuan' })}
-                                    options={[
-                                        { value: '', label: 'Pilih Jenis Kelamin' },
-                                        { value: 'Laki-laki', label: 'Laki-laki' },
-                                        { value: 'Perempuan', label: 'Perempuan' }
-                                    ]}
-                                    disabled={loading}
-                                />
-                                <div>
-                                    <label className="block text-sm font-semibold mb-2" style={{ color: textColor }}>
-                                        Tanggal Lahir
-                                    </label>
-                                    <input
-                                        type="date"
-                                        className={inputStyle}
-                                        value={formData.birth_date || ''}
-                                        onChange={(e) => setFormData({ ...formData, birth_date: e.target.value })}
-                                        disabled={loading}
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Row 3: Profile Picture Upload - Connected input + button */}
-                            <div>
-                                <label className="block text-sm font-semibold mb-2" style={{ color: textColor }}>
-                                    Foto Profil
-                                </label>
-                                <div className="flex">
-                                    <div
-                                        className={`flex-1 px-4 py-3 rounded-l-xl border-2 border-r-0 border-orange-800 dark:border-orange-600 bg-white
-                                            flex items-center cursor-pointer
-                                            dark:bg-gray-700 dark:text-white`}
-                                        onClick={() => !loading && !uploadingPicture && fileInputRef.current?.click()}
-                                    >
-                                        <span className="text-gray-500 dark:text-gray-400 truncate">
-                                            {selectedFile
-                                                ? selectedFile.name
-                                                : formData.profile_picture
-                                                    ? 'Foto sudah diupload'
-                                                    : 'Pilih file...'}
-                                        </span>
-                                        {(previewUrl || formData.profile_picture) && (
-                                            <img
-                                                src={previewUrl || formData.profile_picture || ''}
-                                                alt="Preview"
-                                                className="w-8 h-8 rounded-full object-cover ml-auto"
-                                            />
-                                        )}
-                                    </div>
-                                    <input
-                                        ref={fileInputRef}
-                                        type="file"
-                                        accept="image/jpeg,image/jpg,image/png"
-                                        onChange={handleFileSelect}
-                                        className="hidden"
-                                        disabled={loading || uploadingPicture}
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={selectedFile ? handleUploadPicture : () => fileInputRef.current?.click()}
-                                        className="px-6 py-3 rounded-r-xl font-semibold text-white transition-all hover:opacity-90 disabled:opacity-50"
-                                        style={{ backgroundColor: '#7c2d12' }}
-                                        disabled={loading || uploadingPicture}
-                                    >
-                                        {uploadingPicture ? 'Uploading...' : 'Upload'}
-                                    </button>
-                                </div>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                                    Format: JPEG, PNG. Maksimal 2MB.
-                                </p>
-                            </div>
-
-                            {/* Row 4: Address */}
-                            <Textarea
-                                label="Alamat Rumah"
-                                value={formData.address || ''}
-                                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                                disabled={loading}
-                                placeholder="Masukkan alamat lengkap"
-                                rows={4}
-                            />
-
-                            {/* Buttons - Auth style (outline + solid) */}
-                            <div className="flex gap-4 pt-6">
-                                <button
-                                    type="button"
-                                    onClick={handleClose}
-                                    className="flex-1 py-3 rounded-xl font-bold border-2 border-orange-800 text-orange-800 dark:border-orange-500 dark:text-orange-500 hover:bg-orange-50 dark:hover:bg-gray-700 transition-all disabled:opacity-50"
-                                    disabled={loading || uploadingPicture}
-                                >
-                                    Batal
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="flex-1 py-3 rounded-xl font-bold text-white transition-all hover:opacity-90 disabled:opacity-50"
-                                    style={{ backgroundColor: '#7c2d12' }}
-                                    disabled={loading || uploadingPicture}
-                                >
-                                    {loading ? 'Menyimpan...' : 'Konfirmasi Perubahan'}
-                                </button>
-                            </div>
-                        </form>
+                {/* Error Message */}
+                {error && (
+                    <div className="mb-4 p-4 bg-red-100 border-2 border-red-500 rounded-lg text-red-700">
+                        {error}
                     </div>
+                )}
+
+                {/* Profile Picture Upload Section */}
+                <div className="mb-6">
+                    <label className="block text-sm font-semibold mb-2" style={{ color: textColor }}>
+                        Foto Profil
+                    </label>
+                    <div className="flex">
+                        <div
+                            className="flex-1 px-4 py-3 rounded-l-xl border-2 border-r-0 border-orange-800 dark:border-orange-600 bg-white dark:bg-gray-700 flex items-center cursor-pointer"
+                            onClick={() => !loading && !uploadingPicture && fileInputRef.current?.click()}
+                        >
+                            <span className="text-gray-500 dark:text-gray-400 truncate">
+                                {selectedFile
+                                    ? selectedFile.name
+                                    : profilePictureUrl
+                                        ? 'Foto sudah diupload'
+                                        : 'Pilih file...'}
+                            </span>
+                            {(previewUrl || profilePictureUrl) && (
+                                <img
+                                    src={previewUrl || profilePictureUrl}
+                                    alt="Preview"
+                                    className="w-8 h-8 rounded-full object-cover ml-auto"
+                                />
+                            )}
+                        </div>
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/jpeg,image/jpg,image/png"
+                            onChange={handleFileSelect}
+                            className="hidden"
+                            disabled={loading || uploadingPicture}
+                        />
+                        <button
+                            type="button"
+                            onClick={selectedFile ? handleUploadPicture : () => fileInputRef.current?.click()}
+                            className="px-6 py-3 rounded-r-xl font-semibold text-white transition-all hover:opacity-90 disabled:opacity-50"
+                            style={{ backgroundColor: '#7c2d12' }}
+                            disabled={loading || uploadingPicture}
+                        >
+                            {uploadingPicture ? 'Uploading...' : 'Upload'}
+                        </button>
+                    </div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                        Format: JPEG, PNG. Maksimal 2MB.
+                    </p>
                 </div>
+
+                {/* Universal Form for other fields */}
+                <UniversalForm
+                    title=""
+                    mode="edit"
+                    fields={profileFields}
+                    initialData={initialData}
+                    onSubmit={handleSubmit}
+                    onCancel={handleClose}
+                    submitLabel="Konfirmasi Perubahan"
+                    cancelLabel="Batal"
+                    isLoading={loading || uploadingPicture}
+                />
             </div>
-        </>
+        </Modal>
     )
 }
