@@ -6,8 +6,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import DashboardLayout from '@/components/dashboard/DashboardLayout'
-import StatCard from '@/components/dashboard/StatCard'
+import DashboardLayout from '@/components/shared/DashboardLayout'
+import StatCard from '@/components/shared/StatCard'
 import { getTeacherDashboardStats, type TeacherDashboardStats } from '@/actions/teacher/stats'
 import { getCurrentUserProfile } from '@/actions/auth/profile'
 import { useDarkMode } from '@/hooks/useDarkMode'

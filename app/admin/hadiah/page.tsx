@@ -7,7 +7,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import DashboardLayout from '@/components/dashboard/DashboardLayout'
+import DashboardLayout from '@/components/shared/DashboardLayout'
 import RewardCard from '@/components/rewards/RewardCard'
 import RewardForm from '@/components/rewards/RewardForm'
 import FilterForm from '@/components/rewards/FilterForm'

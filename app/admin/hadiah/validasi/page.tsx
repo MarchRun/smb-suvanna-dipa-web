@@ -7,7 +7,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import DashboardLayout from '@/components/dashboard/DashboardLayout'
+import DashboardLayout from '@/components/shared/DashboardLayout'
 import {
     getPendingOrders,
     approveOrder,

@@ -6,7 +6,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import DashboardLayout from '@/components/dashboard/DashboardLayout'
+import DashboardLayout from '@/components/shared/DashboardLayout'
 import ProfileEditModal from '@/components/profile/ProfileEditModal'
 import { getCurrentUserProfile } from '@/actions/auth/profile'
 import { useDarkMode } from '@/hooks/useDarkMode'

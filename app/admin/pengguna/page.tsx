@@ -8,7 +8,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import DashboardLayout from '@/components/dashboard/DashboardLayout'
+import DashboardLayout from '@/components/shared/DashboardLayout'
 import UserTable from '@/components/admin/UserTable'
 import FilterModal, { type FilterValues } from '@/components/shared/FilterModal'
 import ExportFilterModal from '@/components/shared/ExportFilterModal'

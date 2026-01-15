@@ -7,7 +7,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import DashboardLayout from '@/components/dashboard/DashboardLayout'
+import DashboardLayout from '@/components/shared/DashboardLayout'
 import ImageModal from '@/components/shared/ImageModal'
 import PublicContentEditModal from '@/components/admin/PublicContentEditModal'
 import {

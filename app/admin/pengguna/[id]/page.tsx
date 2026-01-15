@@ -7,7 +7,7 @@
 
 import { use, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import DashboardLayout from '@/components/dashboard/DashboardLayout'
+import DashboardLayout from '@/components/shared/DashboardLayout'
 import { getUserById } from '@/actions/admin/users'
 import { useDarkMode } from '@/hooks/useDarkMode'
 import type { Profile } from '@/types'
