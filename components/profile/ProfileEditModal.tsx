@@ -176,11 +176,11 @@ export default function ProfileEditModal({ isOpen, onClose, currentData, onSucce
 
     const textColor = isDarkMode ? '#ea580c' : '#7c2d12'
 
-    // Common input styles matching wireframe
-    const inputStyle = `w-full px-4 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-800
+    // Common input styles matching wireframe - ORANGE BORDERS
+    const inputStyle = `w-full px-4 py-3 rounded-xl border-2 border-orange-800 dark:border-orange-600 bg-white text-gray-800
         focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200
         disabled:opacity-50 disabled:cursor-not-allowed 
-        dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:border-orange-500`
+        dark:bg-gray-700 dark:text-white dark:focus:border-orange-500`
 
     return (
         <>
@@ -282,11 +282,10 @@ export default function ProfileEditModal({ isOpen, onClose, currentData, onSucce
                                     Foto Profil
                                 </label>
                                 <div className="flex">
-                                    {/* File display area - connected to button */}
                                     <div
-                                        className={`flex-1 px-4 py-3 rounded-l-lg border-2 border-r-0 border-gray-300 bg-white
+                                        className={`flex-1 px-4 py-3 rounded-l-xl border-2 border-r-0 border-orange-800 dark:border-orange-600 bg-white
                                             flex items-center cursor-pointer
-                                            dark:bg-gray-700 dark:border-gray-600 dark:text-white`}
+                                            dark:bg-gray-700 dark:text-white`}
                                         onClick={() => !loading && !uploadingPicture && fileInputRef.current?.click()}
                                     >
                                         <span className="text-gray-500 dark:text-gray-400 truncate">
@@ -315,8 +314,8 @@ export default function ProfileEditModal({ isOpen, onClose, currentData, onSucce
                                     <button
                                         type="button"
                                         onClick={selectedFile ? handleUploadPicture : () => fileInputRef.current?.click()}
-                                        className="px-6 py-3 rounded-r-lg font-semibold text-white transition-all hover:opacity-90 disabled:opacity-50"
-                                        style={{ backgroundColor: '#6b7280' }}
+                                        className="px-6 py-3 rounded-r-xl font-semibold text-white transition-all hover:opacity-90 disabled:opacity-50"
+                                        style={{ backgroundColor: '#7c2d12' }}
                                         disabled={loading || uploadingPicture}
                                     >
                                         {uploadingPicture ? 'Uploading...' : 'Upload'}
@@ -337,20 +336,20 @@ export default function ProfileEditModal({ isOpen, onClose, currentData, onSucce
                                 rows={4}
                             />
 
-                            {/* Buttons - Wireframe style */}
-                            <div className="flex gap-4 pt-4">
+                            {/* Buttons - Auth style (outline + solid) */}
+                            <div className="flex gap-4 pt-6">
                                 <button
                                     type="button"
                                     onClick={handleClose}
-                                    className="flex-1 py-3 rounded-lg font-bold text-gray-700 bg-yellow-400 hover:bg-yellow-500 transition-all disabled:opacity-50"
+                                    className="flex-1 py-3 rounded-xl font-bold border-2 border-orange-800 text-orange-800 dark:border-orange-500 dark:text-orange-500 hover:bg-orange-50 dark:hover:bg-gray-700 transition-all disabled:opacity-50"
                                     disabled={loading || uploadingPicture}
                                 >
                                     Batal
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex-1 py-3 rounded-lg font-bold text-white transition-all hover:opacity-90 disabled:opacity-50"
-                                    style={{ backgroundColor: '#6b7280' }}
+                                    className="flex-1 py-3 rounded-xl font-bold text-white transition-all hover:opacity-90 disabled:opacity-50"
+                                    style={{ backgroundColor: '#7c2d12' }}
                                     disabled={loading || uploadingPicture}
                                 >
                                     {loading ? 'Menyimpan...' : 'Konfirmasi Perubahan'}
