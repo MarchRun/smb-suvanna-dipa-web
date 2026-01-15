@@ -89,7 +89,7 @@ export default function AdminDashboardPage() {
 
                 {/* Grafik Widget - Matching StatCard styling */}
                 <div
-                    className="rounded-xl p-6 md:p-8"
+                    className="rounded-xl p-6 md:p-8 mt-8"
                     style={{
                         backgroundColor: textColor,
                         boxShadow: isDarkMode
