@@ -1,5 +1,5 @@
 /**
- * Public Content Edit Modal - Using UniversalForm with Sections
+ * Public Content Edit Modal - Using UniversalForm + Animated Modal
  * Modal form for editing agenda, gallery, and testimonials
  */
 
@@ -7,6 +7,7 @@
 
 import { useState } from 'react'
 import UniversalForm, { FormSection } from '@/components/shared/UniversalForm'
+import Modal from '@/components/shared/Modal'
 import type { GalleryItem, TestimonialItem } from '@/actions/admin/publicContent'
 
 interface PublicContentEditModalProps {
@@ -119,31 +120,21 @@ export default function PublicContentEditModal({
         await onSubmit({ agenda, gallery, testimonials })
     }
 
-    if (!isOpen) return null
-
     return (
-        <>
-            {/* Backdrop */}
-            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" onClick={onClose} />
-
-            {/* Modal */}
-            <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-                <div
-                    className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    <div className="overflow-y-auto max-h-[90vh] p-6 md:p-8">
-                        <UniversalForm
-                            title="Edit Konten Publik"
-                            mode="edit"
-                            sections={sections}
-                            initialData={initialData}
-                            onSubmit={handleSubmit}
-                            onCancel={onClose}
-                        />
-                    </div>
-                </div>
-            </div>
-        </>
+        <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            size="xl"
+            showCloseButton={false}
+        >
+            <UniversalForm
+                title="Edit Konten Publik"
+                mode="edit"
+                sections={sections}
+                initialData={initialData}
+                onSubmit={handleSubmit}
+                onCancel={onClose}
+            />
+        </Modal>
     )
 }
