@@ -4,7 +4,7 @@
  * All forms can use these standardized configs
  */
 
-import { FieldConfig } from '@/components/shared/DynamicForm'
+import { FieldConfig } from '@/components/shared/UniversalForm'
 import type { Class } from '@/types'
 
 // User Form Fields (for UserFormModal and UserForm)
@@ -207,15 +207,6 @@ export const productFormFields: FieldConfig[] = [
         placeholder: '0',
         required: true,
         min: 0
-    },
-    {
-        name: 'description',
-        type: 'textarea',
-        label: 'Deskripsi',
-        placeholder: 'Masukkan deskripsi produk',
-        required: true,
-        rows: 4,
-        columnSpan: 2
     }
 ]
 
