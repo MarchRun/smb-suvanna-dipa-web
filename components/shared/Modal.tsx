@@ -1,12 +1,12 @@
 /**
- * Modal Component
- * Reusable modal wrapper with backdrop, close handling, and responsive sizing
+ * Modal Component - WITH ANIMATIONS
+ * Reusable modal wrapper with smooth fade+scale animations
  * Provides consistent modal behavior across the application
  */
 
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 interface ModalProps {
     isOpen: boolean
@@ -27,6 +27,29 @@ export default function Modal({
     showCloseButton = true,
     preventBackdropClose = false
 }: ModalProps) {
+    const [isVisible, setIsVisible] = useState(false)
+    const [isAnimating, setIsAnimating] = useState(false)
+
+    // Handle animations on open/close
+    useEffect(() => {
+        if (isOpen) {
+            setIsVisible(true)
+            // Trigger animation after render
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    setIsAnimating(true)
+                })
+            })
+        } else {
+            setIsAnimating(false)
+            // Wait for animation to complete before hiding
+            const timer = setTimeout(() => {
+                setIsVisible(false)
+            }, 200) // Match transition duration
+            return () => clearTimeout(timer)
+        }
+    }, [isOpen])
+
     // Close on ESC key
     useEffect(() => {
         const handleEscape = (e: KeyboardEvent) => {
@@ -50,7 +73,7 @@ export default function Modal({
         }
     }, [isOpen])
 
-    if (!isOpen) return null
+    if (!isVisible) return null
 
     const sizeClasses = {
         sm: 'max-w-md',
@@ -68,17 +91,20 @@ export default function Modal({
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            {/* Backdrop */}
+            {/* Backdrop with fade animation */}
             <div
-                className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+                className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-200 
+                           ${isAnimating ? 'opacity-100' : 'opacity-0'}`}
                 onClick={handleBackdropClick}
                 aria-hidden="true"
             />
 
-            {/* Modal Container */}
+            {/* Modal Container with scale+fade animation */}
             <div
                 className={`relative bg-white dark:bg-gray-800 shadow-xl w-full ${sizeClasses[size]} 
-                           max-h-[90vh] overflow-hidden rounded-2xl`}
+                           max-h-[90vh] overflow-hidden rounded-2xl
+                           transition-all duration-200
+                           ${isAnimating ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
                 role="dialog"
                 aria-modal="true"
                 onClick={(e) => e.stopPropagation()}
