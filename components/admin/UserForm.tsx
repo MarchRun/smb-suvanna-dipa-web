@@ -1,12 +1,11 @@
 /**
- * User Form Component - REFACTORED with DynamicForm
- * Reusable form for Create/Edit user
- * Now uses universal DynamicForm component
+ * User Form - Using UniversalForm
+ * Standalone form for user pages (non-modal)
  */
 
 'use client'
 
-import DynamicForm from '@/components/shared/DynamicForm'
+import UniversalForm from '@/components/shared/UniversalForm'
 import { getUserFormFields } from '@/lib/forms/fieldConfigs'
 import type { Class, UserRole } from '@/types'
 
@@ -39,7 +38,6 @@ export default function UserForm({
     onCancel,
     isLoading = false
 }: UserFormProps) {
-    // Prepare initial data
     const formInitialData = {
         full_name: initialData?.full_name || '',
         email: initialData?.email || '',
@@ -52,10 +50,8 @@ export default function UserForm({
         class_id: initialData?.class_id || ''
     }
 
-    // Get form fields
     let formFields = getUserFormFields(classes)
 
-    // Adjust fields for edit mode
     if (mode === 'edit') {
         formFields = formFields.map(field => {
             if (field.name === 'password') {
@@ -68,7 +64,6 @@ export default function UserForm({
         })
     }
 
-    // Handle submit - transform data
     const handleSubmit = async (data: Record<string, any>) => {
         const userData: UserFormData = {
             full_name: data.full_name,
@@ -86,15 +81,14 @@ export default function UserForm({
     }
 
     return (
-        <DynamicForm
+        <UniversalForm
+            title={mode === 'create' ? 'Tambah Pengguna' : 'Edit Pengguna'}
+            mode={mode}
             fields={formFields}
             initialData={formInitialData}
             onSubmit={handleSubmit}
-            submitLabel={mode === 'create' ? 'Tambah' : 'Konfirmasi Perubahan'}
-            cancelLabel="Batal"
             onCancel={onCancel}
             isLoading={isLoading}
-            columns={2}
         />
     )
 }

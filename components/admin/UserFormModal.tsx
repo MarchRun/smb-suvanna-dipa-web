@@ -1,15 +1,13 @@
 /**
- * User Form Modal Component - REFACTORED with DynamicForm
- * Popup form for Create/Edit user
- * Now uses universal DynamicForm component
+ * User Form Modal - Using UniversalForm
+ * Clean, simple wrapper around UniversalForm
  */
 
 'use client'
 
 import { useState, useEffect } from 'react'
 import { uploadProfilePicture } from '@/actions/profile/uploadPicture'
-import DynamicForm from '@/components/shared/DynamicForm'
-import FileUpload from '@/components/shared/FileUpload'
+import UniversalForm, { FieldConfig } from '@/components/shared/UniversalForm'
 import { getUserFormFields } from '@/lib/forms/fieldConfigs'
 import type { Class, UserRole } from '@/types'
 
@@ -45,50 +43,14 @@ export default function UserFormModal({
     onSubmit,
     isLoading = false
 }: UserFormModalProps) {
-    const [selectedFile, setSelectedFile] = useState<File | null>(null)
-    const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-    const [uploadingPicture, setUploadingPicture] = useState(false)
     const [profilePictureUrl, setProfilePictureUrl] = useState(initialData?.profile_picture || '')
 
-    // Reset state when modal opens
     useEffect(() => {
         if (isOpen) {
-            setSelectedFile(null)
-            setPreviewUrl(null)
             setProfilePictureUrl(initialData?.profile_picture || '')
         }
     }, [isOpen, initialData])
 
-    // Handle file selection
-    const handleFileSelect = (file: File | null) => {
-        if (!file) return
-        setSelectedFile(file)
-        setPreviewUrl(URL.createObjectURL(file))
-    }
-
-    // Handle picture upload
-    const handleUploadPicture = async () => {
-        if (!selectedFile) return
-
-        setUploadingPicture(true)
-        try {
-            const formDataUpload = new FormData()
-            formDataUpload.append('file', selectedFile)
-            const result = await uploadProfilePicture(formDataUpload)
-
-            if (result.success && result.data) {
-                setProfilePictureUrl(result.data)
-                setSelectedFile(null)
-                setPreviewUrl(null)
-            }
-        } catch (err) {
-            console.error('Error uploading picture:', err)
-        } finally {
-            setUploadingPicture(false)
-        }
-    }
-
-    // Handle form submit
     const handleSubmit = async (data: Record<string, any>) => {
         const userData: UserFormData = {
             full_name: data.full_name,
@@ -108,7 +70,6 @@ export default function UserFormModal({
 
     if (!isOpen) return null
 
-    // Prepare initial data for form
     const formInitialData = {
         full_name: initialData?.full_name || '',
         email: initialData?.email || '',
@@ -121,29 +82,25 @@ export default function UserFormModal({
         class_id: initialData?.class_id || ''
     }
 
-    // Get form fields config
-    const formFields = getUserFormFields(classes)
+    let formFields = getUserFormFields(classes)
 
-    // If edit mode, make password optional and email disabled
-    const adjustedFields = formFields.map(field => {
-        if (mode === 'edit') {
+    // Adjust for edit mode
+    if (mode === 'edit') {
+        formFields = formFields.map(field => {
             if (field.name === 'password') {
-                return { ...field, required: false, helperText: 'Kosongkan jika tidak ingin mengubah password' }
+                return { ...field, required: false, helperText: '(kosongkan jika tidak diubah)' }
             }
             if (field.name === 'email') {
                 return { ...field, disabled: true, helperText: 'Email tidak dapat diubah' }
             }
-        }
-        return field
-    })
+            return field
+        })
+    }
 
     return (
         <>
             {/* Backdrop */}
-            <div
-                className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
-                onClick={onClose}
-            />
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" onClick={onClose} />
 
             {/* Modal */}
             <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
@@ -152,43 +109,14 @@ export default function UserFormModal({
                     onClick={(e) => e.stopPropagation()}
                 >
                     <div className="overflow-y-auto max-h-[90vh] p-6 md:p-8">
-                        {/* Title */}
-                        <h2 className="text-2xl md:text-3xl font-bold mb-6 text-orange-600 dark:text-orange-500">
-                            {mode === 'create' ? 'Tambah Pengguna' : 'Edit Pengguna'}
-                        </h2>
-
-                        {/* File Upload */}
-                        <div className="mb-6">
-                            <FileUpload
-                                label="Foto Profil"
-                                onFileSelect={handleFileSelect}
-                                previewUrl={previewUrl || profilePictureUrl}
-                                accept="image/jpeg,image/png"
-                                maxSize={1 * 1024 * 1024}
-                                helperText="Format: JPEG, PNG. Maksimal 1MB."
-                            />
-                            {selectedFile && (
-                                <button
-                                    type="button"
-                                    onClick={handleUploadPicture}
-                                    disabled={uploadingPicture}
-                                    className="mt-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50"
-                                >
-                                    {uploadingPicture ? 'Uploading...' : 'Upload Foto'}
-                                </button>
-                            )}
-                        </div>
-
-                        {/* Dynamic Form */}
-                        <DynamicForm
-                            fields={adjustedFields}
+                        <UniversalForm
+                            title={mode === 'create' ? 'Tambah Pengguna' : 'Edit Pengguna'}
+                            mode={mode}
+                            fields={formFields}
                             initialData={formInitialData}
                             onSubmit={handleSubmit}
-                            submitLabel={mode === 'create' ? 'Tambah' : 'Konfirmasi Perubahan'}
-                            cancelLabel="Batal"
                             onCancel={onClose}
-                            isLoading={isLoading || uploadingPicture}
-                            columns={2}
+                            isLoading={isLoading}
                         />
                     </div>
                 </div>
