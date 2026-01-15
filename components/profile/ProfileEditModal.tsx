@@ -10,6 +10,8 @@ import { useState, useEffect, useRef } from 'react'
 import { updateProfile, type ProfileUpdateData } from '@/actions/profile/update'
 import { uploadProfilePicture, deleteOldProfilePicture } from '@/actions/profile/uploadPicture'
 import { useDarkMode } from '@/hooks/useDarkMode'
+import Select from '@/components/shared/Select'
+import Textarea from '@/components/shared/Textarea'
 
 interface ProfileEditModalProps {
     isOpen: boolean
@@ -45,7 +47,7 @@ export default function ProfileEditModal({ isOpen, onClose, currentData, onSucce
         profile_picture: currentData.profile_picture || ''
     })
 
-        // Handle open/close animations
+    // Handle open/close animations
     useEffect(() => {
         if (isOpen) {
             setIsVisible(true)
@@ -249,21 +251,17 @@ export default function ProfileEditModal({ isOpen, onClose, currentData, onSucce
 
                             {/* Row 2: Gender & Birth Date */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-semibold mb-2" style={{ color: textColor }}>
-                                        Jenis Kelamin
-                                    </label>
-                                    <select
-                                        className={inputStyle}
-                                        value={formData.gender || ''}
-                                        onChange={(e) => setFormData({ ...formData, gender: e.target.value as 'Laki-laki' | 'Perempuan' })}
-                                        disabled={loading}
-                                    >
-                                        <option value="">Pilih Jenis Kelamin</option>
-                                        <option value="Laki-laki">Laki-laki</option>
-                                        <option value="Perempuan">Perempuan</option>
-                                    </select>
-                                </div>
+                                <Select
+                                    label="Jenis Kelamin"
+                                    value={formData.gender || ''}
+                                    onChange={(value) => setFormData({ ...formData, gender: value as 'Laki-laki' | 'Perempuan' })}
+                                    options={[
+                                        { value: '', label: 'Pilih Jenis Kelamin' },
+                                        { value: 'Laki-laki', label: 'Laki-laki' },
+                                        { value: 'Perempuan', label: 'Perempuan' }
+                                    ]}
+                                    disabled={loading}
+                                />
                                 <div>
                                     <label className="block text-sm font-semibold mb-2" style={{ color: textColor }}>
                                         Tanggal Lahir
@@ -330,19 +328,14 @@ export default function ProfileEditModal({ isOpen, onClose, currentData, onSucce
                             </div>
 
                             {/* Row 4: Address */}
-                            <div>
-                                <label className="block text-sm font-semibold mb-2" style={{ color: textColor }}>
-                                    Alamat Rumah
-                                </label>
-                                <textarea
-                                    className={`${inputStyle} resize-none`}
-                                    rows={4}
-                                    value={formData.address}
-                                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                                    disabled={loading}
-                                    placeholder="Masukkan alamat lengkap"
-                                />
-                            </div>
+                            <Textarea
+                                label="Alamat Rumah"
+                                value={formData.address || ''}
+                                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                disabled={loading}
+                                placeholder="Masukkan alamat lengkap"
+                                rows={4}
+                            />
 
                             {/* Buttons - Wireframe style */}
                             <div className="flex gap-4 pt-4">

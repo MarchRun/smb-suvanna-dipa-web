@@ -1,11 +1,10 @@
 /**
  * Image Modal Component
  * Fullscreen modal to view images (for "Lihat" button)
+ * Now using Modal wrapper component
  */
 
 'use client'
-
-import { useEffect } from 'react'
 
 interface ImageModalProps {
     isOpen: boolean
@@ -15,22 +14,6 @@ interface ImageModalProps {
 }
 
 export default function ImageModal({ isOpen, imageUrl, caption, onClose }: ImageModalProps) {
-    // Close on ESC key
-    useEffect(() => {
-        const handleEsc = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') onClose()
-        }
-        if (isOpen) {
-            document.addEventListener('keydown', handleEsc)
-            // Prevent body scroll
-            document.body.style.overflow = 'hidden'
-        }
-        return () => {
-            document.removeEventListener('keydown', handleEsc)
-            document.body.style.overflow = 'unset'
-        }
-    }, [isOpen, onClose])
-
     if (!isOpen) return null
 
     return (
@@ -41,8 +24,9 @@ export default function ImageModal({ isOpen, imageUrl, caption, onClose }: Image
             {/* Close button */}
             <button
                 onClick={onClose}
-                className="absolute top-4 right-4 w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 transition-all flex items-center justify-center text-white"
+                className="absolute top-4 right-4 w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 transition-all flex items-center justify-center text-white z-10"
                 title="Close (ESC)"
+                aria-label="Close"
             >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
