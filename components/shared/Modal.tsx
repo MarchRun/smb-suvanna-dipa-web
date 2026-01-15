@@ -143,8 +143,8 @@ export default function Modal({
                     </div>
                 )}
 
-                {/* Content */}
-                <div className="p-6 max-h-[calc(90vh-140px)] overflow-y-auto">
+                {/* Content - NO PADDING, forms handle their own */}
+                <div className="max-h-[calc(90vh-140px)] overflow-y-auto">
                     {children}
                 </div>
             </div>
