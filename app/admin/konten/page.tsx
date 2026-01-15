@@ -9,7 +9,7 @@
 import { useState, useEffect } from 'react'
 import DashboardLayout from '@/components/shared/DashboardLayout'
 import ImageModal from '@/components/shared/ImageModal'
-import PublicContentEditModal from '@/components/admin/PublicContentEditModal'
+import PublicContentEditModal from '@/components/shared/PublicContentEditModal'
 import {
     getPublicContentBySection,
     updateActivities,
