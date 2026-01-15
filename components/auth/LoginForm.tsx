@@ -10,26 +10,14 @@ import Link from 'next/link'
 import { login } from '@/actions/auth/login'
 import Input from '@/components/shared/Input'
 import Button from '@/components/shared/Button'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 export default function LoginForm() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
-    const [isDarkMode, setIsDarkMode] = useState(false)
-
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
+    const isDarkMode = useDarkMode()
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()

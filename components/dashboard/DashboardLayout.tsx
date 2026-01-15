@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react'
 import DashboardHeader from './DashboardHeader'
 import DashboardSidebar, { MenuItem } from './DashboardSidebar'
 import SessionTimeoutProvider from '@/components/providers/SessionTimeoutProvider'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 interface DashboardLayoutProps {
     role: 'Siswa' | 'Pembina' | 'Admin'
@@ -19,21 +20,7 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ role, menuItems, children }: DashboardLayoutProps) {
     const [sidebarOpen, setSidebarOpen] = useState(false)
-    const [isDarkMode, setIsDarkMode] = useState(false)
-
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
+    const isDarkMode = useDarkMode()
 
     // Close sidebar on window resize to desktop
     useEffect(() => {

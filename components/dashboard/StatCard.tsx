@@ -7,7 +7,7 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 interface StatCardProps {
     title: string
@@ -18,21 +18,7 @@ interface StatCardProps {
 }
 
 export default function StatCard({ title, value, icon, className = '', loading = false }: StatCardProps) {
-    const [isDarkMode, setIsDarkMode] = useState(false)
-
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
+    const isDarkMode = useDarkMode()
 
     // Card background matches textColor (orange/brown)
     const cardBg = isDarkMode ? '#ea580c' : 'var(--primary-900)'

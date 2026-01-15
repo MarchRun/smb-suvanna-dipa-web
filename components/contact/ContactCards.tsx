@@ -8,10 +8,11 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Card from '@/components/shared/Card'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 export default function ContactCards() {
     const [isVisible, setIsVisible] = useState(false)
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const isDarkMode = useDarkMode()
     const sectionRef = useRef<HTMLElement>(null)
 
     const contacts = [
@@ -37,21 +38,7 @@ export default function ContactCards() {
         }
     ]
 
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
-
-    // Intersection Observer
+        // Intersection Observer
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {

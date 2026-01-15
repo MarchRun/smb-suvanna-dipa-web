@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react'
 import DashboardLayout from '@/components/dashboard/DashboardLayout'
 import ProfileEditModal from '@/components/profile/ProfileEditModal'
 import { getCurrentUserProfile } from '@/actions/auth/profile'
+import { useDarkMode } from '@/hooks/useDarkMode'
 import type { UserProfile } from '@/types'
 
 const studentMenuItems = [
@@ -20,24 +21,10 @@ const studentMenuItems = [
 ]
 
 export default function StudentProfilPage() {
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const isDarkMode = useDarkMode()
     const [profile, setProfile] = useState<UserProfile | null>(null)
     const [loading, setLoading] = useState(true)
     const [isModalOpen, setIsModalOpen] = useState(false)
-
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
 
     // Fetch profile
     useEffect(() => {

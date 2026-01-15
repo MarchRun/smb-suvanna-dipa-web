@@ -6,32 +6,19 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import Input from '@/components/shared/Input'
 import Button from '@/components/shared/Button'
 import { requestPasswordReset } from '@/actions/auth/password'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 export default function ForgotPasswordForm() {
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
     const [error, setError] = useState('')
-    const [isDarkMode, setIsDarkMode] = useState(false)
-
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
+    const isDarkMode = useDarkMode()
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()

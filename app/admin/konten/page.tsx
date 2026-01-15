@@ -19,6 +19,7 @@ import {
     type TestimonialItem
 } from '@/actions/admin/publicContent'
 import { uploadProfilePicture } from '@/actions/profile/uploadPicture'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 const adminMenuItems = [
     { label: 'Dashboard', href: '/admin/dashboard' },
@@ -29,7 +30,7 @@ const adminMenuItems = [
 ]
 
 export default function KontenPublikPage() {
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const isDarkMode = useDarkMode()
     const [isEditModalOpen, setIsEditModalOpen] = useState(false)
     const [loading, setLoading] = useState(true)
 
@@ -56,19 +57,6 @@ export default function KontenPublikPage() {
 
     // Uploading state
     const [uploadingIndex, setUploadingIndex] = useState<number | null>(null)
-
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
 
     useEffect(() => {
         loadContent()

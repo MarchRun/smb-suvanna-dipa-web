@@ -7,27 +7,14 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 export default function Quote() {
     const [isVisible, setIsVisible] = useState(false)
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const isDarkMode = useDarkMode()
     const sectionRef = useRef<HTMLElement>(null)
 
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
-
-    useEffect(() => {
+        useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
                 // Track both entering and leaving for refresh effect

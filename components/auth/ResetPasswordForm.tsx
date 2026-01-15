@@ -6,12 +6,13 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Input from '@/components/shared/Input'
 import Button from '@/components/shared/Button'
 import { resetPassword } from '@/actions/auth/password'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 // Password strength calculator
 function calculatePasswordStrength(password: string): { score: number; label: string; color: string } {
@@ -43,21 +44,7 @@ export default function ResetPasswordForm({ token, email }: ResetPasswordFormPro
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
     const [success, setSuccess] = useState(false)
-    const [isDarkMode, setIsDarkMode] = useState(false)
-
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
+    const isDarkMode = useDarkMode()
 
     const passwordStrength = password ? calculatePasswordStrength(password) : null
     const passwordsMatch = password === confirmPassword && confirmPassword !== ''

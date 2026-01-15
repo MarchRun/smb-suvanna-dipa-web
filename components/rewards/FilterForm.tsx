@@ -7,6 +7,7 @@
 
 import { useState, useEffect } from 'react'
 import Button from '@/components/shared/Button'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 interface FilterFormProps {
     onApply: (filters: {
@@ -18,22 +19,9 @@ interface FilterFormProps {
 }
 
 export default function FilterForm({ onApply, onReset, onClose }: FilterFormProps) {
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const isDarkMode = useDarkMode()
     const [stockStatus, setStockStatus] = useState<'all' | 'in-stock' | 'out-of-stock'>('all')
     const [sortBy, setSortBy] = useState<'name-asc' | 'name-desc' | 'price-asc' | 'price-desc' | 'stock-desc'>('name-asc')
-
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
 
     const handleApply = () => {
         onApply({ stockStatus, sortBy })

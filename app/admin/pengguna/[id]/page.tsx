@@ -9,6 +9,7 @@ import { use, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/dashboard/DashboardLayout'
 import { getUserById } from '@/actions/admin/users'
+import { useDarkMode } from '@/hooks/useDarkMode'
 import type { Profile } from '@/types'
 
 const adminMenuItems = [
@@ -22,23 +23,9 @@ const adminMenuItems = [
 export default function UserDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params)
     const router = useRouter()
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const isDarkMode = useDarkMode()
     const [user, setUser] = useState<Profile | null>(null)
     const [loading, setLoading] = useState(true)
-
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
 
     // Fetch user
     useEffect(() => {

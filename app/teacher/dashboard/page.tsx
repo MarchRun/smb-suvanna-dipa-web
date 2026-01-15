@@ -10,6 +10,8 @@ import DashboardLayout from '@/components/dashboard/DashboardLayout'
 import StatCard from '@/components/dashboard/StatCard'
 import { getTeacherDashboardStats, type TeacherDashboardStats } from '@/actions/teacher/stats'
 import { getCurrentUserProfile } from '@/actions/auth/profile'
+import { useDarkMode } from '@/hooks/useDarkMode'
+import { getTextColor } from '@/lib/utils/colorHelpers'
 
 // Menu items for Pembina
 const pembinaMenuItems = [
@@ -20,24 +22,10 @@ const pembinaMenuItems = [
 ]
 
 export default function TeacherDashboardPage() {
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const isDarkMode = useDarkMode()
     const [stats, setStats] = useState<TeacherDashboardStats | null>(null)
     const [userName, setUserName] = useState<string>('')
     const [loading, setLoading] = useState(true)
-
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
 
     // Fetch stats and user profile from database
     useEffect(() => {
@@ -61,7 +49,7 @@ export default function TeacherDashboardPage() {
         fetchData()
     }, [])
 
-    const textColor = isDarkMode ? '#ea580c' : '#7c2d12'
+    const textColor = getTextColor(isDarkMode)
 
     return (
         <DashboardLayout role="Pembina" menuItems={pembinaMenuItems}>

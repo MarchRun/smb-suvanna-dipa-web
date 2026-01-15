@@ -9,6 +9,7 @@
 import { useState, useEffect, useRef } from 'react'
 import LoginForm from '@/components/auth/LoginForm'
 import BubbleEffect from './BubbleEffect'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 export default function Hero() {
     // Array of background images
@@ -22,7 +23,7 @@ export default function Hero() {
     const [isVisible, setIsVisible] = useState(false)
     const [showLoginForm, setShowLoginForm] = useState(false)
     const [isMobile, setIsMobile] = useState(false)
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const isDarkMode = useDarkMode()
     const sectionRef = useRef<HTMLElement>(null)
 
     // Auto-rotate images every 5 seconds
@@ -44,21 +45,6 @@ export default function Hero() {
         checkMobile()
         window.addEventListener('resize', checkMobile)
         return () => window.removeEventListener('resize', checkMobile)
-    }, [])
-
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        // Listen for dark mode changes
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
     }, [])
 
     // Intersection Observer to detect when section is visible

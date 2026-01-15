@@ -12,6 +12,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { getCurrentUserProfile } from '@/actions/auth/profile'
 import { createClient } from '@/lib/supabase/client'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 export interface MenuItem {
     label: string
@@ -105,23 +106,9 @@ const getDefaultIcon = (label: string, color: string, isActive: boolean) => {
 
 export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: DashboardSidebarProps) {
     const pathname = usePathname()
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const isDarkMode = useDarkMode()
     const [userName, setUserName] = useState<string>('User')
     const [userInitials, setUserInitials] = useState<string>(role.charAt(0))
-
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
 
     // Fetch user profile data
     useEffect(() => {

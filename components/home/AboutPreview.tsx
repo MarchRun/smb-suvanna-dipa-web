@@ -9,11 +9,12 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Button from '@/components/shared/Button'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 export default function AboutPreview() {
     const router = useRouter()
     const [isVisible, setIsVisible] = useState(false)
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const isDarkMode = useDarkMode()
     const sectionRef = useRef<HTMLElement>(null)
 
     // Intersection Observer to detect when section is visible
@@ -41,20 +42,6 @@ export default function AboutPreview() {
                 observer.unobserve(sectionRef.current)
             }
         }
-    }, [])
-
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
     }, [])
 
     return (

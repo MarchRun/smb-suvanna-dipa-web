@@ -9,9 +9,12 @@
 import { useState, useEffect } from 'react'
 import DashboardLayout from '@/components/dashboard/DashboardLayout'
 import StatCard from '@/components/dashboard/StatCard'
+import StatsGrid from '@/components/dashboard/StatsGrid'
 import VisitorChart from '@/components/dashboard/VisitorChart'
 import { getDashboardStats, type DashboardStats } from '@/actions/admin/stats'
 import { getCurrentUserProfile } from '@/actions/auth/profile'
+import { useDarkMode } from '@/hooks/useDarkMode'
+import { getTextColor } from '@/lib/utils/colorHelpers'
 
 // Menu items for Admin
 const adminMenuItems = [
@@ -23,24 +26,10 @@ const adminMenuItems = [
 ]
 
 export default function AdminDashboardPage() {
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const isDarkMode = useDarkMode()
     const [stats, setStats] = useState<DashboardStats | null>(null)
     const [userName, setUserName] = useState<string>('')
     const [loading, setLoading] = useState(true)
-
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
 
     // Fetch stats and user profile from Supabase
     useEffect(() => {
@@ -64,7 +53,7 @@ export default function AdminDashboardPage() {
         fetchData()
     }, [])
 
-    const textColor = isDarkMode ? '#ea580c' : 'var(--primary-900)'
+    const textColor = getTextColor(isDarkMode)
 
     return (
         <DashboardLayout role="Admin" menuItems={adminMenuItems}>
@@ -80,8 +69,7 @@ export default function AdminDashboardPage() {
                 </h1>
 
                 {/* Stat Cards - Real-time data from Supabase */}
-                {/* All cards same size, third card centered when wrapping */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8">
+                <StatsGrid>
                     <StatCard
                         title="Jumlah Siswa"
                         value={stats?.totalSiswa ?? 0}
@@ -92,17 +80,12 @@ export default function AdminDashboardPage() {
                         value={stats?.totalKelas ?? 0}
                         loading={loading}
                     />
-                    {/* Card 3: Full width on mobile, centered on tablet (2-col grid), normal on desktop */}
-                    <div className="sm:col-span-2 sm:flex sm:justify-center lg:col-span-1 lg:block">
-                        <div className="sm:w-1/2 lg:w-full">
-                            <StatCard
-                                title="Jumlah Pembina"
-                                value={stats?.totalPembina ?? 0}
-                                loading={loading}
-                            />
-                        </div>
-                    </div>
-                </div>
+                    <StatCard
+                        title="Jumlah Guru"
+                        value={stats?.totalPembina ?? 0}
+                        loading={loading}
+                    />
+                </StatsGrid>
 
                 {/* Grafik Widget - Matching StatCard styling */}
                 <div

@@ -7,6 +7,7 @@
 
 import { useState, useEffect } from 'react'
 import type { Product } from '@/actions/admin/products'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 interface RewardCardProps {
     reward: Product
@@ -15,20 +16,7 @@ interface RewardCardProps {
 }
 
 export default function RewardCard({ reward, onEdit, onDelete }: RewardCardProps) {
-    const [isDarkMode, setIsDarkMode] = useState(false)
-
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
+    const isDarkMode = useDarkMode()
 
     const textColor = isDarkMode ? '#ea580c' : '#7c2d12'
     const bgColor = isDarkMode ? '#1e293b' : '#ffffff'

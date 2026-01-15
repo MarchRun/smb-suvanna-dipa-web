@@ -6,6 +6,7 @@
 'use client'
 
 import React from 'react'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 interface ButtonProps {
     children: React.ReactNode
@@ -30,20 +31,7 @@ export default function Button({
     noShadow = false,
     customStyle = {}
 }: ButtonProps) {
-    const [isDarkMode, setIsDarkMode] = React.useState(false)
-
-    React.useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
+    const isDarkMode = useDarkMode()
     const baseStyles = "px-4 py-2 sm:px-6 sm:py-3 font-semibold border-2 transition-all duration-200 rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
 
     const variantStyles = {

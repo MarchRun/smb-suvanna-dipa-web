@@ -5,24 +5,11 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useDarkMode } from '@/hooks/useDarkMode'
+import { getCurrentYear } from '@/lib/utils/formatters'
 
 export default function Footer() {
-    const [isDarkMode, setIsDarkMode] = useState(false)
-
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
+    const isDarkMode = useDarkMode()
     return (
         <footer
             className="py-8"
@@ -40,7 +27,7 @@ export default function Footer() {
                             textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
                         }}
                     >
-                        © {new Date().getFullYear()} SMB Suvanna Dipa. All rights reserved.
+                        © {getCurrentYear()} SMB Suvanna Dipa. All rights reserved.
                     </p>
                 </div>
             </div>

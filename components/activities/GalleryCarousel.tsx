@@ -8,11 +8,12 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 export default function GalleryCarousel() {
     const [currentIndex, setCurrentIndex] = useState(0)
     const [isVisible, setIsVisible] = useState(false)
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const isDarkMode = useDarkMode()
     const sectionRef = useRef<HTMLElement>(null)
 
     const images = [
@@ -22,20 +23,6 @@ export default function GalleryCarousel() {
         { id: 4, src: '/images/slider-image4.png', caption: 'Fufufafa' },
         { id: 5, src: '/images/slider-image5.png', caption: 'Angkat Karung' }
     ]
-
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
 
     // Intersection Observer
     useEffect(() => {

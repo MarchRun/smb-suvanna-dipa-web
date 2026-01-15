@@ -21,6 +21,7 @@ import {
     type ProductSort
 } from '@/actions/admin/products'
 import { uploadProfilePicture } from '@/actions/profile/uploadPicture'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 const adminMenuItems = [
     { label: 'Dashboard', href: '/admin/dashboard' },
@@ -32,7 +33,7 @@ const adminMenuItems = [
 
 export default function HadiahPage() {
     const router = useRouter()
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const isDarkMode = useDarkMode()
     const [products, setProducts] = useState<Product[]>([])
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState('')
@@ -45,19 +46,6 @@ export default function HadiahPage() {
     const [showFilter, setShowFilter] = useState(false)
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
-
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
 
     useEffect(() => {
         loadProducts()

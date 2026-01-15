@@ -9,6 +9,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { updateProfile, type ProfileUpdateData } from '@/actions/profile/update'
 import { uploadProfilePicture, deleteOldProfilePicture } from '@/actions/profile/uploadPicture'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 interface ProfileEditModalProps {
     isOpen: boolean
@@ -25,7 +26,7 @@ interface ProfileEditModalProps {
 }
 
 export default function ProfileEditModal({ isOpen, onClose, currentData, onSuccess }: ProfileEditModalProps) {
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const isDarkMode = useDarkMode()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
     const [uploadingPicture, setUploadingPicture] = useState(false)
@@ -44,21 +45,7 @@ export default function ProfileEditModal({ isOpen, onClose, currentData, onSucce
         profile_picture: currentData.profile_picture || ''
     })
 
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
-
-    // Handle open/close animations
+        // Handle open/close animations
     useEffect(() => {
         if (isOpen) {
             setIsVisible(true)

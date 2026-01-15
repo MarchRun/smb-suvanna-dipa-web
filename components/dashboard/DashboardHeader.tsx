@@ -7,8 +7,9 @@
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import Link from 'next/link'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 interface DashboardHeaderProps {
     role: 'Siswa' | 'Pembina' | 'Admin'
@@ -18,7 +19,7 @@ interface DashboardHeaderProps {
 }
 
 export default function DashboardHeader({ role, onMenuToggle, showMenuButton = true, blurred = false }: DashboardHeaderProps) {
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const isDarkMode = useDarkMode()
 
     // Get dashboard path based on role
     const getDashboardPath = () => {
@@ -30,21 +31,17 @@ export default function DashboardHeader({ role, onMenuToggle, showMenuButton = t
         }
     }
 
-    // Load and sync dark mode
+    // Load saved dark mode preference on mount
     useEffect(() => {
         const savedMode = localStorage.getItem('darkMode')
-        if (savedMode) {
-            setIsDarkMode(savedMode === 'true')
-            if (savedMode === 'true') {
-                document.documentElement.classList.add('dark')
-            }
+        if (savedMode === 'true') {
+            document.documentElement.classList.add('dark')
         }
     }, [])
 
     // Toggle dark mode (matching Navbar behavior)
     const toggleDarkMode = () => {
         const newMode = !isDarkMode
-        setIsDarkMode(newMode)
         if (newMode) {
             document.documentElement.classList.add('dark')
         } else {

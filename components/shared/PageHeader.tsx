@@ -7,6 +7,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 interface PageHeaderProps {
     title: string
@@ -22,7 +23,7 @@ export default function PageHeader({
     const [displayedTitle, setDisplayedTitle] = useState('')
     const [showCursor, setShowCursor] = useState(true)
     const [isVisible, setIsVisible] = useState(false)
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const isDarkMode = useDarkMode()
     const sectionRef = useRef<HTMLElement>(null)
 
     const alignmentClass = {
@@ -30,20 +31,6 @@ export default function PageHeader({
         center: 'text-center',
         right: 'text-right'
     }
-
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
 
     // Intersection Observer to track visibility
     useEffect(() => {

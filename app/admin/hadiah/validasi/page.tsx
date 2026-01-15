@@ -14,6 +14,7 @@ import {
     rejectOrder,
     type ProductOrder
 } from '@/actions/admin/productOrders'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 const adminMenuItems = [
     { label: 'Dashboard', href: '/admin/dashboard' },
@@ -25,23 +26,10 @@ const adminMenuItems = [
 
 export default function ValidasiPage() {
     const router = useRouter()
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const isDarkMode = useDarkMode()
     const [orders, setOrders] = useState<ProductOrder[]>([])
     const [loading, setLoading] = useState(true)
     const [processingId, setProcessingId] = useState<number | null>(null)
-
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
 
     useEffect(() => {
         loadOrders()

@@ -8,6 +8,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 interface InputProps {
     label?: string
@@ -44,21 +45,8 @@ export default function Input({
     disabled = false,
     error
 }: InputProps) {
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const isDarkMode = useDarkMode()
     const [showPassword, setShowPassword] = useState(false)
-
-    React.useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
 
     const isPassword = type === 'password'
     const inputType = isPassword ? (showPassword ? 'text' : 'password') : type

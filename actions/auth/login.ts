@@ -10,6 +10,7 @@ import { createClient as createServiceClient } from '@supabase/supabase-js'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { isValidEmail, sanitizeHtml } from '@/lib/security/sanitize'
+import { normalizeEmail } from '@/lib/utils/formatters'
 import type { ActionResponse } from '@/types'
 
 interface LoginData {
@@ -21,7 +22,7 @@ export async function login(data: LoginData): Promise<ActionResponse<{ role: str
     const supabase = await createClient()
 
     // Sanitize and validate input
-    const email = data.email.toLowerCase().trim()
+    const email = normalizeEmail(data.email)
 
     if (!isValidEmail(email)) {
         return {

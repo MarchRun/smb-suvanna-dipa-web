@@ -10,6 +10,7 @@ import Input from '@/components/shared/Input'
 import Button from '@/components/shared/Button'
 import { uploadProfilePicture } from '@/actions/profile/uploadPicture'
 import type { Product } from '@/actions/admin/products'
+import { useDarkMode } from '@/hooks/useDarkMode'
 
 interface RewardFormProps {
     mode: 'add' | 'edit'
@@ -19,7 +20,7 @@ interface RewardFormProps {
 }
 
 export default function RewardForm({ mode, initialData, onSubmit, onCancel }: RewardFormProps) {
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const isDarkMode = useDarkMode()
     const [name, setName] = useState(initialData?.name || '')
     const [price, setPrice] = useState(initialData?.price?.toString() || '')
     const [stock, setStock] = useState(initialData?.stock?.toString() || '')
@@ -27,19 +28,6 @@ export default function RewardForm({ mode, initialData, onSubmit, onCancel }: Re
     const [imagePreview, setImagePreview] = useState<string | null>(initialData?.image_url || null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
-
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
