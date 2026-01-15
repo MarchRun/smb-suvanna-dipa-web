@@ -6,6 +6,7 @@
 'use client'
 
 import { useState } from 'react'
+import Textarea from '@/components/shared/Textarea'
 import type { GalleryItem, TestimonialItem } from '@/actions/admin/publicContent'
 
 interface PublicContentEditModalProps {
@@ -239,28 +240,17 @@ export default function PublicContentEditModal({
                                             </div>
 
                                             {/* Description */}
-                                            <div>
-                                                <label
-                                                    className="block text-sm font-semibold mb-2"
-                                                    style={{ color: textColor }}
-                                                >
-                                                    Deskripsi {index + 1}:
-                                                </label>
-                                                <textarea
-                                                    value={item.description}
-                                                    onChange={(e) => {
-                                                        const newTestimonials = [...testimonials]
-                                                        newTestimonials[index].description = e.target.value
-                                                        setTestimonials(newTestimonials)
-                                                    }}
-                                                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-800
-                                                        focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200
-                                                        disabled:opacity-50 resize-none
-                                                        dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                                    rows={4}
-                                                    disabled={saving}
-                                                />
-                                            </div>
+                                            <Textarea
+                                                label={`Deskripsi ${index + 1}:`}
+                                                value={item.description}
+                                                onChange={(e) => {
+                                                    const newTestimonials = [...testimonials]
+                                                    newTestimonials[index].description = e.target.value
+                                                    setTestimonials(newTestimonials)
+                                                }}
+                                                rows={4}
+                                                disabled={saving}
+                                            />
                                         </div>
                                     ))}
                                 </div>

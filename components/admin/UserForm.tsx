@@ -6,6 +6,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Select from '@/components/shared/Select'
+import Textarea from '@/components/shared/Textarea'
 import type { Profile, Class, UserRole } from '@/types'
 
 export interface UserFormData {
@@ -121,18 +123,16 @@ export default function UserForm({
                 </div>
 
                 {/* Jenis Kelamin */}
-                <div>
-                    <label className={labelClass}>Jenis Kelamin</label>
-                    <select
-                        value={formData.gender}
-                        onChange={(e) => setFormData(prev => ({ ...prev, gender: e.target.value }))}
-                        className={inputClass}
-                    >
-                        <option value="">Pilih jenis kelamin</option>
-                        <option value="Laki-laki">Laki-laki</option>
-                        <option value="Perempuan">Perempuan</option>
-                    </select>
-                </div>
+                <Select
+                    label="Jenis Kelamin"
+                    value={formData.gender}
+                    onChange={(value) => setFormData(prev => ({ ...prev, gender: value }))}
+                    options={[
+                        { value: '', label: 'Pilih jenis kelamin' },
+                        { value: 'Laki-laki', label: 'Laki-laki' },
+                        { value: 'Perempuan', label: 'Perempuan' }
+                    ]}
+                />
 
                 {/* Tanggal Lahir */}
                 <div>
@@ -146,47 +146,40 @@ export default function UserForm({
                 </div>
 
                 {/* Kelas */}
-                <div>
-                    <label className={labelClass}>Kelas</label>
-                    <select
-                        value={formData.class_id ?? ''}
-                        onChange={(e) => setFormData(prev => ({
-                            ...prev,
-                            class_id: e.target.value ? Number(e.target.value) : null
-                        }))}
-                        className={inputClass}
-                    >
-                        <option value="">Pilih kelas</option>
-                        {classes.map(c => (
-                            <option key={c.id} value={c.id}>{c.name}</option>
-                        ))}
-                    </select>
-                </div>
+                <Select
+                    label="Kelas"
+                    value={formData.class_id ?? ''}
+                    onChange={(value) => setFormData(prev => ({
+                        ...prev,
+                        class_id: value ? Number(value) : null
+                    }))}
+                    options={[
+                        { value: '', label: 'Pilih kelas' },
+                        ...classes.map(c => ({ value: c.id, label: c.name }))
+                    ]}
+                />
 
                 {/* Peran */}
-                <div>
-                    <label className={labelClass}>Peran *</label>
-                    <select
-                        value={formData.role}
-                        onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value as UserRole }))}
-                        className={inputClass}
-                    >
-                        <option value="siswa">Siswa</option>
-                        <option value="pembina">Pembina</option>
-                    </select>
-                </div>
+                <Select
+                    label="Peran"
+                    value={formData.role}
+                    onChange={(value) => setFormData(prev => ({ ...prev, role: value as UserRole }))}
+                    options={[
+                        { value: 'siswa', label: 'Siswa' },
+                        { value: 'pembina', label: 'Pembina' }
+                    ]}
+                    required
+                />
             </div>
 
             {/* Alamat Rumah - Full width */}
-            <div>
-                <label className={labelClass}>Alamat Rumah</label>
-                <textarea
-                    value={formData.address}
-                    onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
-                    className={`${inputClass} min-h-[100px] resize-none`}
-                    placeholder="Masukkan alamat lengkap"
-                />
-            </div>
+            <Textarea
+                label="Alamat Rumah"
+                value={formData.address}
+                onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
+                placeholder="Masukkan alamat lengkap"
+                rows={4}
+            />
 
             {/* Email & Password */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
