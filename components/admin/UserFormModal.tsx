@@ -53,6 +53,22 @@ export default function UserFormModal({
     }, [isOpen, initialData])
 
     const handleSubmit = async (data: Record<string, any>) => {
+        let finalProfilePicture = profilePictureUrl
+
+        // If a new file is uploaded
+        if (data.profile_picture instanceof File) {
+            const formData = new FormData()
+            formData.append('file', data.profile_picture)
+
+            const uploadResult = await uploadProfilePicture(formData)
+            if (uploadResult.success && uploadResult.data) {
+                finalProfilePicture = uploadResult.data
+            } else {
+                console.error('Failed to upload profile picture:', uploadResult.error)
+                // Optionally handle error (alert or return)
+            }
+        }
+
         const userData: UserFormData = {
             full_name: data.full_name,
             email: data.email,
@@ -63,7 +79,7 @@ export default function UserFormModal({
             address: data.address,
             role: data.role as UserRole,
             class_id: data.class_id ? Number(data.class_id) : null,
-            profile_picture: profilePictureUrl
+            profile_picture: finalProfilePicture
         }
 
         await onSubmit(userData)
@@ -89,9 +105,6 @@ export default function UserFormModal({
             if (field.name === 'password') {
                 return { ...field, required: false, helperText: '(kosongkan jika tidak diubah)' }
             }
-            if (field.name === 'email') {
-                return { ...field, disabled: true, helperText: 'Email tidak dapat diubah' }
-            }
             return field
         })
     }
@@ -103,15 +116,17 @@ export default function UserFormModal({
             size="lg"
             showCloseButton={false}
         >
-            <UniversalForm
-                title={mode === 'create' ? 'Tambah Pengguna' : 'Edit Pengguna'}
-                mode={mode}
-                fields={formFields}
-                initialData={formInitialData}
-                onSubmit={handleSubmit}
-                onCancel={onClose}
-                isLoading={isLoading}
-            />
+            <div className="p-6 md:p-8">
+                <UniversalForm
+                    title={mode === 'create' ? 'Tambah Pengguna' : 'Edit Pengguna'}
+                    mode={mode}
+                    fields={formFields}
+                    initialData={formInitialData}
+                    onSubmit={handleSubmit}
+                    onCancel={onClose}
+                    isLoading={isLoading}
+                />
+            </div>
         </Modal>
     )
 }

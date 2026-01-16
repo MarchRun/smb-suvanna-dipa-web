@@ -21,12 +21,26 @@ export default function FileUpload({
     label,
     onFileSelect,
     previewUrl,
-    accept = 'image/jpeg,image/png',
+    accept = 'image/jpeg,image/jpg,image/png',
     maxSize = 1 * 1024 * 1024, // 1MB default
     helperText = 'Format: JPEG, PNG. Maksimal 1MB.'
 }: FileUploadProps) {
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [error, setError] = useState('')
+    const [fileName, setFileName] = useState('')
+
+    // Determine if dark mode is active
+    const [isDarkMode, setIsDarkMode] = useState(false)
+
+    // Check dark mode on mount
+    if (typeof window !== 'undefined') {
+        const checkDark = document.documentElement.classList.contains('dark')
+        if (checkDark !== isDarkMode) {
+            setIsDarkMode(checkDark)
+        }
+    }
+
+    const textColor = isDarkMode ? '#ea580c' : '#7c2d12'
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
@@ -34,14 +48,16 @@ export default function FileUpload({
 
         if (!file) {
             onFileSelect(null)
+            setFileName('')
             return
         }
 
         // Validate file type
-        const validTypes = ['image/jpeg', 'image/png']
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png']
         if (!validTypes.includes(file.type)) {
             setError('Format file tidak valid. Gunakan JPEG atau PNG.')
             onFileSelect(null)
+            setFileName('')
             return
         }
 
@@ -50,9 +66,11 @@ export default function FileUpload({
             const maxSizeMB = (maxSize / (1024 * 1024)).toFixed(0)
             setError(`Ukuran file terlalu besar. Maksimal ${maxSizeMB}MB.`)
             onFileSelect(null)
+            setFileName('')
             return
         }
 
+        setFileName(file.name)
         onFileSelect(file)
     }
 
@@ -62,11 +80,11 @@ export default function FileUpload({
 
     return (
         <div>
-            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-bold mb-2" style={{ color: textColor }}>
                 {label}
             </label>
 
-            <div className="flex gap-3">
+            <div className="flex gap-2">
                 <input
                     ref={fileInputRef}
                     type="file"
@@ -77,20 +95,20 @@ export default function FileUpload({
 
                 <input
                     type="text"
-                    value={previewUrl ? 'File dipilih' : ''}
+                    value={fileName || (previewUrl ? 'File dipilih' : '')}
                     placeholder="Pilih file..."
                     readOnly
-                    className="flex-1 px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 
-                             bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                             cursor-pointer"
+                    className="flex-1 px-4 py-2.5 rounded-l-full border-2 border-r-0 cursor-pointer
+                             bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                    style={{ borderColor: textColor }}
                     onClick={handleClick}
                 />
 
                 <button
                     type="button"
                     onClick={handleClick}
-                    className="px-6 py-3 rounded-xl font-bold text-white transition-all duration-200 hover:opacity-90"
-                    style={{ backgroundColor: 'var(--primary-700)' }}
+                    className="px-6 py-2.5 rounded-r-full font-bold text-white transition-all duration-200 hover:opacity-90"
+                    style={{ backgroundColor: textColor }}
                 >
                     Upload
                 </button>

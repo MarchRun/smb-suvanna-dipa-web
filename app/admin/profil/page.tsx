@@ -7,7 +7,7 @@
 
 import { useState, useEffect } from 'react'
 import DashboardLayout from '@/components/shared/DashboardLayout'
-import ProfileEditModal from '@/components/profile/ProfileEditModal'
+import ProfileEditModal from '@/components/shared/ProfileEditModal'
 import { getCurrentUserProfile } from '@/actions/auth/profile'
 import { useDarkMode } from '@/hooks/useDarkMode'
 import type { UserProfile } from '@/types'
@@ -59,7 +59,7 @@ export default function AdminProfilPage() {
                     className="text-2xl md:text-3xl font-bold mb-8"
                     style={{ color: textColor }}
                 >
-                    Profil Admin
+                    Profil
                 </h1>
 
                 {loading ? (

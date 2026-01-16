@@ -8,6 +8,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/shared/DashboardLayout'
+import Modal from '@/components/shared/Modal'
 import RewardCard from '@/components/rewards/RewardCard'
 import RewardForm from '@/components/rewards/RewardForm'
 import FilterForm from '@/components/rewards/FilterForm'
@@ -257,28 +258,33 @@ export default function HadiahPage() {
             </div>
 
             {/* Add Form Modal */}
-            {showAddForm && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-                    <div
-                        className="w-full max-w-2xl rounded-xl p-6 my-8"
-                        style={{ backgroundColor: isDarkMode ? '#1e293b' : '#ffffff' }}
-                    >
-                        <RewardForm
-                            mode="add"
-                            onSubmit={handleAdd}
-                            onCancel={() => setShowAddForm(false)}
-                        />
-                    </div>
+            <Modal
+                isOpen={showAddForm}
+                onClose={() => setShowAddForm(false)}
+                size="lg"
+                showCloseButton={false}
+            >
+                <div className="p-6 md:p-8">
+                    <RewardForm
+                        mode="add"
+                        onSubmit={handleAdd}
+                        onCancel={() => setShowAddForm(false)}
+                    />
                 </div>
-            )}
+            </Modal>
 
             {/* Edit Form Modal */}
-            {showEditForm && selectedProduct && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-                    <div
-                        className="w-full max-w-2xl rounded-xl p-6 my-8"
-                        style={{ backgroundColor: isDarkMode ? '#1e293b' : '#ffffff' }}
-                    >
+            <Modal
+                isOpen={showEditForm && !!selectedProduct}
+                onClose={() => {
+                    setShowEditForm(false)
+                    setSelectedProduct(null)
+                }}
+                size="lg"
+                showCloseButton={false}
+            >
+                {selectedProduct && (
+                    <div className="p-6 md:p-8">
                         <RewardForm
                             mode="edit"
                             initialData={selectedProduct}
@@ -289,8 +295,8 @@ export default function HadiahPage() {
                             }}
                         />
                     </div>
-                </div>
-            )}
+                )}
+            </Modal>
 
             {/* Filter Modal */}
             {showFilter && (
@@ -302,12 +308,17 @@ export default function HadiahPage() {
             )}
 
             {/* Delete Confirmation Modal */}
-            {showDeleteConfirm && selectedProduct && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <div
-                        className="w-full max-w-md rounded-xl p-6"
-                        style={{ backgroundColor: isDarkMode ? '#1e293b' : '#ffffff' }}
-                    >
+            <Modal
+                isOpen={showDeleteConfirm && !!selectedProduct}
+                onClose={() => {
+                    setShowDeleteConfirm(false)
+                    setSelectedProduct(null)
+                }}
+                size="sm"
+                showCloseButton={false}
+            >
+                {selectedProduct && (
+                    <div className="p-6 md:p-8">
                         <h2
                             className="text-2xl font-bold mb-4"
                             style={{ color: textColor }}
@@ -340,8 +351,8 @@ export default function HadiahPage() {
                             </button>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
+            </Modal>
         </DashboardLayout>
     )
 }

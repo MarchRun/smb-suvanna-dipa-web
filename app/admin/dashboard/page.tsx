@@ -63,9 +63,7 @@ export default function AdminDashboardPage() {
                     className="text-2xl md:text-3xl font-bold mb-6"
                     style={{ color: textColor }}
                 >
-                    Halo, <span className="text-gray-700 dark:text-gray-300">
-                        {loading ? '...' : userName}
-                    </span>
+                    Dashboard
                 </h1>
 
                 {/* Stat Cards - Real-time data from Supabase */}

@@ -51,10 +51,12 @@ export default function Input({
     const isPassword = type === 'password'
     const inputType = isPassword ? (showPassword ? 'text' : 'password') : type
 
+    const textColor = isDarkMode ? '#ea580c' : '#7c2d12'
+
     return (
         <div className="w-full">
             {label && (
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-bold mb-2" style={{ color: textColor }}>
                     {label}
                     {required && <span className="text-red-600 ml-1">*</span>}
                 </label>

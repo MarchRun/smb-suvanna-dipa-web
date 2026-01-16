@@ -78,6 +78,15 @@ export const getUserFormFields = (classes: Class[]): FieldConfig[] => [
         ]
     },
     {
+        name: 'profile_picture',
+        type: 'file',
+        label: 'Foto Profil',
+        accept: 'image/jpeg,image/jpg,image/png',
+        maxSize: 1 * 1024 * 1024, // 1MB
+        helperText: 'Format: JPEG, PNG. Maksimal 1MB.',
+        columnSpan: 2
+    },
+    {
         name: 'address',
         type: 'textarea',
         label: 'Alamat Rumah',
