@@ -2,7 +2,7 @@
  * Testimonial Cards Component
  * 3 testimonial cards with hover effects
  * Mobile: Auto-scrolling horizontal carousel
- * With dark mode support
+ * With dark mode support - Fetches from database
  */
 
 'use client'
@@ -10,28 +10,42 @@
 import { useState, useEffect, useRef } from 'react'
 import Card from '@/components/shared/Card'
 import { useDarkMode } from '@/hooks/useDarkMode'
+import { getPublicContentBySection, type TestimonialItem } from '@/actions/admin/publicContent'
 
 export default function TestimonialCards() {
     const [isVisible, setIsVisible] = useState(false)
     const isDarkMode = useDarkMode()
     const [currentIndex, setCurrentIndex] = useState(0)
     const [isMobile, setIsMobile] = useState(false)
+    const [testimonials, setTestimonials] = useState<{ name: string; text: string }[]>([])
+    const [loading, setLoading] = useState(true)
     const sectionRef = useRef<HTMLElement>(null)
 
-    const testimonials = [
-        {
-            name: 'Andi Wijaya',
-            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus at tellus eget eros hendrerit mattis. Pellentesque orci magna, dignissim ut fringilla non, imperdiet et arcu. Fusce cursus, orci eu mollis posuere, augue ipsum dignissim enim, sit amet mollis ipsum nisl eu ante.'
-        },
-        {
-            name: 'Siti Rahayu',
-            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus at tellus eget eros hendrerit mattis. Pellentesque orci magna, dignissim ut fringilla non, imperdiet et arcu. Fusce cursus, orci eu mollis posuere, augue ipsum dignissim enim, sit amet mollis ipsum nisl eu ante.'
-        },
-        {
-            name: 'Budi Santoso',
-            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus at tellus eget eros hendrerit mattis. Pellentesque orci magna, dignissim ut fringilla non, imperdiet et arcu. Fusce cursus, orci eu mollis posuere, augue ipsum dignissim enim, sit amet mollis ipsum nisl eu ante.'
+    // Fetch testimonials data from database
+    useEffect(() => {
+        const fetchTestimonials = async () => {
+            try {
+                const result = await getPublicContentBySection('testimonials')
+                if (result.success && result.data?.content?.items) {
+                    const dbItems: TestimonialItem[] = result.data.content.items
+                    // Map database items to testimonial format
+                    const mappedTestimonials = dbItems
+                        .map((item) => ({
+                            name: item.name || '',
+                            text: item.description || ''
+                        }))
+                        .filter(t => t.name || t.text) // Only include non-empty items
+                    setTestimonials(mappedTestimonials)
+                }
+            } catch (error) {
+                console.error('Error fetching testimonials:', error)
+            } finally {
+                setLoading(false)
+            }
         }
-    ]
+        fetchTestimonials()
+    }, [])
+
 
     // Mobile detection
     useEffect(() => {
@@ -98,92 +112,102 @@ export default function TestimonialCards() {
                         Testimoni
                     </h2>
 
-                    {/* Mobile Carousel */}
-                    {isMobile ? (
-                        <div className="relative overflow-hidden">
-                            <div
-                                className="flex transition-transform duration-500 ease-in-out"
-                                style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-                            >
-                                {testimonials.map((testimonial, index) => (
-                                    <div
-                                        key={index}
-                                        className="w-full flex-shrink-0 px-2"
-                                    >
-                                        <Card
-                                            customStyle={{
-                                                backgroundColor: cardBgColor,
-                                                boxShadow: cardShadow,
-                                            }}
-                                        >
-                                            <h3
-                                                className="text-lg font-bold mb-3 text-left"
-                                                style={{ color: '#ffffff' }}
-                                            >
-                                                {testimonial.name}
-                                            </h3>
-                                            <p
-                                                className="text-sm italic text-justify"
-                                                style={{ color: '#ffffff' }}
-                                            >
-                                                &quot;{testimonial.text}&quot;
-                                            </p>
-                                        </Card>
-                                    </div>
-                                ))}
-                            </div>
-
-                            {/* Dot Indicators */}
-                            <div className="flex justify-center items-center gap-2 mt-4">
-                                {testimonials.map((_, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => setCurrentIndex(index)}
-                                        className="transition-all duration-300 rounded-full"
-                                        style={{
-                                            width: index === currentIndex ? '24px' : '8px',
-                                            height: '8px',
-                                            backgroundColor: index === currentIndex
-                                                ? titleColor
-                                                : 'rgba(124, 45, 18, 0.3)',
-                                        }}
-                                        aria-label={`Go to slide ${index + 1}`}
-                                    />
-                                ))}
-                            </div>
+                    {loading ? (
+                        <div className="text-center py-8" style={{ color: titleColor }}>Loading...</div>
+                    ) : testimonials.length === 0 ? (
+                        <div className="text-center py-8 opacity-70" style={{ color: titleColor }}>
+                            Belum ada testimoni. Silakan tambahkan melalui halaman admin.
                         </div>
                     ) : (
-                        /* Desktop Grid */
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-                            {testimonials.map((testimonial, index) => (
-                                <div
-                                    key={index}
-                                    className={`${isVisible ? 'animate-scaleIn' : 'opacity-0'} hover-bounce`}
-                                    style={{ animationDelay: `${index * 0.15}s` }}
-                                >
-                                    <Card
-                                        className="h-full"
-                                        customStyle={{
-                                            backgroundColor: cardBgColor,
-                                            boxShadow: cardShadow,
-                                        }}
+                        <>
+                            {/* Mobile Carousel */}
+                            {isMobile ? (
+                                <div className="relative overflow-hidden">
+                                    <div
+                                        className="flex transition-transform duration-500 ease-in-out"
+                                        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
                                     >
-                                        <h3
-                                            className="text-lg sm:text-xl font-bold mb-3 text-left"
-                                            style={{ color: '#ffffff' }}
-                                        >
-                                            {testimonial.name}
-                                        </h3>
-                                        <p
-                                            className="text-sm sm:text-base italic text-justify"
-                                            style={{ color: '#ffffff' }}
-                                        >
-                                            &quot;{testimonial.text}&quot;
-                                        </p>
-                                    </Card>
+                                        {testimonials.map((testimonial, index) => (
+                                            <div
+                                                key={index}
+                                                className="w-full flex-shrink-0 px-2"
+                                            >
+                                                <Card
+                                                    customStyle={{
+                                                        backgroundColor: cardBgColor,
+                                                        boxShadow: cardShadow,
+                                                    }}
+                                                >
+                                                    <h3
+                                                        className="text-lg font-bold mb-3 text-left"
+                                                        style={{ color: '#ffffff' }}
+                                                    >
+                                                        {testimonial.name}
+                                                    </h3>
+                                                    <p
+                                                        className="text-sm italic text-justify"
+                                                        style={{ color: '#ffffff' }}
+                                                    >
+                                                        &quot;{testimonial.text}&quot;
+                                                    </p>
+                                                </Card>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Dot Indicators */}
+                                    <div className="flex justify-center items-center gap-2 mt-4">
+                                        {testimonials.map((_, index) => (
+                                            <button
+                                                key={index}
+                                                onClick={() => setCurrentIndex(index)}
+                                                className="transition-all duration-300 rounded-full"
+                                                style={{
+                                                    width: index === currentIndex ? '24px' : '8px',
+                                                    height: '8px',
+                                                    backgroundColor: index === currentIndex
+                                                        ? titleColor
+                                                        : 'rgba(124, 45, 18, 0.3)',
+                                                }}
+                                                aria-label={`Go to slide ${index + 1}`}
+                                            />
+                                        ))}
+                                    </div>
                                 </div>
-                            ))}
-                        </div>
+                            ) : (
+                                /* Desktop Grid */
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+                                    {testimonials.map((testimonial, index) => (
+                                        <div
+                                            key={index}
+                                            className={`${isVisible ? 'animate-scaleIn' : 'opacity-0'} hover-bounce`}
+                                            style={{ animationDelay: `${index * 0.15}s` }}
+                                        >
+                                            <Card
+                                                className="h-full"
+                                                customStyle={{
+                                                    backgroundColor: cardBgColor,
+                                                    boxShadow: cardShadow,
+                                                }}
+                                            >
+                                                <h3
+                                                    className="text-lg sm:text-xl font-bold mb-3 text-left"
+                                                    style={{ color: '#ffffff' }}
+                                                >
+                                                    {testimonial.name}
+                                                </h3>
+                                                <p
+                                                    className="text-sm sm:text-base italic text-justify"
+                                                    style={{ color: '#ffffff' }}
+                                                >
+                                                    &quot;{testimonial.text}&quot;
+                                                </p>
+                                            </Card>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
             </section>
@@ -216,3 +240,4 @@ export default function TestimonialCards() {
         </>
     )
 }
+

@@ -57,7 +57,7 @@ export default function Textarea({
                 disabled={disabled}
                 rows={rows}
                 maxLength={maxLength}
-                className={`w-full px-4 py-3 rounded-2xl border-2 font-semibold transition-all resize-none
+                className={`w-full px-4 py-3 rounded-xl border-2 font-semibold transition-all resize-none
                            bg-white dark:bg-gray-800 text-gray-900 dark:text-white
                            focus:outline-none focus:ring-2 focus:ring-orange-500
                            disabled:opacity-50 disabled:cursor-not-allowed

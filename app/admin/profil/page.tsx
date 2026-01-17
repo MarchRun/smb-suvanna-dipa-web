@@ -16,7 +16,7 @@ const adminMenuItems = [
     { label: 'Dashboard', href: '/admin/dashboard' },
     { label: 'Pengguna', href: '/admin/pengguna' },
     { label: 'Hadiah', href: '/admin/hadiah' },
-    { label: 'Konten Publik', href: '/admin/konten-publik' },
+    { label: 'Konten Publik', href: '/admin/konten' },
     { label: 'Profil', href: '/admin/profil' }
 ]
 

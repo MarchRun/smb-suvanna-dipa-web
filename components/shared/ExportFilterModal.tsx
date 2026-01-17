@@ -10,7 +10,7 @@ import UniversalForm, { FieldConfig } from '@/components/shared/UniversalForm'
 import Modal from '@/components/shared/Modal'
 import type { Class } from '@/types'
 import { getUsersForExport } from '@/actions/admin/users'
-import * as XLSX from 'xlsx'
+import XLSX from 'xlsx-js-style'
 
 interface ExportFilterModalProps {
     isOpen: boolean
@@ -81,25 +81,70 @@ export default function ExportFilterModal({
                 return
             }
 
-            // Prepare data for Excel
-            const excelData = result.data.map((user: any, index: number) => ({
-                'No': index + 1,
-                'Nama Lengkap': user.full_name || '-',
-                'Email': user.email || '-',
-                'Nomor Telepon': user.phone || '-',
-                'Jenis Kelamin': user.gender || '-',
-                'Tanggal Lahir': user.birth_date || '-',
-                'Kelas': user.classes?.name || '-',
-                'Peran': user.role === 'siswa' ? 'Siswa' : user.role === 'pembina' ? 'Pembina' : user.role,
-                'Alamat': user.address || '-'
-            }))
+            // Define headers
+            const headers = ['No', 'Nama Lengkap', 'Email', 'Nomor Telepon', 'Jenis Kelamin', 'Tanggal Lahir', 'Kelas', 'Peran', 'Alamat']
 
-            // Create workbook
-            const wb = XLSX.utils.book_new()
-            const ws = XLSX.utils.json_to_sheet(excelData)
+            // Header style (Orange background, white bold text)
+            const headerStyle = {
+                font: { bold: true, color: { rgb: 'FFFFFF' }, sz: 11 },
+                fill: { fgColor: { rgb: 'EA580C' } }, // Orange
+                alignment: { horizontal: 'center', vertical: 'center' },
+                border: {
+                    top: { style: 'thin', color: { rgb: '000000' } },
+                    bottom: { style: 'thin', color: { rgb: '000000' } },
+                    left: { style: 'thin', color: { rgb: '000000' } },
+                    right: { style: 'thin', color: { rgb: '000000' } }
+                }
+            }
+
+            // Cell style (borders only)
+            const cellStyle = {
+                border: {
+                    top: { style: 'thin', color: { rgb: '000000' } },
+                    bottom: { style: 'thin', color: { rgb: '000000' } },
+                    left: { style: 'thin', color: { rgb: '000000' } },
+                    right: { style: 'thin', color: { rgb: '000000' } }
+                },
+                alignment: { vertical: 'center' }
+            }
+
+            // Prepare data rows
+            const rows = result.data.map((user: any, index: number) => [
+                index + 1,
+                user.full_name || '-',
+                user.email || '-',
+                user.phone || '-',
+                user.gender || '-',
+                user.birth_date || '-',
+                user.classes?.name || '-',
+                user.role === 'siswa' ? 'Siswa' : user.role === 'pembina' ? 'Pembina' : user.role,
+                user.address || '-'
+            ])
+
+            // Create worksheet with headers + data
+            const wsData = [headers, ...rows]
+            const ws = XLSX.utils.aoa_to_sheet(wsData)
+
+            // Apply header styles
+            headers.forEach((_, colIndex) => {
+                const cellRef = XLSX.utils.encode_cell({ r: 0, c: colIndex })
+                if (ws[cellRef]) {
+                    ws[cellRef].s = headerStyle
+                }
+            })
+
+            // Apply cell styles to data rows
+            rows.forEach((row, rowIndex) => {
+                row.forEach((_, colIndex) => {
+                    const cellRef = XLSX.utils.encode_cell({ r: rowIndex + 1, c: colIndex })
+                    if (ws[cellRef]) {
+                        ws[cellRef].s = cellStyle
+                    }
+                })
+            })
 
             // Set column widths
-            const colWidths = [
+            ws['!cols'] = [
                 { wch: 5 },  // No
                 { wch: 25 }, // Nama Lengkap
                 { wch: 30 }, // Email
@@ -110,9 +155,12 @@ export default function ExportFilterModal({
                 { wch: 10 }, // Peran
                 { wch: 40 }  // Alamat
             ]
-            ws['!cols'] = colWidths
 
-            // Add worksheet to workbook
+            // Freeze header row
+            ws['!freeze'] = { xSplit: 0, ySplit: 1 }
+
+            // Create workbook
+            const wb = XLSX.utils.book_new()
             XLSX.utils.book_append_sheet(wb, ws, 'Data Pengguna')
 
             // Generate filename with timestamp

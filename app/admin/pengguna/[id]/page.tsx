@@ -198,6 +198,40 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                                     {user.role || '-'}
                                 </div>
                             </div>
+
+                            {/* Kelas */}
+                            <div>
+                                <label className="block text-sm font-bold mb-2" style={{ color: textColor }}>
+                                    Kelas
+                                </label>
+                                <div
+                                    className="px-4 py-3 rounded-xl border-2 min-h-[48px] flex items-center"
+                                    style={{
+                                        borderColor: textColor,
+                                        backgroundColor: bgColor,
+                                        color: textColor
+                                    }}
+                                >
+                                    {(user as any).classes?.name || '-'}
+                                </div>
+                            </div>
+
+                            {/* Points */}
+                            <div>
+                                <label className="block text-sm font-bold mb-2" style={{ color: textColor }}>
+                                    Points
+                                </label>
+                                <div
+                                    className="px-4 py-3 rounded-xl border-2 min-h-[48px] flex items-center"
+                                    style={{
+                                        borderColor: textColor,
+                                        backgroundColor: bgColor,
+                                        color: textColor
+                                    }}
+                                >
+                                    {user.points ?? 0}
+                                </div>
+                            </div>
                         </div>
 
                         {/* Alamat Rumah - Full Width */}

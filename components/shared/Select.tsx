@@ -68,13 +68,14 @@ export default function Select({
                     borderColor: error ? '#ef4444' : borderColor
                 }}
             >
-                {placeholder && (
+                {/* Only show placeholder if no option with empty value exists */}
+                {placeholder && !options.some(o => o.value === '') && (
                     <option value="" disabled>
                         {placeholder}
                     </option>
                 )}
                 {options.map((option) => (
-                    <option key={option.value} value={option.value}>
+                    <option key={String(option.value)} value={option.value}>
                         {option.label}
                     </option>
                 ))}

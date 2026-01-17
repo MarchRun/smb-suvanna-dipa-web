@@ -127,14 +127,16 @@ export default function PublicContentEditModal({
             size="xl"
             showCloseButton={false}
         >
-            <UniversalForm
-                title="Edit Konten Publik"
-                mode="edit"
-                sections={sections}
-                initialData={initialData}
-                onSubmit={handleSubmit}
-                onCancel={onClose}
-            />
+            <div className="p-6 md:p-8">
+                <UniversalForm
+                    title="Edit Konten Publik"
+                    mode="edit"
+                    sections={sections}
+                    initialData={initialData}
+                    onSubmit={handleSubmit}
+                    onCancel={onClose}
+                />
+            </div>
         </Modal>
     )
 }

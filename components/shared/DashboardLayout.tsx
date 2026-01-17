@@ -33,7 +33,8 @@ export default function DashboardLayout({ role, menuItems, children }: Dashboard
         return () => window.removeEventListener('resize', handleResize)
     }, [])
 
-    const contentBg = isDarkMode ? '#0f172a' : '#f5f5f5'
+    // Use CSS variables for consistent dark mode with public pages
+    const contentBg = isDarkMode ? 'var(--background)' : '#f5f5f5'
 
     return (
         <SessionTimeoutProvider>

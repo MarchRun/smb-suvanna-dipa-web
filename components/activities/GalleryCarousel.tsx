@@ -1,7 +1,7 @@
 /**
  * Gallery Carousel Component
  * Elegant 5 image slider with featured center card
- * With dark mode support
+ * With dark mode support - Fetches from database
  */
 
 'use client'
@@ -9,20 +9,40 @@
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { useDarkMode } from '@/hooks/useDarkMode'
+import { getPublicContentBySection, type GalleryItem } from '@/actions/admin/publicContent'
 
 export default function GalleryCarousel() {
     const [currentIndex, setCurrentIndex] = useState(0)
     const [isVisible, setIsVisible] = useState(false)
+    const [images, setImages] = useState<{ id: number; src: string; caption: string }[]>([])
+    const [loading, setLoading] = useState(true)
     const isDarkMode = useDarkMode()
     const sectionRef = useRef<HTMLElement>(null)
 
-    const images = [
-        { id: 1, src: '/images/slider-image1.png', caption: 'Mulyono' },
-        { id: 2, src: '/images/slider-image2.png', caption: 'Terus Terang' },
-        { id: 3, src: '/images/slider-image3.png', caption: 'Sahroni' },
-        { id: 4, src: '/images/slider-image4.png', caption: 'Fufufafa' },
-        { id: 5, src: '/images/slider-image5.png', caption: 'Angkat Karung' }
-    ]
+    // Fetch gallery data from database
+    useEffect(() => {
+        const fetchGallery = async () => {
+            try {
+                const result = await getPublicContentBySection('gallery')
+                if (result.success && result.data?.content?.items) {
+                    const dbItems: GalleryItem[] = result.data.content.items
+                    // Map database items to image format
+                    const mappedImages = dbItems.map((item, index) => ({
+                        id: index + 1,
+                        src: item.image_url || '/images/slider-image1.png',
+                        caption: item.caption || `Kegiatan ${index + 1}`
+                    })).filter(img => img.src) // Only include items with valid images
+                    setImages(mappedImages)
+                }
+            } catch (error) {
+                console.error('Error fetching gallery:', error)
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchGallery()
+    }, [])
+
 
     // Intersection Observer
     useEffect(() => {
@@ -118,152 +138,162 @@ export default function GalleryCarousel() {
                         Galeri Kegiatan SMB
                     </h2>
 
-                    {/* Carousel Container */}
-                    <div className="relative flex items-center justify-center gap-3 sm:gap-6">
-                        {/* Previous Arrow */}
-                        <button
-                            onClick={goToPrevious}
-                            className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full transition-all hover:scale-110 z-20 flex items-center justify-center"
-                            style={{
-                                backgroundColor: buttonBgColor,
-                                color: buttonIconColor,
-                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
-                            }}
-                            aria-label="Previous image"
-                        >
-                            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                            </svg>
-                        </button>
-
-                        {/* Slider Cards */}
-                        <div className="flex items-center justify-center gap-3 sm:gap-6 overflow-hidden py-4">
-                            {/* Left Card - Polaroid style */}
-                            <div
-                                className="hidden md:block cursor-pointer card-side"
-                                onClick={goToPrevious}
-                            >
-                                <div
-                                    className="overflow-hidden rounded-xl"
-                                    style={{
-                                        backgroundColor: captionBgColor,
-                                        boxShadow: captionShadow
-                                    }}
-                                >
-                                    <div className="w-64 lg:w-72 h-40 lg:h-44 overflow-hidden relative">
-                                        <Image
-                                            src={images[getIndex(-1)].src}
-                                            alt={images[getIndex(-1)].caption}
-                                            fill
-                                            className="object-cover"
-                                        />
-                                    </div>
-                                    <div
-                                        className="px-2 py-2"
-                                        style={{ backgroundColor: captionBgColor }}
-                                    >
-                                        <p className="text-xs font-medium text-center text-white">
-                                            {images[getIndex(-1)].caption}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Center Card - Featured, polaroid style */}
-                            <div className="z-10 card-center">
-                                <div
-                                    className="overflow-hidden rounded-xl"
-                                    style={{
-                                        backgroundColor: captionBgColor,
-                                        boxShadow: captionShadow
-                                    }}
-                                >
-                                    <div className="w-[320px] sm:w-[560px] md:w-[640px] lg:w-[720px] h-48 sm:h-64 md:h-72 lg:h-80 overflow-hidden relative rounded-t-xl">
-                                        <Image
-                                            src={images[currentIndex].src}
-                                            alt={images[currentIndex].caption}
-                                            fill
-                                            className="object-cover"
-                                        />
-                                    </div>
-                                    <div
-                                        className="px-3 py-3 sm:px-4 sm:py-3 rounded-b-xl"
-                                        style={{ backgroundColor: captionBgColor }}
-                                    >
-                                        <p className="text-sm sm:text-base font-semibold text-center text-white">
-                                            {images[currentIndex].caption}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Right Card - Polaroid style */}
-                            <div
-                                className="hidden md:block cursor-pointer card-side"
-                                onClick={goToNext}
-                            >
-                                <div
-                                    className="overflow-hidden rounded-xl"
-                                    style={{
-                                        backgroundColor: captionBgColor,
-                                        boxShadow: captionShadow
-                                    }}
-                                >
-                                    <div className="w-64 lg:w-72 h-40 lg:h-44 overflow-hidden relative">
-                                        <Image
-                                            src={images[getIndex(1)].src}
-                                            alt={images[getIndex(1)].caption}
-                                            fill
-                                            className="object-cover"
-                                        />
-                                    </div>
-                                    <div
-                                        className="px-2 py-2"
-                                        style={{ backgroundColor: captionBgColor }}
-                                    >
-                                        <p className="text-xs font-medium text-center text-white">
-                                            {images[getIndex(1)].caption}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                    {loading ? (
+                        <div className="text-center text-white py-12">Loading...</div>
+                    ) : images.length === 0 ? (
+                        <div className="text-center text-white py-12 opacity-70">
+                            Belum ada gambar galeri. Silakan tambahkan melalui halaman admin.
                         </div>
+                    ) : (
+                        <>
+                            {/* Carousel Container */}
+                            <div className="relative flex items-center justify-center gap-3 sm:gap-6">
+                                {/* Previous Arrow */}
+                                <button
+                                    onClick={goToPrevious}
+                                    className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full transition-all hover:scale-110 z-20 flex items-center justify-center"
+                                    style={{
+                                        backgroundColor: buttonBgColor,
+                                        color: buttonIconColor,
+                                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+                                    }}
+                                    aria-label="Previous image"
+                                >
+                                    <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </button>
 
-                        {/* Next Arrow */}
-                        <button
-                            onClick={goToNext}
-                            className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full transition-all hover:scale-110 z-20 flex items-center justify-center"
-                            style={{
-                                backgroundColor: buttonBgColor,
-                                color: buttonIconColor,
-                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
-                            }}
-                            aria-label="Next image"
-                        >
-                            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                        </button>
-                    </div>
+                                {/* Slider Cards */}
+                                <div className="flex items-center justify-center gap-3 sm:gap-6 overflow-hidden py-4">
+                                    {/* Left Card - Polaroid style */}
+                                    <div
+                                        className="hidden md:block cursor-pointer card-side"
+                                        onClick={goToPrevious}
+                                    >
+                                        <div
+                                            className="overflow-hidden rounded-xl"
+                                            style={{
+                                                backgroundColor: captionBgColor,
+                                                boxShadow: captionShadow
+                                            }}
+                                        >
+                                            <div className="w-64 lg:w-72 h-40 lg:h-44 overflow-hidden relative">
+                                                <Image
+                                                    src={images[getIndex(-1)].src}
+                                                    alt={images[getIndex(-1)].caption}
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            </div>
+                                            <div
+                                                className="px-2 py-2"
+                                                style={{ backgroundColor: captionBgColor }}
+                                            >
+                                                <p className="text-xs font-medium text-center text-white">
+                                                    {images[getIndex(-1)].caption}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                    {/* Dot Indicators */}
-                    <div className="flex justify-center items-center gap-3 mt-8">
-                        {images.map((_, index) => (
-                            <button
-                                key={index}
-                                onClick={() => goToSlide(index)}
-                                className="transition-all duration-300 rounded-full"
-                                style={{
-                                    width: index === currentIndex ? '28px' : '10px',
-                                    height: '10px',
-                                    backgroundColor: index === currentIndex
-                                        ? '#ffffff'
-                                        : 'rgba(255, 255, 255, 0.4)',
-                                }}
-                                aria-label={`Go to slide ${index + 1}`}
-                            />
-                        ))}
-                    </div>
+                                    {/* Center Card - Featured, polaroid style */}
+                                    <div className="z-10 card-center">
+                                        <div
+                                            className="overflow-hidden rounded-xl"
+                                            style={{
+                                                backgroundColor: captionBgColor,
+                                                boxShadow: captionShadow
+                                            }}
+                                        >
+                                            <div className="w-[320px] sm:w-[560px] md:w-[640px] lg:w-[720px] h-48 sm:h-64 md:h-72 lg:h-80 overflow-hidden relative rounded-t-xl">
+                                                <Image
+                                                    src={images[currentIndex].src}
+                                                    alt={images[currentIndex].caption}
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            </div>
+                                            <div
+                                                className="px-3 py-3 sm:px-4 sm:py-3 rounded-b-xl"
+                                                style={{ backgroundColor: captionBgColor }}
+                                            >
+                                                <p className="text-sm sm:text-base font-semibold text-center text-white">
+                                                    {images[currentIndex].caption}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Right Card - Polaroid style */}
+                                    <div
+                                        className="hidden md:block cursor-pointer card-side"
+                                        onClick={goToNext}
+                                    >
+                                        <div
+                                            className="overflow-hidden rounded-xl"
+                                            style={{
+                                                backgroundColor: captionBgColor,
+                                                boxShadow: captionShadow
+                                            }}
+                                        >
+                                            <div className="w-64 lg:w-72 h-40 lg:h-44 overflow-hidden relative">
+                                                <Image
+                                                    src={images[getIndex(1)].src}
+                                                    alt={images[getIndex(1)].caption}
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            </div>
+                                            <div
+                                                className="px-2 py-2"
+                                                style={{ backgroundColor: captionBgColor }}
+                                            >
+                                                <p className="text-xs font-medium text-center text-white">
+                                                    {images[getIndex(1)].caption}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Next Arrow */}
+                                <button
+                                    onClick={goToNext}
+                                    className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full transition-all hover:scale-110 z-20 flex items-center justify-center"
+                                    style={{
+                                        backgroundColor: buttonBgColor,
+                                        color: buttonIconColor,
+                                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+                                    }}
+                                    aria-label="Next image"
+                                >
+                                    <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            {/* Dot Indicators */}
+                            <div className="flex justify-center items-center gap-3 mt-8">
+                                {images.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => goToSlide(index)}
+                                        className="transition-all duration-300 rounded-full"
+                                        style={{
+                                            width: index === currentIndex ? '28px' : '10px',
+                                            height: '10px',
+                                            backgroundColor: index === currentIndex
+                                                ? '#ffffff'
+                                                : 'rgba(255, 255, 255, 0.4)',
+                                        }}
+                                        aria-label={`Go to slide ${index + 1}`}
+                                    />
+                                ))}
+                            </div>
+                        </>
+                    )}
                 </div>
             </section>
 
@@ -315,3 +345,4 @@ export default function GalleryCarousel() {
         </>
     )
 }
+

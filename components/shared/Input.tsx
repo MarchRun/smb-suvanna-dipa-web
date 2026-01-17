@@ -12,7 +12,7 @@ import { useDarkMode } from '@/hooks/useDarkMode'
 
 interface InputProps {
     label?: string
-    type?: 'text' | 'email' | 'password' | 'tel' | 'number'
+    type?: 'text' | 'email' | 'password' | 'tel' | 'number' | 'date'
     placeholder?: string
     value?: string
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void

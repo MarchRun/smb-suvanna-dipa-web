@@ -41,9 +41,8 @@ export const getUserFormFields = (classes: Class[]): FieldConfig[] => [
     },
     {
         name: 'birth_date',
-        type: 'text',
+        type: 'date',
         label: 'Tanggal Lahir',
-        placeholder: 'YYYY-MM-DD',
         required: true
     },
     {
@@ -126,9 +125,8 @@ export const profileEditFormFields: FieldConfig[] = [
     },
     {
         name: 'birth_date',
-        type: 'text',
+        type: 'date',
         label: 'Tanggal Lahir',
-        placeholder: 'YYYY-MM-DD',
         required: true
     },
     {
@@ -216,6 +214,15 @@ export const productFormFields: FieldConfig[] = [
         placeholder: '0',
         required: true,
         min: 0
+    },
+    {
+        name: 'image',
+        type: 'file',
+        label: 'Gambar Produk',
+        accept: 'image/jpeg,image/jpg,image/png',
+        maxSize: 1 * 1024 * 1024, // 1MB
+        helperText: 'Format: JPEG, PNG. Maksimal 1MB.',
+        columnSpan: 2
     }
 ]
 

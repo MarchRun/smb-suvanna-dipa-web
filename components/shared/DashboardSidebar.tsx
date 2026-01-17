@@ -109,6 +109,7 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
     const isDarkMode = useDarkMode()
     const [userName, setUserName] = useState<string>('User')
     const [userInitials, setUserInitials] = useState<string>(role.charAt(0))
+    const [profilePicture, setProfilePicture] = useState<string | null>(null)
 
     // Fetch user profile data
     useEffect(() => {
@@ -117,6 +118,7 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
             if (result.success && result.data) {
                 const fullName = result.data.full_name || 'User'
                 setUserName(fullName)
+                setProfilePicture(result.data.profile_picture || null)
 
                 // Generate initials from full name
                 const names = fullName.split(' ')
@@ -130,10 +132,10 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
         fetchUserProfile()
     }, [])
 
-    // Colors based on dark mode - light mode uses CSS variables
-    const sidebarBg = isDarkMode ? '#1e293b' : 'var(--accent-100)'
+    // Colors - Use CSS variables for consistent dark mode with public pages
+    const sidebarBg = isDarkMode ? 'var(--neutral-800)' : 'var(--accent-100)'
     const textColor = isDarkMode ? '#ea580c' : 'var(--primary-900)'
-    const hoverItemBg = isDarkMode ? 'rgba(234, 88, 12, 0.1)' : 'rgba(124, 45, 18, 0.08)'
+    const hoverItemBg = isDarkMode ? 'rgba(234, 88, 12, 0.15)' : 'rgba(124, 45, 18, 0.08)'
 
     const handleLogout = async () => {
         try {
@@ -178,20 +180,28 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
                         minHeight: '80px'
                     }}
                 >
-                    {/* Avatar Circle with Initials */}
+                    {/* Avatar Circle with Profile Picture or Initials */}
                     <div
-                        className="flex items-center justify-center rounded-full flex-shrink-0"
+                        className="flex items-center justify-center rounded-full flex-shrink-0 overflow-hidden"
                         style={{
                             width: '48px',
                             height: '48px',
-                            backgroundColor: textColor,
+                            backgroundColor: profilePicture ? 'transparent' : textColor,
                             color: '#ffffff',
                             fontWeight: 700,
                             fontSize: '1.125rem',
                             fontFamily: 'var(--font-brand)'
                         }}
                     >
-                        {userInitials.toUpperCase()}
+                        {profilePicture ? (
+                            <img
+                                src={profilePicture}
+                                alt={userName}
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            userInitials.toUpperCase()
+                        )}
                     </div>
 
                     {/* User Info */}

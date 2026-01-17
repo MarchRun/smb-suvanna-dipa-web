@@ -79,7 +79,7 @@ export default function AdminDashboardPage() {
                         loading={loading}
                     />
                     <StatCard
-                        title="Jumlah Guru"
+                        title="Jumlah Pembina"
                         value={stats?.totalPembina ?? 0}
                         loading={loading}
                     />

@@ -102,9 +102,9 @@ export default function ProfileEditModal({ isOpen, onClose, currentData, onSucce
             return
         }
 
-        // Validate file size (max 2MB)
-        if (file.size > 2 * 1024 * 1024) {
-            setError('Ukuran file terlalu besar. Maksimal 2MB.')
+        // Validate file size (max 1MB)
+        if (file.size > 1 * 1024 * 1024) {
+            setError('Ukuran file terlalu besar. Maksimal 1MB.')
             return
         }
 
@@ -225,7 +225,7 @@ export default function ProfileEditModal({ isOpen, onClose, currentData, onSucce
                     </label>
                     <div className="flex">
                         <div
-                            className="flex-1 px-4 py-3 rounded-l-xl border-2 border-r-0 border-orange-800 dark:border-orange-600 bg-white dark:bg-gray-700 flex items-center cursor-pointer"
+                            className="flex-1 px-4 py-3 rounded-l-full border-2 border-r-0 border-orange-800 dark:border-orange-600 bg-white dark:bg-gray-700 flex items-center cursor-pointer"
                             onClick={() => !loading && !uploadingPicture && fileInputRef.current?.click()}
                         >
                             <span className="text-gray-500 dark:text-gray-400 truncate">
@@ -254,7 +254,7 @@ export default function ProfileEditModal({ isOpen, onClose, currentData, onSucce
                         <button
                             type="button"
                             onClick={selectedFile ? handleUploadPicture : () => fileInputRef.current?.click()}
-                            className="px-6 py-3 rounded-r-xl font-semibold text-white transition-all hover:opacity-90 disabled:opacity-50"
+                            className="px-6 py-3 rounded-r-full font-semibold text-white transition-all hover:opacity-90 disabled:opacity-50"
                             style={{ backgroundColor: '#7c2d12' }}
                             disabled={loading || uploadingPicture}
                         >
@@ -262,7 +262,7 @@ export default function ProfileEditModal({ isOpen, onClose, currentData, onSucce
                         </button>
                     </div>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                        Format: JPEG, PNG. Maksimal 2MB.
+                        Format: JPEG, PNG. Maksimal 1MB.
                     </p>
                 </div>
 

@@ -56,7 +56,7 @@ export default function DashboardHeader({ role, onMenuToggle, showMenuButton = t
         <header
             className={`h-20 flex items-center justify-between px-4 md:px-6 shadow-md sticky top-0 z-40 transition-all duration-300 ${blurred ? 'blur-sm pointer-events-none' : ''}`}
             style={{
-                backgroundColor: isDarkMode ? '#1e293b' : 'var(--accent-200)',
+                backgroundColor: isDarkMode ? 'var(--neutral-800)' : 'var(--accent-200)',
                 boxShadow: isDarkMode
                     ? '0 4px 12px rgba(0, 0, 0, 0.3)'
                     : '0 4px 12px rgba(217, 87, 20, 0.20), 0 2px 4px rgba(217, 87, 20, 0.12)'

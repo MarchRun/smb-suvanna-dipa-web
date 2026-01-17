@@ -201,7 +201,7 @@ export default function UniversalForm({
                 return (
                     <Input
                         {...commonProps}
-                        type="text"
+                        type="date"
                         onChange={(e) => handleFieldChange(field.name, e.target.value)}
                     />
                 )
