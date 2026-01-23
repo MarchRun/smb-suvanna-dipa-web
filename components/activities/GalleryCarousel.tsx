@@ -81,14 +81,12 @@ export default function GalleryCarousel() {
         return (currentIndex + offset + images.length) % images.length
     }
 
-    // Dynamic colors
-    const sectionBgColor = isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)' // Bright orange in dark, dark brown in light
-    const captionBgColor = isDarkMode ? 'var(--primary-900)' : 'var(--primary-500)' // Brownish in dark, bright in light
-    const captionShadow = isDarkMode
-        ? '0 0 30px rgba(124, 45, 18, 0.6)'
-        : '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
-    const buttonBgColor = isDarkMode ? 'rgba(255, 255, 255, 0.9)' : 'var(--primary-600)' // White bg in dark, bright orange in light
-    const buttonIconColor = isDarkMode ? 'var(--primary-600)' : '#ffffff' // Bright orange icon in dark, white in light
+    // Dynamic colors - White theme with orange accent
+    const sectionBgColor = '#E57526' // Logo orange
+    const captionBgColor = '#C25F1D' // Darker orange for captions
+    const captionShadow = '0 4px 15px rgba(229, 117, 38, 0.4)'
+    const buttonBgColor = '#FFFFFF' // White buttons
+    const buttonIconColor = '#E57526' // Orange icons
 
     return (
         <>

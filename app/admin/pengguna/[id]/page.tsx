@@ -49,8 +49,8 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
         setLoading(false)
     }
 
-    const textColor = isDarkMode ? '#ea580c' : '#7c2d12'
-    const bgColor = isDarkMode ? '#0f172a' : 'var(--accent-200)'
+    const textColor = isDarkMode ? '#ea580c' : '#E57526'
+    const dataTextColor = isDarkMode ? '#fdba74' : '#9a3412'
 
     return (
         <DashboardLayout role="Admin" menuItems={adminMenuItems}>
@@ -103,12 +103,8 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                                     Nama Lengkap
                                 </label>
                                 <div
-                                    className="px-4 py-3 rounded-xl border-2 min-h-[48px] flex items-center"
-                                    style={{
-                                        borderColor: textColor,
-                                        backgroundColor: bgColor,
-                                        color: textColor
-                                    }}
+                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                    style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {user.full_name || '-'}
                                 </div>
@@ -120,12 +116,8 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                                     Email
                                 </label>
                                 <div
-                                    className="px-4 py-3 rounded-xl border-2 min-h-[48px] flex items-center"
-                                    style={{
-                                        borderColor: textColor,
-                                        backgroundColor: bgColor,
-                                        color: textColor
-                                    }}
+                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                    style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {user.email || '-'}
                                 </div>
@@ -137,12 +129,8 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                                     Nomor Telepon
                                 </label>
                                 <div
-                                    className="px-4 py-3 rounded-xl border-2 min-h-[48px] flex items-center"
-                                    style={{
-                                        borderColor: textColor,
-                                        backgroundColor: bgColor,
-                                        color: textColor
-                                    }}
+                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                    style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {user.phone || '-'}
                                 </div>
@@ -154,12 +142,8 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                                     Jenis Kelamin
                                 </label>
                                 <div
-                                    className="px-4 py-3 rounded-xl border-2 min-h-[48px] flex items-center"
-                                    style={{
-                                        borderColor: textColor,
-                                        backgroundColor: bgColor,
-                                        color: textColor
-                                    }}
+                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                    style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {user.gender || '-'}
                                 </div>
@@ -171,12 +155,8 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                                     Tanggal Lahir
                                 </label>
                                 <div
-                                    className="px-4 py-3 rounded-xl border-2 min-h-[48px] flex items-center"
-                                    style={{
-                                        borderColor: textColor,
-                                        backgroundColor: bgColor,
-                                        color: textColor
-                                    }}
+                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                    style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {user.birth_date || '-'}
                                 </div>
@@ -188,12 +168,8 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                                     Peran
                                 </label>
                                 <div
-                                    className="px-4 py-3 rounded-xl border-2 min-h-[48px] flex items-center capitalize"
-                                    style={{
-                                        borderColor: textColor,
-                                        backgroundColor: bgColor,
-                                        color: textColor
-                                    }}
+                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center capitalize bg-gray-200 dark:bg-gray-600"
+                                    style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {user.role || '-'}
                                 </div>
@@ -205,12 +181,8 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                                     Kelas
                                 </label>
                                 <div
-                                    className="px-4 py-3 rounded-xl border-2 min-h-[48px] flex items-center"
-                                    style={{
-                                        borderColor: textColor,
-                                        backgroundColor: bgColor,
-                                        color: textColor
-                                    }}
+                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                    style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {(user as any).classes?.name || '-'}
                                 </div>
@@ -222,12 +194,8 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                                     Points
                                 </label>
                                 <div
-                                    className="px-4 py-3 rounded-xl border-2 min-h-[48px] flex items-center"
-                                    style={{
-                                        borderColor: textColor,
-                                        backgroundColor: bgColor,
-                                        color: textColor
-                                    }}
+                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                    style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {user.points ?? 0}
                                 </div>
@@ -240,12 +208,8 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                                 Alamat Rumah
                             </label>
                             <div
-                                className="px-4 py-3 rounded-xl border-2 min-h-[100px]"
-                                style={{
-                                    borderColor: textColor,
-                                    backgroundColor: bgColor,
-                                    color: textColor
-                                }}
+                                className="px-4 py-3 rounded-xl border-2 min-h-[100px] bg-gray-200 dark:bg-gray-600"
+                                style={{ borderColor: textColor, color: dataTextColor }}
                             >
                                 {user.address || '-'}
                             </div>

@@ -18,9 +18,9 @@ interface RewardCardProps {
 export default function RewardCard({ reward, onEdit, onDelete }: RewardCardProps) {
     const isDarkMode = useDarkMode()
 
-    const textColor = isDarkMode ? '#ea580c' : '#7c2d12'
+    const textColor = isDarkMode ? '#ea580c' : '#E57526'
     const bgColor = isDarkMode ? '#1e293b' : '#ffffff'
-    const borderColor = isDarkMode ? '#ea580c' : '#7c2d12'
+    const borderColor = isDarkMode ? '#ea580c' : '#E57526'
 
     return (
         <div

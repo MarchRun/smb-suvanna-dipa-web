@@ -50,7 +50,7 @@ export default function ResetPasswordForm({ token, email }: ResetPasswordFormPro
     const passwordsMatch = password === confirmPassword && confirmPassword !== ''
 
     // Dynamic colors based on dark mode
-    const primaryColor = isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)'
+    const primaryColor = isDarkMode ? 'var(--primary-600)' : '#E57526'
     const borderGlow = isDarkMode
         ? '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
         : '0 0 30px rgba(124, 45, 18, 0.6)'

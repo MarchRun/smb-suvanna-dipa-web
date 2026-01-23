@@ -50,7 +50,7 @@ export default function DashboardHeader({ role, onMenuToggle, showMenuButton = t
         localStorage.setItem('darkMode', newMode.toString())
     }
 
-    const textColor = isDarkMode ? '#ea580c' : 'var(--primary-900)'
+    const textColor = '#E57526' // Logo orange
 
     return (
         <header

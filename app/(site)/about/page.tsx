@@ -52,9 +52,9 @@ export default function AboutPage() {
         }
     }, [])
 
-    // Dynamic colors
-    const bgColor = isDarkMode ? '#BAE6FD' : '#FFEFD5' // Sky blue in dark, cream in light
-    const textColor = isDarkMode ? '#ea580c' : '#7c2d12' // Bright orange in dark, brownish in light
+    // Dynamic colors - White theme with orange accent
+    const bgColor = '#FFFFFF' // White background
+    const textColor = '#4A4A4A' // Gray text for readability
 
     return (
         <>

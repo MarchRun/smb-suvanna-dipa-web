@@ -104,9 +104,9 @@ export default function UserTable({
 
     if (isLoading) {
         return (
-            <div className="overflow-hidden border-2" style={{ borderColor: 'var(--primary-900)' }}>
+            <div className="overflow-hidden border-2" style={{ borderColor: '#E57526' }}>
                 <div className="animate-pulse p-8">
-                    <div className="h-10 rounded mb-4" style={{ backgroundColor: 'var(--primary-900)', opacity: 0.3 }}></div>
+                    <div className="h-10 rounded mb-4" style={{ backgroundColor: '#E57526', opacity: 0.3 }}></div>
                     {[1, 2, 3, 4, 5].map((i) => (
                         <div key={i} className="h-14 bg-gray-100 dark:bg-gray-700 rounded mb-2"></div>
                     ))}
@@ -117,7 +117,7 @@ export default function UserTable({
 
     if (users.length === 0) {
         return (
-            <div className="border-2 p-8 text-center" style={{ borderColor: 'var(--primary-900)' }}>
+            <div className="border-2 p-8 text-center" style={{ borderColor: '#E57526' }}>
                 <p className="text-gray-500 dark:text-gray-400">
                     Tidak ada data pengguna
                 </p>
@@ -125,8 +125,8 @@ export default function UserTable({
         )
     }
 
-    const headerBg = 'var(--primary-900)'
-    const borderColor = 'var(--primary-900)'
+    const headerBg = '#E57526' // Logo orange
+    const borderColor = '#E57526'
 
     return (
         <div>
@@ -268,7 +268,7 @@ export default function UserTable({
                                             ? 'text-white'
                                             : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                                         }`}
-                                    style={currentPage === page ? { backgroundColor: 'var(--primary-900)' } : {}}
+                                    style={currentPage === page ? { backgroundColor: '#E57526' } : {}}
                                 >
                                     {page}
                                 </button>

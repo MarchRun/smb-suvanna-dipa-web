@@ -44,8 +44,8 @@ export default function Select({
         onChange(e.target.value)
     }
 
-    const borderColor = isDarkMode ? '#ea580c' : '#7c2d12'
-    const textColor = isDarkMode ? '#ea580c' : '#7c2d12'
+    const borderColor = '#E57526' // Logo orange
+    const textColor = '#E57526' // Logo orange
 
     return (
         <div className={className}>

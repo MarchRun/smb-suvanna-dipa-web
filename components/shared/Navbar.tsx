@@ -1,11 +1,13 @@
 /**
  * Enhanced Navbar - VIBRANT Warm Sunny Theme
  * Using CSS variables for colors with STRONGER orange presence
+ * Light mode only
  */
 
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 
@@ -13,33 +15,17 @@ export default function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const [isClosing, setIsClosing] = useState(false)
     const pathname = usePathname()
-    const [isDarkMode, setIsDarkMode] = useState(false)
     const [scrolled, setScrolled] = useState(false)
 
-    // Load dark mode preference from localStorage
-    useEffect(() => {
-        const savedMode = localStorage.getItem('darkMode')
-        if (savedMode) {
-            setIsDarkMode(savedMode === 'true')
-        }
-    }, [])
-
-    // Apply dark mode when state changes
-    useEffect(() => {
-        if (isDarkMode) {
-            document.documentElement.classList.add('dark')
-        } else {
-            document.documentElement.classList.remove('dark')
-        }
-        localStorage.setItem('darkMode', isDarkMode.toString())
-    }, [isDarkMode])
-
-    // Scroll detection for header opacity
+    // Scroll detection for header background change
     useEffect(() => {
         const handleScroll = () => {
-            // Change opacity after scrolling past ~80vh (hero section height)
-            setScrolled(window.scrollY > window.innerHeight * 0.8)
+            // Change background after scrolling past 100px
+            setScrolled(window.scrollY > 100)
         }
+
+        // Check initial scroll position
+        handleScroll()
 
         window.addEventListener('scroll', handleScroll)
         return () => window.removeEventListener('scroll', handleScroll)
@@ -60,30 +46,39 @@ export default function Navbar() {
         }, 400) // Match slideUp animation duration
     }
 
+    // Orange color matching the logo
+    const orangeColor = '#E57526'
+
     return (
         <nav
-            className="sticky top-0 z-50 transition-all duration-300"
+            className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
             style={{
-                backgroundColor: 'var(--accent-200)', // Solid warm yellow/orange
-                backdropFilter: scrolled ? 'blur(12px)' : 'blur(8px)',
-                boxShadow: '0 4px 12px rgba(217, 87, 20, 0.20), 0 2px 4px rgba(217, 87, 20, 0.12)',
-                opacity: scrolled ? 0.85 : 1
+                backgroundColor: scrolled ? 'rgba(255, 255, 255, 0.95)' : 'transparent',
+                backdropFilter: scrolled ? 'blur(12px)' : 'none',
+                boxShadow: scrolled ? '0 4px 20px rgba(229, 117, 38, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08)' : 'none'
             }}
         >
             <div className="max-w-6xl mx-auto px-4">
-                <div className="flex justify-between items-center py-6 sm:py-7">
-                    {/* Logo - Bold Uppercase with Hover Effect and Entrance Animation */}
+                <div className="flex justify-between items-center py-3 sm:py-4">
+                    {/* Logo - Large with overflow effect */}
                     <Link
                         href="/"
-                        className="text-2xl sm:text-3xl lg:text-4xl tracking-wide transition-all duration-200 hover:scale-110 uppercase animate-fadeIn"
+                        className="transition-all duration-200 hover:scale-105 animate-fadeIn flex items-center"
                         style={{
-                            color: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)',
-                            fontFamily: 'var(--font-brand)',
-                            fontWeight: 900,
-                            animationDelay: '0.8s' // Appears last
+                            animationDelay: '0.8s',
+                            marginTop: '-8px',
+                            marginBottom: '-8px'
                         }}
                     >
-                        SMB Suvanna Dipa
+                        <Image
+                            src="/images/logo-smbsd-orange.png"
+                            alt="SMB Suvanna Dipa"
+                            width={400}
+                            height={400}
+                            className="h-16 sm:h-20 md:h-24 w-auto object-contain"
+                            style={{ mixBlendMode: 'multiply' }}
+                            priority
+                        />
                     </Link>
 
                     {/* Desktop Navigation */}
@@ -96,9 +91,9 @@ export default function Navbar() {
                                     href={link.href}
                                     className="relative px-4 py-2 text-lg transition-all duration-300 overflow-visible group animate-fadeInDown"
                                     style={{
-                                        color: isActive ? '#ffffff' : (isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)'),
+                                        color: isActive ? '#ffffff' : '#1a1a1a',
                                         fontWeight: isActive ? 800 : 700,
-                                        textShadow: isActive ? '0 1px 2px rgba(0, 0, 0, 0.3)' : '0 1px 2px rgba(0, 0, 0, 0.15)',
+                                        textShadow: isActive ? '0 1px 2px rgba(0, 0, 0, 0.3)' : 'none',
                                         animationDelay: `${index * 0.1}s` // Stagger: 0s, 0.1s, 0.2s, 0.3s
                                     }}
                                 >
@@ -108,38 +103,14 @@ export default function Navbar() {
                                             }`}
                                         style={{
                                             background: isActive
-                                                ? (isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)') // Bright orange in dark mode
-                                                : 'rgba(255, 255, 255, 0.5)' // Light semi-transparent for hover
+                                                ? orangeColor
+                                                : 'rgba(229, 117, 38, 0.1)' // Light orange for hover
                                         }}
                                     />
                                     {link.label}
                                 </Link>
                             )
                         })}
-
-                        <button
-                            onClick={() => setIsDarkMode(!isDarkMode)}
-                            className="ml-2 p-2 rounded-full transition-all duration-300 hover:scale-110 animate-fadeInDown"
-                            style={{
-                                color: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)',
-                                backgroundColor: isDarkMode ? 'rgba(59, 130, 246, 0.2)' : 'rgba(255, 255, 255, 0.3)', // Light blue in dark mode
-                                border: `3px solid ${isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)'}`,
-                                animationDelay: '0.4s'
-                            }}
-                            aria-label="Toggle dark mode"
-                        >
-                            {isDarkMode ? (
-                                /* Moon icon for dark mode */
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
-                                </svg>
-                            ) : (
-                                /* Sun icon for light mode */
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-                                </svg>
-                            )}
-                        </button>
                     </div>
 
                     {/* Mobile Hamburger Button */}
@@ -153,7 +124,7 @@ export default function Navbar() {
                         }}
                         className="md:hidden p-3 transition-all"
                         style={{
-                            color: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)'
+                            color: orangeColor
                         }}
                         aria-label="Toggle menu"
                     >
@@ -171,8 +142,8 @@ export default function Navbar() {
                     <div
                         className={`md:hidden border-t-2 overflow-hidden ${isClosing ? 'animate-slideUp' : 'animate-slideDown'}`}
                         style={{
-                            borderColor: 'var(--primary-600)',
-                            backgroundColor: 'var(--primary-900)' // Solid dark brown
+                            borderColor: orangeColor,
+                            backgroundColor: '#D35400' // Darker orange
                         }}
                     >
                         <div className="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-3">
@@ -184,8 +155,8 @@ export default function Navbar() {
                                         href={link.href}
                                         className="px-4 py-3 rounded-2xl text-lg font-semibold transition-all duration-200"
                                         style={{
-                                            color: isActive ? '#ffffff' : 'var(--primary-50)',
-                                            backgroundColor: isActive ? 'var(--primary-600)' : 'rgba(255, 255, 255, 0.1)',
+                                            color: isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.9)',
+                                            backgroundColor: isActive ? orangeColor : 'rgba(255, 255, 255, 0.1)',
                                             fontWeight: isActive ? 800 : 700
                                         }}
                                         onClick={() => handleMenuClose()}
@@ -194,34 +165,6 @@ export default function Navbar() {
                                     </Link>
                                 )
                             })}
-
-                            {/* Dark Mode Toggle for Mobile */}
-                            <button
-                                onClick={() => setIsDarkMode(!isDarkMode)}
-                                className="mt-2 px-4 py-3 rounded-2xl transition-all duration-300 flex items-center justify-center gap-3"
-                                style={{
-                                    color: 'var(--primary-50)',
-                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                    border: '3px solid var(--primary-50)' // Thick border matching icon color for mobile
-                                }}
-                                aria-label="Toggle dark mode"
-                            >
-                                {isDarkMode ? (
-                                    <>
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
-                                        </svg>
-                                        <span className="text-lg font-bold">Dark Mode</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-                                        </svg>
-                                        <span className="text-lg font-bold">Light Mode</span>
-                                    </>
-                                )}
-                            </button>
                         </div>
                     </div>
                 )}

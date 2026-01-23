@@ -14,7 +14,7 @@ export default function Quote() {
     const isDarkMode = useDarkMode()
     const sectionRef = useRef<HTMLElement>(null)
 
-        useEffect(() => {
+    useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
                 // Track both entering and leaving for refresh effect
@@ -34,9 +34,9 @@ export default function Quote() {
         }
     }, [])
 
-    // Dynamic colors
-    const textColor = isDarkMode ? '#ea580c' : '#7c2d12' // Bright orange in dark, brownish in light
-    const bgColor = isDarkMode ? '#BAE6FD' : '#FFEFD5' // Sky blue in dark, cream in light
+    // Dynamic colors - White theme with orange accent
+    const textColor = '#E57526' // Logo orange
+    const bgColor = '#FFFFFF' // White background
 
     return (
         <section

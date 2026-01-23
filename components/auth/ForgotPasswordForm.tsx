@@ -41,7 +41,7 @@ export default function ForgotPasswordForm() {
     }
 
     // Dynamic colors based on dark mode
-    const primaryColor = isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)'
+    const primaryColor = isDarkMode ? 'var(--primary-600)' : '#E57526'
     const borderGlow = isDarkMode
         ? '0 0 30px rgba(234, 88, 12, 0.6)'
         : '0 0 30px rgba(124, 45, 18, 0.6)'

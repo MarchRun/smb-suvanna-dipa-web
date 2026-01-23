@@ -50,7 +50,7 @@ export default function CTASection() {
                 ref={sectionRef}
                 className="py-12 sm:py-16 md:py-20 relative overflow-hidden"
                 style={{
-                    backgroundColor: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)' // Dark brown matching header text
+                    backgroundColor: '#E57526' // Logo orange
                 }}
             >
                 {/* Top-left trapezoid - hidden on mobile */}
@@ -100,11 +100,9 @@ export default function CTASection() {
                         variant="primary"
                         onClick={() => router.push('/activities')}
                         customStyle={{
-                            backgroundColor: isDarkMode ? 'var(--primary-900)' : 'var(--primary-600)',
+                            backgroundColor: '#C25F1D', // Darker orange for button
                             color: '#ffffff',
-                            boxShadow: isDarkMode
-                                ? '0 0 30px rgba(124, 45, 18, 0.6)'
-                                : '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
+                            boxShadow: '0 4px 15px rgba(229, 117, 38, 0.4)'
                         }}
                     >
                         Lihat Aktivitas Kami

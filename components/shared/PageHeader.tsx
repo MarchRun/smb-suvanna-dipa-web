@@ -79,18 +79,33 @@ export default function PageHeader({
         return () => clearInterval(typingInterval)
     }, [title, isVisible])
 
-    // Dynamic colors
-    const titleColor = isDarkMode ? '#ea580c' : '#7c2d12' // Bright orange in dark, brownish in light
-    const bgColor = isDarkMode ? '#BAE6FD' : '#FFEFD5' // Sky blue in dark, cream in light
+    // Dynamic colors - White theme with orange accent
+    const titleColor = '#E57526' // Logo orange
+    const bgColor = '#FFFFFF' // White background
 
     return (
         <>
             <section
                 ref={sectionRef}
-                className="py-8 sm:py-10"
-                style={{ backgroundColor: bgColor }}
+                className="relative py-16 sm:py-20"
+                style={{
+                    paddingTop: '120px', // Account for fixed header
+                    minHeight: '300px'
+                }}
             >
-                <div className="max-w-7xl mx-auto px-4">
+                {/* Background Image - Cropped to show top portion only */}
+                <div
+                    className="absolute inset-0 z-0"
+                    style={{
+                        backgroundImage: 'url(/images/vihara-full.jpg)',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'top', // Crop from top - only show upper portion
+                        backgroundRepeat: 'no-repeat',
+                        opacity: 1 // Increased opacity for better visibility
+                    }}
+                />
+
+                <div className="max-w-7xl mx-auto px-4 relative z-10">
                     <div className={alignmentClass[align]}>
                         <h1
                             className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4"

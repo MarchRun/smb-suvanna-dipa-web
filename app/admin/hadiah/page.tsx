@@ -164,7 +164,7 @@ export default function HadiahPage() {
         }
     }
 
-    const textColor = isDarkMode ? '#ea580c' : '#7c2d12'
+    const textColor = isDarkMode ? '#ea580c' : '#E57526'
 
     return (
         <DashboardLayout role="Admin" menuItems={adminMenuItems}>
@@ -271,7 +271,7 @@ export default function HadiahPage() {
             <Modal
                 isOpen={showAddForm}
                 onClose={() => setShowAddForm(false)}
-                size="lg"
+                size="md"
                 showCloseButton={false}
             >
                 <div className="p-6 md:p-8">
@@ -290,7 +290,7 @@ export default function HadiahPage() {
                     setShowEditForm(false)
                     setSelectedProduct(null)
                 }}
-                size="lg"
+                size="md"
                 showCloseButton={false}
             >
                 {selectedProduct && (

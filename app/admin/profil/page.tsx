@@ -48,8 +48,8 @@ export default function AdminProfilPage() {
         loadProfile() // Reload profile after update
     }
 
-    const textColor = isDarkMode ? '#ea580c' : '#7c2d12'
-    const bgColor = isDarkMode ? '#0f172a' : 'var(--accent-200)'
+    const textColor = isDarkMode ? '#ea580c' : '#E57526'
+    const dataTextColor = isDarkMode ? '#fdba74' : '#9a3412'
 
     return (
         <DashboardLayout role="Admin" menuItems={adminMenuItems}>
@@ -86,25 +86,25 @@ export default function AdminProfilPage() {
                             {/* Row 1: Nama & Phone */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-semibold mb-2" style={{ color: textColor }}>
-                                        Nama Lengkap :
+                                    <label className="block text-sm font-bold mb-2" style={{ color: textColor }}>
+                                        Nama Lengkap
                                     </label>
                                     <div
-                                        className="w-full px-4 py-3 rounded-lg italic text-gray-600 min-h-[48px] flex items-center"
-                                        style={{ backgroundColor: bgColor }}
+                                        className="w-full px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                        style={{ borderColor: textColor, color: dataTextColor }}
                                     >
-                                        {profile?.full_name || ''}
+                                        {profile?.full_name || '-'}
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold mb-2" style={{ color: textColor }}>
-                                        Nomor Telepon :
+                                    <label className="block text-sm font-bold mb-2" style={{ color: textColor }}>
+                                        Nomor Telepon
                                     </label>
                                     <div
-                                        className="w-full px-4 py-3 rounded-lg italic text-gray-600 min-h-[48px] flex items-center"
-                                        style={{ backgroundColor: bgColor }}
+                                        className="w-full px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                        style={{ borderColor: textColor, color: dataTextColor }}
                                     >
-                                        {profile?.phone || ''}
+                                        {profile?.phone || '-'}
                                     </div>
                                 </div>
                             </div>
@@ -112,39 +112,39 @@ export default function AdminProfilPage() {
                             {/* Row 2: Gender & Birth Date */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-semibold mb-2" style={{ color: textColor }}>
-                                        Jenis Kelamin :
+                                    <label className="block text-sm font-bold mb-2" style={{ color: textColor }}>
+                                        Jenis Kelamin
                                     </label>
                                     <div
-                                        className="w-full px-4 py-3 rounded-lg italic text-gray-600 min-h-[48px] flex items-center"
-                                        style={{ backgroundColor: bgColor }}
+                                        className="w-full px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                        style={{ borderColor: textColor, color: dataTextColor }}
                                     >
-                                        {profile?.gender || ''}
+                                        {profile?.gender || '-'}
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold mb-2" style={{ color: textColor }}>
-                                        Tanggal Lahir :
+                                    <label className="block text-sm font-bold mb-2" style={{ color: textColor }}>
+                                        Tanggal Lahir
                                     </label>
                                     <div
-                                        className="w-full px-4 py-3 rounded-lg italic text-gray-600 min-h-[48px] flex items-center"
-                                        style={{ backgroundColor: bgColor }}
+                                        className="w-full px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                        style={{ borderColor: textColor, color: dataTextColor }}
                                     >
-                                        {profile?.birth_date || ''}
+                                        {profile?.birth_date || '-'}
                                     </div>
                                 </div>
                             </div>
 
                             {/* Row 3: Address */}
                             <div>
-                                <label className="block text-sm font-semibold mb-2" style={{ color: textColor }}>
-                                    Alamat Rumah :
+                                <label className="block text-sm font-bold mb-2" style={{ color: textColor }}>
+                                    Alamat Rumah
                                 </label>
                                 <div
-                                    className="w-full px-4 py-3 rounded-lg italic text-gray-600 min-h-[100px]"
-                                    style={{ backgroundColor: bgColor }}
+                                    className="w-full px-4 py-3 rounded-xl border-2 min-h-[100px] bg-gray-200 dark:bg-gray-600"
+                                    style={{ borderColor: textColor, color: dataTextColor }}
                                 >
-                                    {profile?.address || ''}
+                                    {profile?.address || '-'}
                                 </div>
                             </div>
 
@@ -152,7 +152,7 @@ export default function AdminProfilPage() {
                             <div className="pt-6">
                                 <button
                                     onClick={() => setIsModalOpen(true)}
-                                    className="w-full py-4 rounded-lg font-bold text-white text-lg transition-all duration-200 hover:opacity-90"
+                                    className="w-full py-4 rounded-xl font-bold text-white text-lg transition-all duration-200 hover:opacity-90"
                                     style={{ backgroundColor: textColor }}
                                 >
                                     Ubah Profil

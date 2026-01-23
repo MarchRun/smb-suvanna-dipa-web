@@ -88,13 +88,11 @@ export default function TestimonialCards() {
         }
     }, [])
 
-    // Dynamic colors
-    const bgColor = isDarkMode ? '#BAE6FD' : '#FFEFD5' // Sky blue in dark, cream in light
-    const titleColor = isDarkMode ? '#ea580c' : '#7c2d12' // Bright orange in dark, brownish in light
-    const cardBgColor = isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)' // Bright orange in dark, brownish in light
-    const cardShadow = isDarkMode
-        ? '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
-        : '0 0 30px rgba(124, 45, 18, 0.6)' // Brownish shadow in light
+    // Dynamic colors - White theme with orange accent
+    const bgColor = '#FFFFFF' // White background
+    const titleColor = '#E57526' // Logo orange
+    const cardBgColor = '#E57526' // Logo orange
+    const cardShadow = '0 4px 15px rgba(229, 117, 38, 0.4)'
 
     return (
         <>

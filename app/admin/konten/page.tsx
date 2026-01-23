@@ -1,12 +1,12 @@
 /**
  * Admin - Konten Publik Page
  * Manage public website content: Activities, Gallery, Testimonials
- * View mode with edit modal
+ * View mode with edit modal - Collapsible sections with smooth animation
  */
 
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import DashboardLayout from '@/components/shared/DashboardLayout'
 import ImageModal from '@/components/shared/ImageModal'
 import PublicContentEditModal from '@/components/shared/PublicContentEditModal'
@@ -37,6 +37,76 @@ const defaultGalleryImages = [
     '/images/slider-image4.png',
     '/images/slider-image5.png'
 ]
+
+// Collapsible Section Component with smooth animation
+function CollapsibleSection({
+    title,
+    children,
+    defaultOpen = true,
+    textColor,
+    borderColor
+}: {
+    title: string
+    children: React.ReactNode
+    defaultOpen?: boolean
+    textColor: string
+    borderColor: string
+}) {
+    const [isOpen, setIsOpen] = useState(defaultOpen)
+    const contentRef = useRef<HTMLDivElement>(null)
+    const [contentHeight, setContentHeight] = useState<number | undefined>(undefined)
+
+    useEffect(() => {
+        if (contentRef.current) {
+            setContentHeight(contentRef.current.scrollHeight)
+        }
+    }, [children])
+
+    return (
+        <div
+            className="rounded-xl border-2 overflow-hidden"
+            style={{ borderColor: textColor }}
+        >
+            {/* Header - Clickable */}
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="w-full px-6 py-4 flex items-center justify-between bg-white/50 hover:bg-white/70 transition-colors"
+            >
+                <h2
+                    className="text-lg md:text-xl font-bold"
+                    style={{ color: textColor }}
+                >
+                    {title}
+                </h2>
+                <svg
+                    className={`w-5 h-5 transition-transform duration-300 ease-in-out ${isOpen ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke={textColor}
+                    viewBox="0 0 24 24"
+                >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+
+            {/* Content with smooth animation */}
+            <div
+                className="overflow-hidden transition-all duration-300 ease-in-out"
+                style={{
+                    maxHeight: isOpen ? contentHeight : 0,
+                    opacity: isOpen ? 1 : 0
+                }}
+            >
+                <div
+                    ref={contentRef}
+                    className="px-6 py-5 border-t-2"
+                    style={{ borderColor: textColor }}
+                >
+                    {children}
+                </div>
+            </div>
+        </div>
+    )
+}
 
 export default function KontenPublikPage() {
     const isDarkMode = useDarkMode()
@@ -98,44 +168,41 @@ export default function KontenPublikPage() {
     const handleImageUpload = async (index: number, file: File) => {
         setUploadingIndex(index)
 
-        const formData = new FormData()
-        formData.append('file', file)
-        const result = await uploadProfilePicture(formData)
-
-        if (result.success && result.data) {
-            const newGallery = [...gallery]
-            newGallery[index].image_url = result.data
-            setGallery(newGallery)
+        const result = await uploadProfilePicture(file)
+        if (result.success && result.url) {
+            const updatedGallery = [...gallery]
+            updatedGallery[index] = { ...updatedGallery[index], image_url: result.url }
+            setGallery(updatedGallery)
         } else {
-            alert(result.error || 'Gagal upload gambar')
+            alert(result.error || 'Gagal mengupload gambar')
         }
 
         setUploadingIndex(null)
     }
 
-    const handleSave = async (data: {
-        agenda: string[]
-        gallery: GalleryItem[]
-        testimonials: TestimonialItem[]
-    }) => {
+    const handleSave = async (data: { agenda: string[], gallery: GalleryItem[], testimonials: TestimonialItem[] }) => {
         // Update activities
         const activitiesResult = await updateActivities(data.agenda)
         if (!activitiesResult.success) {
-            alert(activitiesResult.error || 'Gagal update agenda')
+            alert(activitiesResult.error || 'Gagal mengupdate agenda')
             return
         }
 
-        // Update gallery
-        const galleryResult = await updateGallery(data.gallery)
+        // Update gallery (merge with current images)
+        const mergedGallery = data.gallery.map((item, index) => ({
+            ...item,
+            image_url: gallery[index]?.image_url || item.image_url
+        }))
+        const galleryResult = await updateGallery(mergedGallery)
         if (!galleryResult.success) {
-            alert(galleryResult.error || 'Gagal update galeri')
+            alert(galleryResult.error || 'Gagal mengupdate galeri')
             return
         }
 
         // Update testimonials
         const testimonialsResult = await updateTestimonials(data.testimonials)
         if (!testimonialsResult.success) {
-            alert(testimonialsResult.error || 'Gagal update testimoni')
+            alert(testimonialsResult.error || 'Gagal mengupdate testimoni')
             return
         }
 
@@ -144,10 +211,12 @@ export default function KontenPublikPage() {
         loadContent() // Reload data
     }
 
-    const textColor = isDarkMode ? '#ea580c' : '#7c2d12'
-    const bgColor = isDarkMode ? '#0f172a' : 'var(--accent-200)'
+    // Colors - consistent across all sections
+    const textColor = isDarkMode ? '#ea580c' : '#E57526'
+    const inputBgColor = isDarkMode ? 'rgb(75, 85, 99)' : 'rgb(229, 231, 235)' // gray-600 / gray-200
+    const dataTextColor = isDarkMode ? '#e5e7eb' : '#374151'
 
-    // Get display image - use uploaded or fallback to default
+    // Get display image
     const getGalleryImage = (item: GalleryItem, index: number) => {
         return item.image_url || defaultGalleryImages[index] || '/images/slider-image1.png'
     }
@@ -166,15 +235,14 @@ export default function KontenPublikPage() {
                 {loading ? (
                     <div className="text-center py-12 text-gray-500">Loading...</div>
                 ) : (
-                    <div className="space-y-8 max-w-4xl mx-auto">
-                        {/* Section 1: Agenda Tahunan Kegiatan */}
-                        <div>
-                            <h2
-                                className="text-xl md:text-2xl font-bold mb-6 text-center"
-                                style={{ color: textColor }}
-                            >
-                                Agenda Tahunan Kegiatan
-                            </h2>
+                    <div className="space-y-6 max-w-4xl mx-auto">
+
+                        {/* ===== SECTION 1: AGENDA ===== */}
+                        <CollapsibleSection
+                            title="Agenda Tahunan Kegiatan"
+                            textColor={textColor}
+                            borderColor={textColor}
+                        >
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {agenda.map((item, index) => (
                                     <div key={index}>
@@ -182,158 +250,126 @@ export default function KontenPublikPage() {
                                             className="block text-sm font-bold mb-2"
                                             style={{ color: textColor }}
                                         >
-                                            Agenda {index + 1}:
+                                            Agenda {index + 1}
                                         </label>
                                         <div
-                                            className="px-4 py-3 rounded-xl border-2 min-h-[48px] flex items-center"
+                                            className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center"
                                             style={{
                                                 borderColor: textColor,
-                                                backgroundColor: bgColor,
-                                                color: textColor
+                                                backgroundColor: inputBgColor,
+                                                color: dataTextColor
                                             }}
                                         >
-                                            {item || '-'}
+                                            {item || <span className="text-gray-400 italic">Belum diisi</span>}
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                        </div>
+                        </CollapsibleSection>
 
-                        {/* Section 2: Galeri Kegiatan */}
-                        <div>
-                            <h2
-                                className="text-xl md:text-2xl font-bold mb-6 text-center"
-                                style={{ color: textColor }}
-                            >
-                                Galeri Kegiatan
-                            </h2>
+                        {/* ===== SECTION 2: GALERI ===== */}
+                        <CollapsibleSection
+                            title="Galeri Kegiatan"
+                            textColor={textColor}
+                            borderColor={textColor}
+                        >
                             <div className="space-y-4">
                                 {gallery.map((item, index) => (
                                     <div
                                         key={index}
-                                        className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                                        className="flex flex-col md:flex-row gap-4 p-4 rounded-xl border-2"
+                                        style={{
+                                            borderColor: textColor,
+                                            backgroundColor: inputBgColor
+                                        }}
                                     >
-                                        {/* Image */}
-                                        <div>
-                                            <label
-                                                className="block text-sm font-bold mb-2"
-                                                style={{ color: textColor }}
-                                            >
-                                                Gambar {index + 1}:
-                                            </label>
-                                            <div
-                                                className="px-4 py-3 rounded-xl border-2 min-h-[48px] flex items-center gap-4"
-                                                style={{
-                                                    borderColor: textColor,
-                                                    backgroundColor: bgColor
-                                                }}
-                                            >
-                                                <img
-                                                    src={getGalleryImage(item, index)}
-                                                    alt={`Gambar ${index + 1}`}
-                                                    className="w-16 h-12 object-cover rounded-lg"
-                                                />
-                                                <button
-                                                    onClick={() => setImageModal({
-                                                        isOpen: true,
-                                                        url: getGalleryImage(item, index),
-                                                        caption: item.caption
-                                                    })}
-                                                    className="px-4 py-2 rounded-xl font-bold text-white hover:opacity-90 transition-opacity text-sm"
-                                                    style={{ backgroundColor: textColor }}
-                                                >
-                                                    Lihat
-                                                </button>
+                                        {/* Image Preview - Left side */}
+                                        <div
+                                            className="relative w-full md:w-48 h-32 flex-shrink-0 cursor-pointer group rounded-lg overflow-hidden"
+                                            onClick={() => setImageModal({
+                                                isOpen: true,
+                                                url: getGalleryImage(item, index),
+                                                caption: item.caption
+                                            })}
+                                        >
+                                            <img
+                                                src={getGalleryImage(item, index)}
+                                                alt={`Gambar ${index + 1}`}
+                                                className="w-full h-full object-cover"
+                                            />
+                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                <span className="text-white font-semibold text-sm">Lihat</span>
                                             </div>
                                         </div>
 
-                                        {/* Caption */}
-                                        <div>
+                                        {/* Caption - Right side */}
+                                        <div className="flex-1">
                                             <label
                                                 className="block text-sm font-bold mb-2"
                                                 style={{ color: textColor }}
                                             >
-                                                Caption Gambar {index + 1}:
+                                                Caption Gambar {index + 1}
                                             </label>
-                                            <div
-                                                className="px-4 py-3 rounded-xl border-2 min-h-[48px] flex items-center"
-                                                style={{
-                                                    borderColor: textColor,
-                                                    backgroundColor: bgColor,
-                                                    color: textColor
-                                                }}
+                                            <p
+                                                style={{ color: dataTextColor }}
                                             >
-                                                {item.caption || '-'}
-                                            </div>
+                                                {item.caption || <span className="text-gray-400 italic">Belum ada caption</span>}
+                                            </p>
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                        </div>
+                        </CollapsibleSection>
 
-                        {/* Section 3: Testimoni */}
-                        <div>
-                            <h2
-                                className="text-xl md:text-2xl font-bold mb-6 text-center"
-                                style={{ color: textColor }}
-                            >
-                                Testimoni
-                            </h2>
+                        {/* ===== SECTION 3: TESTIMONI ===== */}
+                        <CollapsibleSection
+                            title="Testimoni"
+                            textColor={textColor}
+                            borderColor={textColor}
+                        >
                             <div className="space-y-4">
                                 {testimonials.map((item, index) => (
                                     <div
                                         key={index}
-                                        className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                                        className="p-4 rounded-xl border-2"
+                                        style={{
+                                            borderColor: textColor,
+                                            backgroundColor: inputBgColor
+                                        }}
                                     >
-                                        {/* Name */}
-                                        <div>
-                                            <label
-                                                className="block text-sm font-bold mb-2"
-                                                style={{ color: textColor }}
-                                            >
-                                                Nama {index + 1}:
-                                            </label>
-                                            <div
-                                                className="px-4 py-3 rounded-xl border-2 min-h-[48px] flex items-center"
-                                                style={{
-                                                    borderColor: textColor,
-                                                    backgroundColor: bgColor,
-                                                    color: textColor
-                                                }}
-                                            >
-                                                {item.name || '-'}
-                                            </div>
-                                        </div>
+                                        {/* Testimoni Label */}
+                                        <label
+                                            className="block text-sm font-bold mb-2"
+                                            style={{ color: textColor }}
+                                        >
+                                            Testimoni {index + 1}
+                                        </label>
+
+                                        {/* Name - Same style as label */}
+                                        <p
+                                            className="font-bold mb-3"
+                                            style={{ color: textColor }}
+                                        >
+                                            {item.name || <span className="text-gray-400 italic font-normal">Nama kosong</span>}
+                                        </p>
 
                                         {/* Description */}
-                                        <div>
-                                            <label
-                                                className="block text-sm font-bold mb-2"
-                                                style={{ color: textColor }}
-                                            >
-                                                Deskripsi {index + 1}:
-                                            </label>
-                                            <div
-                                                className="px-4 py-3 rounded-xl border-2 min-h-[48px] flex items-center"
-                                                style={{
-                                                    borderColor: textColor,
-                                                    backgroundColor: bgColor,
-                                                    color: textColor
-                                                }}
-                                            >
-                                                {item.description || '-'}
-                                            </div>
-                                        </div>
+                                        <p
+                                            className="leading-relaxed"
+                                            style={{ color: dataTextColor }}
+                                        >
+                                            {item.description || <span className="text-gray-400 italic">Belum ada deskripsi testimoni</span>}
+                                        </p>
                                     </div>
                                 ))}
                             </div>
-                        </div>
+                        </CollapsibleSection>
 
-                        {/* Action Button - Not sticky, at bottom */}
-                        <div className="pt-6">
+                        {/* Action Button */}
+                        <div className="pt-4">
                             <button
                                 onClick={() => setIsEditModalOpen(true)}
-                                className="w-full py-4 rounded-xl font-bold text-white text-lg transition-all duration-200 hover:opacity-90"
+                                className="w-full py-4 rounded-xl font-bold text-white text-lg transition-all duration-200 hover:opacity-90 hover:shadow-lg"
                                 style={{ backgroundColor: textColor }}
                             >
                                 Ubah Konten
@@ -366,4 +402,3 @@ export default function KontenPublikPage() {
         </DashboardLayout>
     )
 }
-

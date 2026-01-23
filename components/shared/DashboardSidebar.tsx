@@ -132,10 +132,10 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
         fetchUserProfile()
     }, [])
 
-    // Colors - Use CSS variables for consistent dark mode with public pages
-    const sidebarBg = isDarkMode ? 'var(--neutral-800)' : 'var(--accent-100)'
-    const textColor = isDarkMode ? '#ea580c' : 'var(--primary-900)'
-    const hoverItemBg = isDarkMode ? 'rgba(234, 88, 12, 0.15)' : 'rgba(124, 45, 18, 0.08)'
+    // Colors - Use consistent orange theme
+    const sidebarBg = 'var(--accent-100)'
+    const textColor = '#E57526' // Logo orange
+    const hoverItemBg = 'rgba(229, 117, 38, 0.1)'
 
     const handleLogout = async () => {
         try {
@@ -175,7 +175,7 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
                     className="flex items-center gap-3 px-4 py-4 border-b"
                     style={{
                         backgroundColor: sidebarBg,
-                        borderBottomColor: isDarkMode ? 'rgba(234, 88, 12, 0.3)' : 'rgba(124, 45, 18, 0.2)',
+                        borderBottomColor: 'rgba(229, 117, 38, 0.2)',
                         borderBottomWidth: '1px',
                         minHeight: '80px'
                     }}
@@ -210,7 +210,7 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
                         <h2
                             className="font-bold truncate"
                             style={{
-                                color: isDarkMode ? '#ffffff' : 'var(--primary-900)',
+                                color: '#4A4A4A', // Dark gray for readability
                                 fontSize: '1rem',
                                 lineHeight: '1.25'
                             }}
@@ -222,7 +222,7 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
                         <div
                             className="text-sm font-semibold mt-1"
                             style={{
-                                color: isDarkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(124, 45, 18, 0.8)',
+                                color: 'rgba(74, 74, 74, 0.8)', // Gray
                                 fontSize: '0.875rem'
                             }}
                         >
@@ -233,7 +233,7 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
 
                 {/* Navigation Menu - flex-1 to take remaining space */}
                 <nav className="flex-1 py-6 overflow-y-auto border-b" style={{
-                    borderBottomColor: isDarkMode ? 'rgba(234, 88, 12, 0.3)' : 'rgba(124, 45, 18, 0.2)',
+                    borderBottomColor: 'rgba(229, 117, 38, 0.2)',
                     borderBottomWidth: '1px'
                 }}>
                     <ul className="space-y-2 px-4">

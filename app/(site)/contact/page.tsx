@@ -27,9 +27,9 @@ export default function ContactPage() {
         return () => observer.disconnect()
     }, [])
 
-    // Dynamic colors
-    const bgColor = isDarkMode ? '#BAE6FD' : '#FFEFD5' // Sky blue in dark, cream in light
-    const borderColor = isDarkMode ? '#ea580c' : '#7c2d12' // Bright orange in dark, brownish in light
+    // Dynamic colors - White theme with orange accent
+    const bgColor = '#FFFFFF' // White background
+    const borderColor = '#E57526' // Logo orange
 
     return (
         <>

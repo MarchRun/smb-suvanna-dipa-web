@@ -102,7 +102,7 @@ export default function Modal({
             {/* Modal Container with scale+fade animation */}
             <div
                 className={`relative bg-white dark:bg-gray-800 shadow-xl w-full ${sizeClasses[size]} 
-                           max-h-[90vh] overflow-hidden rounded-2xl
+                           max-h-[95vh] overflow-hidden rounded-2xl
                            transition-all duration-200
                            ${isAnimating ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
                 role="dialog"
@@ -144,7 +144,7 @@ export default function Modal({
                 )}
 
                 {/* Content - NO PADDING, forms handle their own */}
-                <div className="max-h-[calc(90vh-140px)] overflow-y-auto">
+                <div className="max-h-[calc(95vh-80px)] overflow-y-auto">
                     {children}
                 </div>
             </div>

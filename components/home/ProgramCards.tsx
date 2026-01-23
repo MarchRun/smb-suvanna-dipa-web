@@ -93,12 +93,12 @@ export default function ProgramCards() {
             <section
                 ref={sectionRef}
                 className="py-12 sm:py-16 md:py-20"
-                style={{ backgroundColor: isDarkMode ? '#BAE6FD' : '#FFEFD5' }} // Sky Blue 200 in dark, cream in light
+                style={{ backgroundColor: '#FFFFFF' }} // White background
             >
                 <div className="max-w-6xl mx-auto px-4">
                     <h2
                         className={`text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-8 sm:mb-12 ${isVisible ? 'animate-slideUpFade' : 'opacity-0'}`}
-                        style={{ color: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)' }} // Bright orange in dark (same as cards), brownish in light
+                        style={{ color: '#E57526' }} // Logo orange
                     >
                         Program Unggulan Kami
                     </h2>
@@ -115,10 +115,8 @@ export default function ProgramCards() {
                                 <Card
                                     className="text-center h-full"
                                     customStyle={{
-                                        backgroundColor: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)',
-                                        boxShadow: isDarkMode
-                                            ? '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
-                                            : '0 0 30px rgba(124, 45, 18, 0.6)' // Brownish orange shadow like login form
+                                        backgroundColor: '#E57526', // Logo orange
+                                        boxShadow: '0 4px 15px rgba(229, 117, 38, 0.4)'
                                     }}
                                 >
                                     {/* Icon - SVG single color with glow */}

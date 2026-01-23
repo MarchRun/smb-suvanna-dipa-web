@@ -20,8 +20,8 @@ interface StatCardProps {
 export default function StatCard({ title, value, icon, className = '', loading = false }: StatCardProps) {
     const isDarkMode = useDarkMode()
 
-    // Card background matches textColor (orange/brown)
-    const cardBg = isDarkMode ? '#ea580c' : 'var(--primary-900)'
+    // Card background matches textColor (orange)
+    const cardBg = '#E57526' // Logo orange
     const textColor = '#ffffff'
 
     return (
@@ -29,9 +29,7 @@ export default function StatCard({ title, value, icon, className = '', loading =
             className={`p-4 md:p-6 rounded-xl transition-all duration-300 hover:scale-105 ${className}`}
             style={{
                 backgroundColor: cardBg,
-                boxShadow: isDarkMode
-                    ? '0 4px 15px rgba(234, 88, 12, 0.3)'
-                    : '0 4px 15px rgba(124, 45, 18, 0.3)'
+                boxShadow: '0 4px 15px rgba(229, 117, 38, 0.3)'
             }}
         >
             {/* Icon (optional) */}

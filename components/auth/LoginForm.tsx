@@ -56,15 +56,13 @@ export default function LoginForm() {
             className="p-6 sm:p-8 rounded-xl shadow-2xl border-4 transition-all duration-300 hover:scale-105"
             style={{
                 backgroundColor: 'white',
-                borderColor: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)',
-                boxShadow: isDarkMode
-                    ? '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
-                    : '0 0 30px rgba(124, 45, 18, 0.6)'
+                borderColor: '#E57526', // Logo orange
+                boxShadow: '0 4px 20px rgba(229, 117, 38, 0.4)'
             }}
         >
             <h2
                 className="text-2xl sm:text-3xl font-bold text-center mb-6"
-                style={{ color: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)' }}
+                style={{ color: '#E57526' }} // Logo orange
             >
                 Gerbang Masuk
             </h2>
@@ -107,7 +105,7 @@ export default function LoginForm() {
                     <Link
                         href="/forgot-password"
                         className="text-sm font-semibold hover:underline transition-colors"
-                        style={{ color: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)' }}
+                        style={{ color: '#E57526' }} // Logo orange
                     >
                         Lupa Password?
                     </Link>

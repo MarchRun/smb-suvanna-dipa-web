@@ -23,7 +23,7 @@ export default function Footer() {
                     <p
                         className="text-base font-bold"
                         style={{
-                            color: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)', // Bright orange in dark, brownish in light
+                            color: '#E57526', // Logo orange
                             textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)'
                         }}
                     >

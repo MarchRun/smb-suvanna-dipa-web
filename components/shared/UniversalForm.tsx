@@ -268,7 +268,7 @@ export default function UniversalForm({
 
     // Colors based on dark mode
     const titleColor = isDarkMode ? '#ea580c' : '#9a3412'
-    const buttonBgColor = isDarkMode ? '#7c2d12' : '#9a3412'
+    const buttonBgColor = isDarkMode ? '#E57526' : '#9a3412'
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">

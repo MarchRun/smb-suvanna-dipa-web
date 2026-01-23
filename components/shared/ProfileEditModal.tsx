@@ -193,13 +193,13 @@ export default function ProfileEditModal({ isOpen, onClose, currentData, onSucce
         address: currentData.address || ''
     }
 
-    const textColor = isDarkMode ? '#ea580c' : '#7c2d12'
+    const textColor = isDarkMode ? '#ea580c' : '#E57526'
 
     return (
         <Modal
             isOpen={isOpen}
             onClose={handleClose}
-            size="lg"
+            size="md"
             showCloseButton={false}
         >
             <div className="p-6 md:p-8">
@@ -255,7 +255,7 @@ export default function ProfileEditModal({ isOpen, onClose, currentData, onSucce
                             type="button"
                             onClick={selectedFile ? handleUploadPicture : () => fileInputRef.current?.click()}
                             className="px-6 py-3 rounded-r-full font-semibold text-white transition-all hover:opacity-90 disabled:opacity-50"
-                            style={{ backgroundColor: '#7c2d12' }}
+                            style={{ backgroundColor: '#E57526' }}
                             disabled={loading || uploadingPicture}
                         >
                             {uploadingPicture ? 'Uploading...' : 'Upload'}

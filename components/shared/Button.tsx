@@ -51,11 +51,11 @@ export default function Button({
                 disabled={disabled}
                 className={combinedClassName}
                 style={{
-                    backgroundColor: disabled ? '#cbd5e1' : (isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)'),
+                    backgroundColor: disabled ? '#cbd5e1' : '#E57526', // Logo orange
                     color: '#ffffff',
                     opacity: disabled ? 0.6 : 1,
                     cursor: disabled ? 'not-allowed' : 'pointer',
-                    boxShadow: disabled || noShadow ? 'none' : '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(124, 45, 18, 0.4)',
+                    boxShadow: disabled || noShadow ? 'none' : '0 4px 15px rgba(229, 117, 38, 0.4)',
                     ...customStyle
                 }}
             >

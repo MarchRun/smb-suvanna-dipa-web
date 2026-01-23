@@ -16,7 +16,7 @@ export default function VisionMission() {
     const isDarkMode = useDarkMode()
     const sectionRef = useRef<HTMLElement>(null)
 
-        useEffect(() => {
+    useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
                 // Track both entering and leaving for refresh effect
@@ -36,11 +36,9 @@ export default function VisionMission() {
         }
     }, [])
 
-    // Dynamic colors - in dark mode, use same color as buttons (brownish orange with brownish shadow)
-    const cardBgColor = isDarkMode ? 'var(--primary-900)' : 'var(--primary-500)' // Brownish in dark, bright orange in light
-    const cardShadow = isDarkMode
-        ? '0 0 30px rgba(124, 45, 18, 0.6)' // Brownish shadow in dark mode (same as buttons)
-        : '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)' // Yellow glow in light mode
+    // Dynamic colors - White theme with orange accent
+    const cardBgColor = '#E57526' // Logo orange
+    const cardShadow = '0 4px 15px rgba(229, 117, 38, 0.4)'
 
     return (
         <>
@@ -48,7 +46,7 @@ export default function VisionMission() {
                 ref={sectionRef}
                 className="py-16 sm:py-20 md:py-24 relative overflow-hidden"
                 style={{
-                    backgroundColor: isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)' // Bright orange in dark, dark brown in light
+                    backgroundColor: '#E57526' // Logo orange
                 }}
             >
                 {/* Top-left trapezoid - hidden on mobile */}
@@ -140,7 +138,7 @@ export default function VisionMission() {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section >
 
             <style jsx>{`
                 @keyframes slideFromLeft {

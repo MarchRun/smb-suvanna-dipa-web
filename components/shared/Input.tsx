@@ -51,7 +51,7 @@ export default function Input({
     const isPassword = type === 'password'
     const inputType = isPassword ? (showPassword ? 'text' : 'password') : type
 
-    const textColor = isDarkMode ? '#ea580c' : '#7c2d12'
+    const textColor = '#E57526' // Logo orange
 
     return (
         <div className="w-full">
@@ -72,15 +72,15 @@ export default function Input({
                     className={`w-full px-4 py-2 sm:px-4 sm:py-2.5 rounded-full focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all placeholder:text-gray-500 ${isPassword ? 'pr-12' : ''}`}
                     style={{
                         backgroundColor: '#ffffff',
-                        border: `2px solid ${isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)'}`,
+                        border: '2px solid #E57526', // Logo orange
                         color: 'var(--neutral-900)'
                     }}
                     onFocus={(e) => {
-                        e.currentTarget.style.borderColor = isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)'
-                        e.currentTarget.style.boxShadow = isDarkMode ? '0 0 0 3px rgba(234, 88, 12, 0.1)' : '0 0 0 3px rgba(124, 45, 18, 0.1)'
+                        e.currentTarget.style.borderColor = '#E57526'
+                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(229, 117, 38, 0.15)'
                     }}
                     onBlur={(e) => {
-                        e.currentTarget.style.borderColor = isDarkMode ? 'var(--primary-600)' : 'var(--primary-900)'
+                        e.currentTarget.style.borderColor = '#E57526'
                         e.currentTarget.style.boxShadow = 'none'
                     }}
                 />

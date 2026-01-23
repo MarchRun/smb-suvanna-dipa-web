@@ -40,7 +40,7 @@ export default function FileUpload({
         }
     }
 
-    const textColor = isDarkMode ? '#ea580c' : '#7c2d12'
+    const textColor = '#E57526' // Logo orange
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]

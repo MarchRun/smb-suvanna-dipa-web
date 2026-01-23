@@ -5,9 +5,11 @@
 
 'use client'
 
-import { useState } from 'react'
-import UniversalForm, { FormSection } from '@/components/shared/UniversalForm'
+import { useState, useRef, useEffect } from 'react'
 import Modal from '@/components/shared/Modal'
+import Input from '@/components/shared/Input'
+import Textarea from '@/components/shared/Textarea'
+import { useDarkMode } from '@/hooks/useDarkMode'
 import type { GalleryItem, TestimonialItem } from '@/actions/admin/publicContent'
 
 interface PublicContentEditModalProps {
@@ -26,6 +28,87 @@ interface PublicContentEditModalProps {
     isDarkMode: boolean
 }
 
+// Compact file upload component for gallery
+function CompactFileUpload({
+    index,
+    onFileSelect,
+    existingUrl,
+    isUploading
+}: {
+    index: number
+    onFileSelect: (file: File) => void
+    existingUrl?: string
+    isUploading: boolean
+}) {
+    const fileInputRef = useRef<HTMLInputElement>(null)
+    const [fileName, setFileName] = useState('')
+    const [error, setError] = useState('')
+    const isDarkMode = useDarkMode()
+    const textColor = isDarkMode ? '#ea580c' : '#E57526'
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        setError('')
+
+        if (!file) return
+
+        // Validate file type
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png']
+        if (!validTypes.includes(file.type)) {
+            setError('Format: JPEG, PNG saja')
+            return
+        }
+
+        // Validate file size (1MB)
+        if (file.size > 1 * 1024 * 1024) {
+            setError('Maksimal 1MB')
+            return
+        }
+
+        setFileName(file.name)
+        onFileSelect(file)
+    }
+
+    return (
+        <div>
+            <label className="block text-sm font-bold mb-2" style={{ color: textColor }}>
+                Gambar {index + 1}
+            </label>
+            <div className="flex">
+                <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png"
+                    onChange={handleFileChange}
+                    className="hidden"
+                />
+                <input
+                    type="text"
+                    value={fileName || (existingUrl ? 'Gambar ada' : '')}
+                    placeholder="Pilih file..."
+                    readOnly
+                    className="flex-1 px-3 py-2 text-sm rounded-l-full border-2 border-r-0 cursor-pointer
+                             bg-white dark:bg-gray-800 text-gray-900 dark:text-white truncate"
+                    style={{ borderColor: textColor }}
+                    onClick={() => fileInputRef.current?.click()}
+                />
+                <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploading}
+                    className="px-3 py-2 text-sm rounded-r-full font-bold text-white transition-all duration-200 hover:opacity-90 disabled:opacity-50"
+                    style={{ backgroundColor: textColor }}
+                >
+                    {isUploading ? '...' : 'Upload'}
+                </button>
+            </div>
+            <p className="text-gray-500 text-xs mt-1">
+                {error || 'Format: JPEG, PNG. Maksimal 1MB.'}
+            </p>
+        </div>
+    )
+}
+
 export default function PublicContentEditModal({
     isOpen,
     onClose,
@@ -33,109 +116,186 @@ export default function PublicContentEditModal({
     initialGallery,
     initialTestimonials,
     onSubmit,
-    isDarkMode
+    onImageUpload,
+    uploadingIndex,
+    isDarkMode: propDarkMode
 }: PublicContentEditModalProps) {
-    // Prepare initial data
-    const initialData: Record<string, any> = {
-        agenda_1: initialAgenda[0] || '',
-        agenda_2: initialAgenda[1] || '',
-        agenda_3: initialAgenda[2] || '',
-        agenda_4: initialAgenda[3] || '',
+    const isDarkMode = useDarkMode()
+    const textColor = isDarkMode ? '#ea580c' : '#E57526'
+    const buttonBgColor = isDarkMode ? '#E57526' : '#9a3412'
 
-        // Gallery items
-        ...initialGallery.reduce((acc, item, index) => {
-            acc[`gallery_${index + 1}_caption`] = item.caption
-            return acc
-        }, {} as Record<string, string>),
+    // Form state
+    const [agenda, setAgenda] = useState<string[]>(initialAgenda)
+    const [gallery, setGallery] = useState<GalleryItem[]>(initialGallery)
+    const [testimonials, setTestimonials] = useState<TestimonialItem[]>(initialTestimonials)
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
-        // Testimonials
-        ...initialTestimonials.reduce((acc, item, index) => {
-            acc[`testimonial_${index + 1}_name`] = item.name
-            acc[`testimonial_${index + 1}_text`] = item.description  // Use description
-            return acc
-        }, {} as Record<string, string>)
+    // Reset form when modal opens
+    useEffect(() => {
+        if (isOpen) {
+            setAgenda(initialAgenda)
+            setGallery(initialGallery)
+            setTestimonials(initialTestimonials)
+        }
+    }, [isOpen, initialAgenda, initialGallery, initialTestimonials])
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setIsSubmitting(true)
+        try {
+            await onSubmit({ agenda, gallery, testimonials })
+        } finally {
+            setIsSubmitting(false)
+        }
     }
 
-    // Define sections
-    const sections: FormSection[] = [
-        {
-            sectionTitle: 'Agenda Tahunan Kegiatan',
-            fields: [
-                { name: 'agenda_1', type: 'text', label: 'Agenda 1', required: true },
-                { name: 'agenda_2', type: 'text', label: 'Agenda 2', required: true },
-                { name: 'agenda_3', type: 'text', label: 'Agenda 3', required: true },
-                { name: 'agenda_4', type: 'text', label: 'Agenda 4', required: true }
-            ]
-        },
-        {
-            sectionTitle: 'Galeri Kegiatan',
-            fields: initialGallery.map((_, index) => ({
-                name: `gallery_${index + 1}_caption`,
-                type: 'text' as const,
-                label: `Caption Gambar ${index + 1}`,
-                required: true
-            }))
-        },
-        {
-            sectionTitle: 'Testimoni',
-            fields: initialTestimonials.flatMap((_, index) => [
-                {
-                    name: `testimonial_${index + 1}_name`,
-                    type: 'text' as const,
-                    label: `Nama ${index + 1}`,
-                    required: true
-                },
-                {
-                    name: `testimonial_${index + 1}_text`,
-                    type: 'textarea' as const,
-                    label: `Deskripsi ${index + 1}`,
-                    required: true,
-                    rows: 4,
-                    columnSpan: 2 as const
-                }
-            ])
-        }
-    ]
+    const updateAgenda = (index: number, value: string) => {
+        const newAgenda = [...agenda]
+        newAgenda[index] = value
+        setAgenda(newAgenda)
+    }
 
-    // Handle submit - transform data back
-    const handleSubmit = async (data: Record<string, any>) => {
-        const agenda = [
-            data.agenda_1,
-            data.agenda_2,
-            data.agenda_3,
-            data.agenda_4
-        ]
+    const updateGalleryCaption = (index: number, caption: string) => {
+        const newGallery = [...gallery]
+        newGallery[index] = { ...newGallery[index], caption }
+        setGallery(newGallery)
+    }
 
-        const gallery = initialGallery.map((item, index) => ({
-            ...item,
-            caption: data[`gallery_${index + 1}_caption`]
-        }))
+    const updateTestimonialName = (index: number, name: string) => {
+        const newTestimonials = [...testimonials]
+        newTestimonials[index] = { ...newTestimonials[index], name }
+        setTestimonials(newTestimonials)
+    }
 
-        const testimonials = initialTestimonials.map((item, index) => ({
-            ...item,
-            name: data[`testimonial_${index + 1}_name`],
-            description: data[`testimonial_${index + 1}_text`]  // Map to description
-        }))
-
-        await onSubmit({ agenda, gallery, testimonials })
+    const updateTestimonialText = (index: number, description: string) => {
+        const newTestimonials = [...testimonials]
+        newTestimonials[index] = { ...newTestimonials[index], description }
+        setTestimonials(newTestimonials)
     }
 
     return (
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            size="xl"
+            size="md"
             showCloseButton={false}
         >
             <div className="p-6 md:p-8">
-                <UniversalForm
-                    title="Edit Konten Publik"
-                    mode="edit"
-                    sections={sections}
-                    initialData={initialData}
-                    onSubmit={handleSubmit}
-                    onCancel={onClose}
-                />
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Form Title */}
+                    <h2
+                        className="text-2xl md:text-3xl font-bold"
+                        style={{ color: textColor }}
+                    >
+                        Edit Konten Publik
+                    </h2>
+
+                    {/* Section 1: Agenda */}
+                    <div className="space-y-4">
+                        <h3
+                            className="text-xl font-bold border-b-2 pb-2"
+                            style={{ color: textColor, borderColor: textColor }}
+                        >
+                            Agenda Tahunan Kegiatan
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {[0, 1, 2, 3].map((i) => (
+                                <Input
+                                    key={i}
+                                    label={`Agenda ${i + 1}`}
+                                    value={agenda[i] || ''}
+                                    onChange={(e) => updateAgenda(i, e.target.value)}
+                                    required
+                                />
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Section 2: Gallery with Upload + Caption side by side */}
+                    <div className="space-y-4">
+                        <h3
+                            className="text-xl font-bold border-b-2 pb-2"
+                            style={{ color: textColor, borderColor: textColor }}
+                        >
+                            Galeri Kegiatan
+                        </h3>
+                        <div className="space-y-4">
+                            {gallery.map((item, i) => (
+                                <div key={i} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {/* Left: File Upload */}
+                                    <CompactFileUpload
+                                        index={i}
+                                        onFileSelect={(file) => onImageUpload(i, file)}
+                                        existingUrl={item.imageUrl}
+                                        isUploading={uploadingIndex === i}
+                                    />
+                                    {/* Right: Caption */}
+                                    <Input
+                                        label={`Caption Gambar ${i + 1}`}
+                                        value={item.caption}
+                                        onChange={(e) => updateGalleryCaption(i, e.target.value)}
+                                        required
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Section 3: Testimonials with full-width name */}
+                    <div className="space-y-4">
+                        <h3
+                            className="text-xl font-bold border-b-2 pb-2"
+                            style={{ color: textColor, borderColor: textColor }}
+                        >
+                            Testimoni
+                        </h3>
+                        <div className="space-y-6">
+                            {testimonials.map((item, i) => (
+                                <div key={i} className="space-y-4">
+                                    {/* Name - Full Width */}
+                                    <Input
+                                        label={`Nama ${i + 1}`}
+                                        value={item.name}
+                                        onChange={(e) => updateTestimonialName(i, e.target.value)}
+                                        required
+                                    />
+                                    {/* Description - Full Width */}
+                                    <Textarea
+                                        label={`Deskripsi ${i + 1}`}
+                                        value={item.description}
+                                        onChange={(e) => updateTestimonialText(i, e.target.value)}
+                                        required
+                                        rows={4}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-4 pt-4">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            disabled={isSubmitting}
+                            className="flex-1 py-3 px-6 rounded-xl border-2 font-bold
+                                     border-orange-600 text-orange-600 
+                                     hover:bg-orange-50 dark:hover:bg-orange-900/20
+                                     transition-all disabled:opacity-50"
+                        >
+                            Batal
+                        </button>
+                        <button
+                            type="submit"
+                            disabled={isSubmitting || uploadingIndex !== null}
+                            className="flex-1 py-3 px-6 rounded-xl font-bold text-white 
+                                     transition-all disabled:opacity-50 hover:opacity-90"
+                            style={{ backgroundColor: buttonBgColor }}
+                        >
+                            {isSubmitting ? 'Menyimpan...' : 'Konfirmasi Perubahan'}
+                        </button>
+                    </div>
+                </form>
             </div>
         </Modal>
     )
