@@ -163,7 +163,7 @@ export default function TestimonialCards() {
                                                 className="transition-all duration-300 rounded-full"
                                                 style={{
                                                     width: index === currentIndex ? '24px' : '8px',
-                                                    height: '8px',
+                                                    height: '24px',
                                                     backgroundColor: index === currentIndex
                                                         ? titleColor
                                                         : 'rgba(124, 45, 18, 0.3)',
@@ -179,11 +179,12 @@ export default function TestimonialCards() {
                                     {testimonials.map((testimonial, index) => (
                                         <div
                                             key={index}
-                                            className={`${isVisible ? 'animate-scaleIn' : 'opacity-0'} hover-bounce`}
+                                            className={`${isVisible ? 'animate-scaleIn' : 'opacity-0'}`}
                                             style={{ animationDelay: `${index * 0.15}s` }}
                                         >
                                             <Card
                                                 className="h-full"
+                                                hoverable={true}
                                                 customStyle={{
                                                     backgroundColor: cardBgColor,
                                                     boxShadow: cardShadow,
@@ -226,17 +227,7 @@ export default function TestimonialCards() {
                 :global(.animate-scaleIn) {
                     animation: scaleIn 0.6s ease-out forwards;
                 }
-
-                :global(.hover-bounce) {
-                    transition: all 0.3s ease;
-                    cursor: pointer;
-                }
-
-                :global(.hover-bounce:hover) {
-                    transform: scale(1.05) !important;
-                }
             `}</style>
         </>
     )
 }
-

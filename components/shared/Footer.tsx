@@ -47,7 +47,7 @@ export default function Footer() {
                         <h3 className="text-lg font-bold text-[#E57526]">Jelajahi</h3>
                         <div className="grid grid-cols-2 gap-x-4 sm:gap-x-12 text-left">
                             <div className="flex flex-col gap-4">
-                                <a href="/student/login" className="text-gray-300 hover:text-white transition-colors">Login</a>
+                                <a href="/home" className="text-gray-300 hover:text-white transition-colors">Login</a>
                                 <a href="/forgot-password" className="text-gray-300 hover:text-white transition-colors">Lupa Password</a>
                                 <a href="/about#profile" className="text-gray-300 hover:text-white transition-colors">Profil</a>
                                 <a href="/about#vision" className="text-gray-300 hover:text-white transition-colors">Visi & Misi</a>

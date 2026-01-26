@@ -87,10 +87,10 @@ export default function PageHeader({
         <>
             <section
                 ref={sectionRef}
-                className="relative py-16 sm:py-20"
+                className="relative py-8 sm:py-12"
                 style={{
-                    paddingTop: '120px', // Account for fixed header
-                    minHeight: '300px'
+                    paddingTop: '100px', // Account for fixed header
+                    minHeight: '200px'
                 }}
             >
                 {/* Background Image - Cropped to show top portion only */}

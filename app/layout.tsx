@@ -23,6 +23,10 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   title: "SMB Suvanna Dipa - Sistem Informasi Sekolah Minggu Buddha",
   description: "Portal informasi dan manajemen Sekolah Minggu Buddha Suvanna Dipa",
+  icons: {
+    icon: "/images/logo-smbsd-v2.png",
+    apple: "/images/logo-smbsd-v2.png",
+  },
 };
 
 export default function RootLayout({

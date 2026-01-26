@@ -37,15 +37,15 @@ export default function VisionMission() {
     }, [])
 
     // Dynamic colors - White theme with orange accent
-    const cardBgColor = '#E57526' // Logo orange
-    const cardShadow = '0 4px 15px rgba(229, 117, 38, 0.4)'
+    const cardBgColor = '#C25F1D' // Darker orange (matching button)
+    const cardShadow = '0 4px 20px rgba(255, 255, 255, 0.4)' // Bright White Glow (matching button)
 
     return (
         <>
             <section
                 id="vision"
                 ref={sectionRef}
-                className="py-16 sm:py-20 md:py-24 relative overflow-hidden scroll-mt-40"
+                className="py-12 sm:py-16 md:py-20 relative overflow-hidden scroll-mt-40"
                 style={{
                     backgroundColor: '#E57526' // Logo orange
                 }}
@@ -84,15 +84,17 @@ export default function VisionMission() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
                         {/* Visi */}
                         <div
-                            className={`${isVisible ? 'animate-scaleIn' : 'opacity-0'} hover-bounce`}
+                            className={`${isVisible ? 'animate-scaleIn' : 'opacity-0'}`}
                             style={{ animationDelay: '0s' }}
                         >
                             <Card
                                 className="text-center h-full"
+                                hoverable={true}
                                 customStyle={{
                                     backgroundColor: cardBgColor,
                                     boxShadow: cardShadow,
                                     border: 'none',
+                                    borderRadius: '40px' // Rounded like pill button
                                 }}
                             >
                                 <h3
@@ -112,15 +114,17 @@ export default function VisionMission() {
 
                         {/* Misi */}
                         <div
-                            className={`${isVisible ? 'animate-scaleIn' : 'opacity-0'} hover-bounce`}
+                            className={`${isVisible ? 'animate-scaleIn' : 'opacity-0'}`}
                             style={{ animationDelay: '0.2s' }}
                         >
                             <Card
                                 className="text-center h-full"
+                                hoverable={true}
                                 customStyle={{
                                     backgroundColor: cardBgColor,
                                     boxShadow: cardShadow,
                                     border: 'none',
+                                    borderRadius: '40px' // Rounded like pill button
                                 }}
                             >
                                 <h3
@@ -185,15 +189,6 @@ export default function VisionMission() {
 
                 :global(.animate-scaleIn) {
                     animation: scaleIn 0.6s ease-out forwards;
-                }
-
-                :global(.hover-bounce) {
-                    transition: all 0.3s ease;
-                    cursor: pointer;
-                }
-
-                :global(.hover-bounce:hover) {
-                    transform: scale(1.05) !important;
                 }
             `}</style>
         </>

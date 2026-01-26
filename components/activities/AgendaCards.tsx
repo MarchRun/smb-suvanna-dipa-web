@@ -96,7 +96,7 @@ export default function AgendaCards() {
             <section
                 id="agenda"
                 ref={sectionRef}
-                className="pt-2 pb-6 sm:pb-8 scroll-mt-40"
+                className="py-20 sm:py-24 md:py-32 scroll-mt-40"
                 style={{ backgroundColor: bgColor }}
             >
                 <div className="max-w-6xl mx-auto px-4">
@@ -171,11 +171,12 @@ export default function AgendaCards() {
                                     {activities.map((activity, index) => (
                                         <div
                                             key={index}
-                                            className={`${isVisible ? 'animate-scaleIn' : 'opacity-0'} hover-bounce`}
+                                            className={`${isVisible ? 'animate-scaleIn' : 'opacity-0'}`}
                                             style={{ animationDelay: `${index * 0.15}s` }}
                                         >
                                             <Card
                                                 className="text-center h-full"
+                                                hoverable={true}
                                                 customStyle={{
                                                     backgroundColor: cardBgColor,
                                                     boxShadow: cardShadow,
@@ -211,15 +212,6 @@ export default function AgendaCards() {
 
                 :global(.animate-scaleIn) {
                     animation: scaleIn 0.6s ease-out forwards;
-                }
-
-                :global(.hover-bounce) {
-                    transition: all 0.3s ease;
-                    cursor: pointer;
-                }
-
-                :global(.hover-bounce:hover) {
-                    transform: scale(1.05) !important;
                 }
             `}</style>
         </>
