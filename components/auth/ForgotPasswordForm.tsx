@@ -42,14 +42,12 @@ export default function ForgotPasswordForm() {
 
     // Dynamic colors based on dark mode
     const primaryColor = isDarkMode ? 'var(--primary-600)' : '#E57526'
-    const borderGlow = isDarkMode
-        ? '0 0 30px rgba(234, 88, 12, 0.6)'
-        : '0 0 30px rgba(124, 45, 18, 0.6)'
+    const borderGlow = 'none'
 
     if (success) {
         return (
             <div
-                className="p-6 sm:p-8 rounded-xl shadow-2xl border-4 transition-all duration-300"
+                className="p-6 sm:p-8 rounded-xl border-4 transition-all duration-300"
                 style={{
                     backgroundColor: 'white',
                     borderColor: primaryColor,
@@ -104,7 +102,7 @@ export default function ForgotPasswordForm() {
 
     return (
         <div
-            className="p-6 sm:p-8 rounded-xl shadow-2xl border-4 transition-all duration-300 hover:scale-105"
+            className="p-6 sm:p-8 rounded-xl border-4 transition-all duration-300 hover:scale-105"
             style={{
                 backgroundColor: 'white',
                 borderColor: primaryColor,

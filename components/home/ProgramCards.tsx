@@ -17,19 +17,19 @@ export default function ProgramCards() {
 
     const programs = [
         {
-            title: 'Lorem ipsum',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-            iconType: 'star'
+            title: 'Pujabakti & Meditasi',
+            description: 'Membangun kedamaian batin melalui doa dan latihan meditasi rutin setiap minggu.',
+            iconType: 'lotus'
         },
         {
-            title: 'Lorem ipsum',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            title: 'Pembelajaran Dhamma',
+            description: 'Kelas interaktif mengenal ajaran Buddha, moralitas, dan budi pekerti luhur.',
             iconType: 'book'
         },
         {
-            title: 'Lorem ipsum',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-            iconType: 'medal'
+            title: 'Kreativitas & Seni',
+            description: 'Mengasah bakat melalui seni, nyanyian buddhis, dan berbagai aktivitas kreatif.',
+            iconType: 'palette'
         }
     ]
 
@@ -63,24 +63,22 @@ export default function ProgramCards() {
         const iconSize = '48px'
 
         switch (iconType) {
-            case 'star':
+            case 'lotus':
                 return (
-                    <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none" style={{ filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.5))' }}>
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill={iconColor} />
+                    <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="currentColor" style={{ color: iconColor }}>
+                        <path d="M12 2c0 0-7 6-7 12 0 4 5 7 7 7s7-3 7-7c0-6-7-12-7-12zm0 15c-1.4 0-2.5-1.1-2.5-2.5S10.6 12 12 12s2.5 1.1 2.5 2.5S13.4 17 12 17z" />
                     </svg>
                 )
             case 'book':
                 return (
-                    <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none" style={{ filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.5))' }}>
-                        <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" fill={iconColor} />
+                    <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="currentColor" style={{ color: iconColor }}>
+                        <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" />
                     </svg>
                 )
-            case 'medal':
+            case 'palette':
                 return (
-                    <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none" style={{ filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.5))' }}>
-                        <circle cx="12" cy="15" r="5" fill={iconColor} />
-                        <path d="M12 10.5c-2.5 0-4.5 2-4.5 4.5s2 4.5 4.5 4.5 4.5-2 4.5-4.5-2-4.5-4.5-4.5zm0 6.5c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" fill={iconColor} />
-                        <path d="M14.5 2L12 6 9.5 2 8 9l4 1.5L16 9z" fill={iconColor} />
+                    <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="currentColor" style={{ color: iconColor }}>
+                        <path d="M12 3a9 9 0 0 0 0 18c4.97 0 9-3.58 9-8a9 9 0 0 0-9-10zm0 16c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7zm1.5-10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm-3 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm-3 4c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm9 3c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z" />
                     </svg>
                 )
             default:
@@ -96,27 +94,37 @@ export default function ProgramCards() {
                 style={{ backgroundColor: '#FFFFFF' }} // White background
             >
                 <div className="max-w-6xl mx-auto px-4">
-                    <h2
-                        className={`text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-8 sm:mb-12 ${isVisible ? 'animate-slideUpFade' : 'opacity-0'}`}
-                        style={{ color: '#E57526' }} // Logo orange
-                    >
-                        Program Unggulan Kami
-                    </h2>
+                    <div className={`flex items-center justify-center gap-4 mb-8 sm:mb-12 ${isVisible ? 'animate-slideUpFade' : 'opacity-0'}`}>
+                        {/* Left Line */}
+                        <div className="hidden sm:block h-1 w-12 sm:w-24 bg-[#E57526] opacity-80 rounded-full"></div>
+
+                        <h2
+                            className="text-3xl sm:text-4xl md:text-5xl font-bold text-center"
+                            style={{ color: '#E57526' }} // Logo orange
+                        >
+                            Program Unggulan Kami
+                        </h2>
+
+                        {/* Right Line */}
+                        <div className="hidden sm:block h-1 w-12 sm:w-24 bg-[#E57526] opacity-80 rounded-full"></div>
+                    </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
                         {programs.map((program, index) => (
                             <div
                                 key={index}
-                                className={`${isVisible ? 'animate-scaleIn' : 'opacity-0'} hover-bounce`}
+                                className={`${isVisible ? 'animate-scaleIn' : 'opacity-0'}`}
                                 style={{
                                     animationDelay: `${index * 0.2}s`,
                                 }}
                             >
                                 <Card
                                     className="text-center h-full"
+                                    hoverable={true}
                                     customStyle={{
                                         backgroundColor: '#E57526', // Logo orange
-                                        boxShadow: '0 4px 15px rgba(229, 117, 38, 0.4)'
+                                        boxShadow: 'none',
+                                        borderRadius: '32px' // More rounded
                                     }}
                                 >
                                     {/* Icon - SVG single color with glow */}
@@ -157,15 +165,6 @@ export default function ProgramCards() {
 
                 :global(.animate-scaleIn) {
                     animation: scaleIn 0.6s ease-out forwards;
-                }
-
-                :global(.hover-bounce) {
-                    transition: all 0.3s ease;
-                    cursor: pointer;
-                }
-
-                :global(.hover-bounce:hover) {
-                    transform: scale(1.05) !important;
                 }
             `}</style>
         </>

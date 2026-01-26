@@ -13,7 +13,7 @@ export default function ActivitiesPage() {
         <>
             {/* Section 1: Page Header */}
             <PageHeader
-                title="Aktivitas SMB Suvanna Dipa"
+                title="Aktivitas"
             />
 
             {/* Section 2: Agenda Tahunan */}

@@ -91,8 +91,9 @@ export default function GalleryCarousel() {
     return (
         <>
             <section
+                id="gallery"
                 ref={sectionRef}
-                className="py-12 sm:py-16 md:py-20 relative overflow-hidden"
+                className="py-12 sm:py-16 md:py-20 relative overflow-hidden scroll-mt-40"
                 style={{
                     backgroundColor: sectionBgColor
                 }}

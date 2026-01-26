@@ -168,10 +168,13 @@ export default function KontenPublikPage() {
     const handleImageUpload = async (index: number, file: File) => {
         setUploadingIndex(index)
 
-        const result = await uploadProfilePicture(file)
-        if (result.success && result.url) {
+        const formData = new FormData()
+        formData.append('file', file)
+
+        const result = await uploadProfilePicture(formData)
+        if (result.success && result.data) {
             const updatedGallery = [...gallery]
-            updatedGallery[index] = { ...updatedGallery[index], image_url: result.url }
+            updatedGallery[index] = { ...updatedGallery[index], image_url: result.data }
             setGallery(updatedGallery)
         } else {
             alert(result.error || 'Gagal mengupload gambar')

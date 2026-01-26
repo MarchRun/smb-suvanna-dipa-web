@@ -13,7 +13,7 @@ import { useDarkMode } from '@/hooks/useDarkMode'
 export default function Hero() {
     // Single vihara background image
     const backgroundImages = [
-        '/images/vihara-full.jpg'
+        '/images/smbsd-bg-hd.jpg'
     ]
 
     const [isVisible, setIsVisible] = useState(false)
@@ -61,7 +61,7 @@ export default function Hero() {
     const scrollToNextSection = () => {
         const heroHeight = sectionRef.current?.offsetHeight || 0
         window.scrollTo({
-            top: heroHeight,
+            top: heroHeight - 120, // Adjusted to > 112px (header height)
             behavior: 'smooth'
         })
     }
@@ -79,21 +79,35 @@ export default function Hero() {
                     overflow: 'hidden'
                 }}
             >
-                {/* Background images with fade transition */}
+                {/* Background images with fade transition and grayscale filter */}
                 {backgroundImages.map((image, index) => (
                     <div
                         key={index}
                         className="absolute inset-0"
-                        style={{
-                            backgroundImage: `url(${image})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'top',
-                            backgroundRepeat: 'no-repeat',
-                            opacity: 1,
-                            transition: 'opacity 1s ease-in-out',
-                            zIndex: 0
-                        }}
-                    />
+                    >
+                        {/* Grayscale Image Layer */}
+                        <div
+                            className="absolute inset-0"
+                            style={{
+                                backgroundImage: `url(${image})`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'top',
+                                backgroundRepeat: 'no-repeat',
+                                // filter: 'grayscale(100%) brightness(1.1) contrast(1.5)', // Removed for normal look
+                                opacity: 1,
+                                transition: 'opacity 1s ease-in-out',
+                            }}
+                        />
+                        {/* Orange Overlay Layer Removed */}
+                        {/* <div
+                            className="absolute inset-0"
+                            style={{
+                                backgroundColor: '#E57526', // Brand Orange
+                                mixBlendMode: 'multiply',
+                                opacity: 0.85 
+                            }}
+                        /> */}
+                    </div>
                 ))}
 
                 {/* Content */}
@@ -102,14 +116,22 @@ export default function Hero() {
                         {/* Left: Heading with slide-up animation */}
                         <div className={`text-center lg:text-left ${isVisible ? 'animate-slideUpFade' : 'opacity-0'}`}>
                             <h1
-                                className="text-2xl sm:text-3xl lg:text-5xl font-bold mb-4 sm:mb-6 drop-shadow-sm"
-                                style={{ color: '#E57526' }} // Logo orange
+                                className="text-3xl sm:text-5xl lg:text-6xl font-black mb-4 sm:mb-6 drop-shadow-sm leading-tight" // Reduced mobile size (4xl -> 3xl)
+                                style={{
+                                    color: '#ffffff', // White Fill
+                                    // Responsive Outline: 2px on Mobile, 4px on Desktop
+                                    textShadow: isMobile
+                                        ? '2px 2px 0 #E57526, -2px 2px 0 #E57526, 2px -2px 0 #E57526, -2px -2px 0 #E57526, 2px 0 0 #E57526, -2px 0 0 #E57526, 0 2px 0 #E57526, 0 -2px 0 #E57526'
+                                        : '4px 4px 0 #E57526, -4px 4px 0 #E57526, 4px -4px 0 #E57526, -4px -4px 0 #E57526, 4px 0 0 #E57526, -4px 0 0 #E57526, 0 4px 0 #E57526, 0 -4px 0 #E57526'
+                                }}
                             >
                                 Sekolah Minggu Buddha Suvanna Dipa
                             </h1>
                             <p
-                                className="text-base sm:text-lg font-bold mb-6"
-                                style={{ color: '#1A1A1A' }} // Dark text
+                                className="text-base sm:text-xl font-bold mb-6"
+                                style={{
+                                    color: '#1A1A1A', // Dark text, no outline
+                                }}
                             >
                                 Yuk Temukan Informasi tentang Kami di sini.
                             </p>
@@ -122,7 +144,7 @@ export default function Hero() {
                                         className="flex-1 px-6 py-3 rounded-lg font-bold text-white transition-all duration-300 hover:scale-105"
                                         style={{
                                             backgroundColor: '#E57526', // Logo orange
-                                            boxShadow: '0 4px 15px rgba(229, 117, 38, 0.4)'
+                                            boxShadow: '0 4px 20px rgba(255, 255, 255, 0.4)' // Bright White Glow
                                         }}
                                     >
                                         Jelajahi
@@ -133,7 +155,7 @@ export default function Hero() {
                                         className="flex-1 px-6 py-3 rounded-lg font-bold text-white transition-all duration-300 hover:scale-105"
                                         style={{
                                             backgroundColor: '#E57526', // Logo orange
-                                            boxShadow: '0 4px 15px rgba(229, 117, 38, 0.4)'
+                                            boxShadow: '0 4px 20px rgba(255, 255, 255, 0.4)' // Bright White Glow
                                         }}
                                     >
                                         {showLoginForm ? 'Tutup' : 'Login'}
@@ -148,7 +170,7 @@ export default function Hero() {
                                     className="px-6 py-3 rounded-lg font-bold text-white transition-all duration-300 hover:scale-105"
                                     style={{
                                         backgroundColor: '#E57526', // Logo orange
-                                        boxShadow: '0 4px 15px rgba(229, 117, 38, 0.4)'
+                                        boxShadow: '0 4px 20px rgba(255, 255, 255, 0.4)' // Bright White Glow
                                     }}
                                 >
                                     Jelajahi

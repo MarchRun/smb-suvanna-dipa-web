@@ -53,11 +53,11 @@ export default function LoginForm() {
 
     return (
         <div
-            className="p-6 sm:p-8 rounded-xl shadow-2xl border-4 transition-all duration-300 hover:scale-105"
+            className="p-6 sm:p-8 rounded-xl border-4 transition-all duration-300 hover:scale-105"
             style={{
                 backgroundColor: 'white',
                 borderColor: '#E57526', // Logo orange
-                boxShadow: '0 4px 20px rgba(229, 117, 38, 0.4)'
+                boxShadow: '0 4px 20px rgba(255, 255, 255, 0.4)' // Bright White Glow
             }}
         >
             <h2

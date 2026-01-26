@@ -97,8 +97,9 @@ export default function TestimonialCards() {
     return (
         <>
             <section
+                id="testimonials"
                 ref={sectionRef}
-                className="py-8 sm:py-10"
+                className="py-8 sm:py-10 scroll-mt-40"
                 style={{ backgroundColor: bgColor }}
             >
                 <div className="max-w-6xl mx-auto px-4">

@@ -35,8 +35,8 @@ export default function Button({
     const baseStyles = "px-4 py-2 sm:px-6 sm:py-3 font-semibold border-2 transition-all duration-200 rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
 
     const variantStyles = {
-        primary: "text-white border-transparent hover:shadow-lg hover:scale-105",
-        secondary: "bg-transparent hover:shadow-md"
+        primary: "text-white border-transparent hover:scale-105",
+        secondary: "bg-transparent"
     }
 
     const widthStyles = fullWidth ? "w-full" : ""
@@ -55,7 +55,7 @@ export default function Button({
                     color: '#ffffff',
                     opacity: disabled ? 0.6 : 1,
                     cursor: disabled ? 'not-allowed' : 'pointer',
-                    boxShadow: disabled || noShadow ? 'none' : '0 4px 15px rgba(229, 117, 38, 0.4)',
+                    boxShadow: 'none',
                     ...customStyle
                 }}
             >

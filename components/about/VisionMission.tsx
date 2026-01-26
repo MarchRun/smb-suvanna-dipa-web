@@ -43,8 +43,9 @@ export default function VisionMission() {
     return (
         <>
             <section
+                id="vision"
                 ref={sectionRef}
-                className="py-16 sm:py-20 md:py-24 relative overflow-hidden"
+                className="py-16 sm:py-20 md:py-24 relative overflow-hidden scroll-mt-40"
                 style={{
                     backgroundColor: '#E57526' // Logo orange
                 }}

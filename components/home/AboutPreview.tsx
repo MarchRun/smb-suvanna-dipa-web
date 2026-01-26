@@ -84,12 +84,20 @@ export default function AboutPreview() {
                 />
 
                 <div className={`max-w-7xl mx-auto px-4 text-center relative z-10 ${isVisible ? 'animate-slideUpFade' : 'opacity-0'}`}>
-                    <h2
-                        className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6"
-                        style={{ color: '#ffffff' }}
-                    >
-                        Mengenal SMB Suvanna Dipa
-                    </h2>
+                    <div className="flex items-center justify-center gap-4 mb-4 sm:mb-6">
+                        {/* Left Line */}
+                        <div className="hidden sm:block h-[2px] w-12 sm:w-24 bg-white opacity-80 rounded-full"></div>
+
+                        <h2
+                            className="text-3xl sm:text-4xl md:text-5xl font-bold"
+                            style={{ color: '#ffffff' }}
+                        >
+                            Mengenal SMB Suvanna Dipa
+                        </h2>
+
+                        {/* Right Line */}
+                        <div className="hidden sm:block h-[2px] w-12 sm:w-24 bg-white opacity-80 rounded-full"></div>
+                    </div>
                     <p
                         className="text-base sm:text-lg mb-6 sm:mb-8 mx-auto font-semibold px-4 sm:px-8 md:px-12 text-justify"
                         style={{ color: '#ffffff' }}
@@ -102,7 +110,7 @@ export default function AboutPreview() {
                         customStyle={{
                             backgroundColor: '#C25F1D', // Darker orange for button
                             color: '#ffffff',
-                            boxShadow: '0 4px 15px rgba(229, 117, 38, 0.4)'
+                            boxShadow: '0 4px 20px rgba(255, 255, 255, 0.4)' // Bright White Glow
                         }}
                     >
                         Selengkapnya Tentang Kami

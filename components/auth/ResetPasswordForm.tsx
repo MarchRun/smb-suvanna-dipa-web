@@ -51,9 +51,7 @@ export default function ResetPasswordForm({ token, email }: ResetPasswordFormPro
 
     // Dynamic colors based on dark mode
     const primaryColor = isDarkMode ? 'var(--primary-600)' : '#E57526'
-    const borderGlow = isDarkMode
-        ? '0 0 20px rgba(252, 211, 77, 0.8), 0 4px 15px rgba(249, 115, 22, 0.4)'
-        : '0 0 30px rgba(124, 45, 18, 0.6)'
+    const borderGlow = 'none'
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -95,7 +93,7 @@ export default function ResetPasswordForm({ token, email }: ResetPasswordFormPro
     if (success) {
         return (
             <div
-                className="p-6 sm:p-8 rounded-xl shadow-2xl border-4 transition-all duration-300"
+                className="p-6 sm:p-8 rounded-xl border-4 transition-all duration-300"
                 style={{
                     backgroundColor: 'white',
                     borderColor: primaryColor,
@@ -149,7 +147,7 @@ export default function ResetPasswordForm({ token, email }: ResetPasswordFormPro
 
     return (
         <div
-            className="p-6 sm:p-8 rounded-xl shadow-2xl border-4 transition-all duration-300 hover:scale-105"
+            className="p-6 sm:p-8 rounded-xl border-4 transition-all duration-300 hover:scale-105"
             style={{
                 backgroundColor: 'white',
                 borderColor: primaryColor,

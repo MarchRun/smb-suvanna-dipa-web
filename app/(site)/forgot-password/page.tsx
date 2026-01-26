@@ -30,8 +30,12 @@ export default function ForgotPasswordPage() {
         <div
             className="flex items-center justify-center p-4"
             style={{
-                backgroundColor: isDarkMode ? '#BAE6FD' : '#FFEFD5', // Sky Blue in dark, Cream in light
-                minHeight: 'calc(100vh - 100px)' // Account for navbar
+                backgroundImage: 'url(/images/smbsd-bg-hd.jpg)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                minHeight: '100vh',
+                paddingTop: '80px' // Match Hero section
             }}
         >
             {/* Form Card - Already has its own styling */}

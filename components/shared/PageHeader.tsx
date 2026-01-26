@@ -80,7 +80,7 @@ export default function PageHeader({
     }, [title, isVisible])
 
     // Dynamic colors - White theme with orange accent
-    const titleColor = '#E57526' // Logo orange
+    const titleColor = '#FFFFFF' // Logo orange
     const bgColor = '#FFFFFF' // White background
 
     return (
@@ -96,34 +96,57 @@ export default function PageHeader({
                 {/* Background Image - Cropped to show top portion only */}
                 <div
                     className="absolute inset-0 z-0"
-                    style={{
-                        backgroundImage: 'url(/images/vihara-full.jpg)',
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'top', // Crop from top - only show upper portion
-                        backgroundRepeat: 'no-repeat',
-                        opacity: 1 // Increased opacity for better visibility
-                    }}
-                />
+                >
+                    {/* Grayscale Image Base */}
+                    <div
+                        className="absolute inset-0"
+                        style={{
+                            backgroundImage: 'url(/images/smbsd-bg-hd.jpg)',
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'top',
+                            backgroundRepeat: 'no-repeat',
+                            // filter: 'grayscale(100%) brightness(1.1) contrast(1.5)',
+                        }}
+                    />
+                    {/* Orange Overlay Removed */}
+                    {/* <div
+                        className="absolute inset-0"
+                        style={{
+                            backgroundColor: '#E57526',
+                            mixBlendMode: 'multiply',
+                            opacity: 0.85
+                        }}
+                    /> */}
+                </div>
 
                 <div className="max-w-7xl mx-auto px-4 relative z-10">
                     <div className={alignmentClass[align]}>
-                        <h1
-                            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4"
-                            style={{ color: titleColor }}
-                        >
-                            {displayedTitle}
-                            <span
-                                className="inline-block w-1 ml-1"
-                                style={{
-                                    backgroundColor: showCursor ? titleColor : 'transparent',
-                                    height: '1em',
-                                    verticalAlign: 'text-bottom'
-                                }}
-                            />
-                        </h1>
+                        <div className={`flex items-center gap-4 leading-tight ${align === 'center' ? 'justify-center' : align === 'right' ? 'justify-end' : 'justify-start'}`}>
+                            {/* Left Decorative Line */}
+                            <div className="hidden sm:block h-[2px] w-12 sm:w-24 bg-white opacity-80 rounded-full"></div>
+
+                            <h1
+                                className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 text-center sm:text-left" // Ensure text alignment matches context
+                                style={{ color: titleColor }}
+                            >
+                                {displayedTitle}
+                                <span
+                                    className="inline-block w-1 ml-1"
+                                    style={{
+                                        backgroundColor: showCursor ? titleColor : 'transparent',
+                                        height: '1em',
+                                        verticalAlign: 'text-bottom'
+                                    }}
+                                />
+                            </h1>
+
+                            {/* Right Decorative Line */}
+                            <div className="hidden sm:block h-[2px] w-12 sm:w-24 bg-white opacity-80 rounded-full"></div>
+                        </div>
+
                         {subtitle && (
                             <p
-                                className="text-sm sm:text-base md:text-lg px-4"
+                                className="text-sm sm:text-base md:text-lg px-4 mt-2"
                                 style={{ color: titleColor }}
                             >
                                 {subtitle}

@@ -60,13 +60,14 @@ export default function AboutPage() {
         <>
             {/* Section 1: Page Header with dynamic background */}
             <PageHeader
-                title="Tentang SMB Suvanna Dipa"
+                title="Tentang"
             />
 
             {/* Section 2: Image + Long Description */}
             <section
+                id="profile"
                 ref={section2Ref}
-                className="pt-4 pb-12 sm:pb-16"
+                className="pt-4 pb-12 sm:pb-16 scroll-mt-40"
                 style={{ backgroundColor: bgColor }}
             >
                 <div
@@ -79,7 +80,7 @@ export default function AboutPage() {
                     <div className="mb-8 sm:mb-12 flex justify-center">
                         <div className="relative w-full max-w-lg aspect-video rounded-lg overflow-hidden">
                             <Image
-                                src="/images/logo-smbsd.png"
+                                src="/images/logo-smbsd-v2.png"
                                 alt="Logo SMB Suvanna Dipa"
                                 fill
                                 className="object-contain"
@@ -95,13 +96,13 @@ export default function AboutPage() {
                         </p>
                     </div>
                 </div>
-            </section>
+            </section >
 
             {/* Section 3: Vision & Mission */}
-            <VisionMission />
+            < VisionMission />
 
             {/* Section 4: Quote */}
-            <Quote />
+            < Quote />
         </>
     )
 }

@@ -46,7 +46,7 @@ export default function Navbar() {
         }, 400) // Match slideUp animation duration
     }
 
-    // Orange color matching the logo
+    // Brand Orange (Logo Color)
     const orangeColor = '#E57526'
 
     return (
@@ -55,65 +55,95 @@ export default function Navbar() {
             style={{
                 backgroundColor: scrolled ? 'rgba(255, 255, 255, 0.95)' : 'transparent',
                 backdropFilter: scrolled ? 'blur(12px)' : 'none',
-                boxShadow: scrolled ? '0 4px 20px rgba(229, 117, 38, 0.15), 0 2px 8px rgba(0, 0, 0, 0.08)' : 'none'
+                boxShadow: 'none'
             }}
         >
             <div className="max-w-6xl mx-auto px-4">
-                <div className="flex justify-between items-center py-3 sm:py-4">
-                    {/* Logo - Large with overflow effect */}
+                <div className="relative flex justify-center md:justify-between items-center">
+                    {/* Logo - Large with overflow effect - Added Margin */}
+                    {/* Centered on Mobile using flexbox (static) to push header height */}
                     <Link
                         href="/"
-                        className="transition-all duration-200 hover:scale-105 animate-fadeIn flex items-center"
+                        className="transition-all duration-200 hover:scale-105 animate-fadeIn flex items-center my-2 md:ml-2 relative justify-center" // Ensure centered content
                         style={{
                             animationDelay: '0.8s',
-                            marginTop: '-8px',
-                            marginBottom: '-8px'
                         }}
                     >
+                        {/* Abstract Blob Background */}
+                        <svg
+                            viewBox="0 0 200 200"
+                            xmlns="http://www.w3.org/2000/svg"
+                            className={`absolute w-[280%] h-[200%] -z-10 transition-opacity duration-300 ${scrolled ? 'opacity-0' : 'opacity-100'}`} // Much wider to cover text
+                            style={{
+                                left: '50%',
+                                top: '55%', // Moved down slightly to cover text
+                                transform: 'translate(-50%, -50%)'
+                            }}
+                        >
+                            <path
+                                fill="#ffffff" // White background for visibility
+                                d="M57.1,-22.4C68.6,-9.3,69.1,11.5,60.5,27.1C51.9,42.7,34.2,53.1,16.2,55.9C-1.8,58.7,-20.1,53.9,-35,41.9C-49.9,29.9,-61.4,10.7,-58.5,-3.8C-55.6,-18.3,-38.3,-28.1,-23.1,-39.8C-7.9,-51.5,5.2,-65.1,15.8,-63.1C26.4,-61.1,34.5,-43.5,45.6,-31Z" // Smoother, flatter blob
+                                transform="translate(100 100) scale(1.4 0.8)" // Flatten height, stretch width
+                            />
+                        </svg>
+
                         <Image
-                            src="/images/logo-smbsd-orange.png"
+                            src="/images/logo-smbsd-v2.png"
                             alt="SMB Suvanna Dipa"
                             width={400}
                             height={400}
-                            className="h-16 sm:h-20 md:h-24 w-auto object-contain"
+                            className="h-24 w-auto object-contain relative z-10" // Fixed height to match desktop
                             style={{ mixBlendMode: 'multiply' }}
                             priority
                         />
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center gap-4 lg:gap-6">
+                    <div className="hidden md:flex items-center gap-2 lg:gap-4 ml-auto">
                         {navLinks.map((link, index) => {
                             const isActive = pathname === link.href
                             return (
                                 <Link
                                     key={link.href}
                                     href={link.href}
-                                    className="relative px-4 py-2 text-lg transition-all duration-300 overflow-visible group animate-fadeInDown"
+                                    className="relative px-6 py-4 text-lg transition-all duration-300 group" // Removed overflow-hidden
                                     style={{
-                                        color: isActive ? '#ffffff' : '#1a1a1a',
+                                        color: isActive ? '#ffffff' : (scrolled ? '#1A1A1A' : '#ffffff'), // Black if scrolled & inactive, else white
                                         fontWeight: isActive ? 800 : 700,
-                                        textShadow: isActive ? '0 1px 2px rgba(0, 0, 0, 0.3)' : 'none',
-                                        animationDelay: `${index * 0.1}s` // Stagger: 0s, 0.1s, 0.2s, 0.3s
+                                        textShadow: isActive ? '0 1px 2px rgba(0, 0, 0, 0.2)' : (scrolled ? 'none' : '0 1px 2px rgba(0, 0, 0, 0.5)'), // Remove shadow on white bg
+                                        animationDelay: `${index * 0.1}s`
                                     }}
                                 >
-                                    {/* Animated rounded background box */}
-                                    <span
-                                        className={`absolute inset-0 rounded-xl transition-all duration-300 -z-10 ${isActive ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100'
-                                            }`}
-                                        style={{
-                                            background: isActive
-                                                ? orangeColor
-                                                : 'rgba(229, 117, 38, 0.1)' // Light orange for hover
-                                        }}
-                                    />
-                                    {link.label}
+                                    {/* Active "Hanging Box" Background */}
+                                    {isActive && (
+                                        <span
+                                            className="absolute left-0 right-0 rounded-b-[40px] -z-10 animate-slideDownBox"
+                                            style={{
+                                                backgroundColor: orangeColor,
+                                                transformOrigin: 'top',
+                                                top: '-50px', // Extend up above navbar
+                                                bottom: '-28px', // Extend to bottom of header (calculated based on logo height)
+                                            }}
+                                        />
+                                    )}
+
+                                    {/* Hover Effect (only for non-active) */}
+                                    {!isActive && (
+                                        <span
+                                            className="absolute bottom-3 left-1/2 w-0 h-0.5 bg-[#FF8C00] transition-all duration-300 ease-out group-hover:w-1/2 group-hover:-translate-x-1/2"
+                                            style={{ backgroundColor: orangeColor }}
+                                        />
+                                    )}
+
+                                    <span className="relative z-10">
+                                        {link.label}
+                                    </span>
                                 </Link>
                             )
                         })}
                     </div>
 
-                    {/* Mobile Hamburger Button */}
+                    {/* Mobile Hamburger Button - Pushed to right absolute */}
                     <button
                         onClick={() => {
                             if (mobileMenuOpen) {
@@ -122,7 +152,7 @@ export default function Navbar() {
                                 setMobileMenuOpen(true)
                             }
                         }}
-                        className="md:hidden p-3 transition-all"
+                        className="md:hidden p-3 transition-all absolute right-0" // Absolute right position
                         style={{
                             color: orangeColor
                         }}
@@ -140,7 +170,7 @@ export default function Navbar() {
 
                 {mobileMenuOpen && (
                     <div
-                        className={`md:hidden border-t-2 overflow-hidden ${isClosing ? 'animate-slideUp' : 'animate-slideDown'}`}
+                        className={`md:hidden border-t-0 overflow-hidden rounded-b-3xl ${isClosing ? 'animate-slideUp' : 'animate-slideDown'}`} // Removed mx-2 to merge
                         style={{
                             borderColor: orangeColor,
                             backgroundColor: '#D35400' // Darker orange

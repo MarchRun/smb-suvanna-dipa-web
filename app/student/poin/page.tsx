@@ -17,7 +17,7 @@ import {
     createRedemption,
     type ProductFilters
 } from '@/actions/student/products'
-import type { Product } from '@/actions/admin/products'
+import type { Product } from '@/types'
 import { useDarkMode } from '@/hooks/useDarkMode'
 
 const siswaMenuItems = [

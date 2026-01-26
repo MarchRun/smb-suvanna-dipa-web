@@ -226,7 +226,7 @@ export default function PublicContentEditModal({
                                     <CompactFileUpload
                                         index={i}
                                         onFileSelect={(file) => onImageUpload(i, file)}
-                                        existingUrl={item.imageUrl}
+                                        existingUrl={item.image_url}
                                         isUploading={uploadingIndex === i}
                                     />
                                     {/* Right: Caption */}

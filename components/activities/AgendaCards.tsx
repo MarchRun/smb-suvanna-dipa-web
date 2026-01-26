@@ -94,8 +94,9 @@ export default function AgendaCards() {
     return (
         <>
             <section
+                id="agenda"
                 ref={sectionRef}
-                className="pt-2 pb-6 sm:pb-8"
+                className="pt-2 pb-6 sm:pb-8 scroll-mt-40"
                 style={{ backgroundColor: bgColor }}
             >
                 <div className="max-w-6xl mx-auto px-4">

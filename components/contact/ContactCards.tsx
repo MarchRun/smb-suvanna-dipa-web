@@ -61,7 +61,7 @@ export default function ContactCards() {
     // Dynamic colors - White theme with orange accent
     const bgColor = '#FFFFFF' // White background
     const cardBgColor = '#E57526' // Logo orange
-    const cardShadow = '0 4px 15px rgba(229, 117, 38, 0.4)'
+    const cardShadow = 'none'
 
     // Material Icons as SVG
     const renderIcon = (iconType: string) => {
@@ -69,7 +69,7 @@ export default function ContactCards() {
             width: '40px',
             height: '40px',
             color: '#ffffff',
-            filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.5))'
+            // filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.5))' // Removed
         }
 
         switch (iconType) {
@@ -104,49 +104,48 @@ export default function ContactCards() {
 
     return (
         <>
-            <section
+            <div
                 ref={sectionRef}
-                className="py-8 sm:py-10"
-                style={{ backgroundColor: bgColor }}
+                className="w-full mt-8 sm:mt-12"
             >
-                <div className="max-w-7xl mx-auto px-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-                        {contacts.map((contact, index) => (
-                            <div
-                                key={index}
-                                className={`${isVisible ? 'animate-scaleIn' : 'opacity-0'} hover-bounce`}
-                                style={{ animationDelay: `${index * 0.15}s` }}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+                    {contacts.map((contact, index) => (
+                        <div
+                            key={index}
+                            className={`${isVisible ? 'animate-scaleIn' : 'opacity-0'}`}
+                            style={{ animationDelay: `${index * 0.15}s` }}
+                        >
+                            <Card
+                                className="text-center h-full"
+                                hoverable={true}
+                                customStyle={{
+                                    backgroundColor: cardBgColor,
+                                    boxShadow: cardShadow,
+                                    borderRadius: '32px'
+                                }}
                             >
-                                <Card
-                                    className="text-center h-full"
-                                    customStyle={{
-                                        backgroundColor: cardBgColor,
-                                        boxShadow: cardShadow,
-                                    }}
-                                >
-                                    {/* Icon */}
-                                    <div className="mb-4 flex justify-center">
-                                        {renderIcon(contact.iconType)}
-                                    </div>
+                                {/* Icon */}
+                                <div className="mb-4 flex justify-center">
+                                    {renderIcon(contact.iconType)}
+                                </div>
 
-                                    <h3
-                                        className="text-lg sm:text-xl font-bold mb-2"
-                                        style={{ color: '#ffffff' }}
-                                    >
-                                        {contact.title}
-                                    </h3>
-                                    <p
-                                        className="text-sm sm:text-base"
-                                        style={{ color: '#ffffff' }}
-                                    >
-                                        {contact.info}
-                                    </p>
-                                </Card>
-                            </div>
-                        ))}
-                    </div>
+                                <h3
+                                    className="text-lg sm:text-xl font-bold mb-2"
+                                    style={{ color: '#ffffff' }}
+                                >
+                                    {contact.title}
+                                </h3>
+                                <p
+                                    className="text-sm sm:text-base font-bold"
+                                    style={{ color: '#ffffff' }}
+                                >
+                                    {contact.info}
+                                </p>
+                            </Card>
+                        </div>
+                    ))}
                 </div>
-            </section>
+            </div>
 
             <style jsx>{`
                 @keyframes scaleIn {
@@ -164,13 +163,8 @@ export default function ContactCards() {
                     animation: scaleIn 0.6s ease-out forwards;
                 }
 
-                :global(.hover-bounce) {
-                    transition: all 0.3s ease;
-                    cursor: pointer;
-                }
-
-                :global(.hover-bounce:hover) {
-                    transform: scale(1.05) !important;
+                :global(.animate-scaleIn) {
+                    animation: scaleIn 0.6s ease-out forwards;
                 }
             `}</style>
         </>

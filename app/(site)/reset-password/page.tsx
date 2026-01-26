@@ -73,7 +73,12 @@ function ResetPasswordContent() {
         return (
             <div
                 className="min-h-[calc(100vh-88px)] flex items-center justify-center px-4"
-                style={{ backgroundColor: bgColor }}
+                style={{
+                    backgroundImage: 'url(/images/smbsd-bg-hd.jpg)',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                }}
             >
                 <div
                     className="p-8 rounded-xl shadow-2xl border-4 text-center"
@@ -99,7 +104,12 @@ function ResetPasswordContent() {
         return (
             <div
                 className="min-h-[calc(100vh-88px)] flex items-center justify-center px-4"
-                style={{ backgroundColor: bgColor }}
+                style={{
+                    backgroundImage: 'url(/images/smbsd-bg-hd.jpg)',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat',
+                }}
             >
                 <div
                     className="p-8 rounded-xl shadow-2xl border-4 text-center max-w-md"
@@ -143,8 +153,15 @@ function ResetPasswordContent() {
     // Valid token - show reset form
     return (
         <div
-            className="min-h-[calc(100vh-88px)] flex items-center justify-center px-4 py-8"
-            style={{ backgroundColor: bgColor }}
+            className="flex items-center justify-center px-4 py-8"
+            style={{
+                backgroundImage: 'url(/images/smbsd-bg-hd.jpg)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                minHeight: '100vh',
+                paddingTop: '80px'
+            }}
         >
             <div className="w-full max-w-md">
                 <ResetPasswordForm token={token} email={userEmail} />
