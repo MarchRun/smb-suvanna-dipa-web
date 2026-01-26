@@ -16,9 +16,9 @@ import { getTextColor } from '@/lib/utils/colorHelpers'
 // Menu items for Pembina
 const pembinaMenuItems = [
     { label: 'Dashboard', href: '/teacher/dashboard' },
-    { label: 'Jadwal', href: '/teacher/jadwal' },
-    { label: 'Kelas', href: '/teacher/kelas' },
-    { label: 'Profil', href: '/teacher/profil' },
+    { label: 'Jadwal', href: '/teacher/schedule' },
+    { label: 'Kelas', href: '/teacher/classes' },
+    { label: 'Profil', href: '/teacher/profile' },
 ]
 
 export default function TeacherDashboardPage() {

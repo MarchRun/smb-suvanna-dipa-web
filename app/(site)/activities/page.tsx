@@ -4,9 +4,9 @@
  */
 
 import PageHeader from '@/components/shared/PageHeader'
-import AgendaCards from '@/components/activities/AgendaCards'
-import GalleryCarousel from '@/components/activities/GalleryCarousel'
-import TestimonialCards from '@/components/activities/TestimonialCards'
+import ActivitiesAgendaSection from '@/components/activities/ActivitiesAgendaSection'
+import ActivitiesGallerySection from '@/components/activities/ActivitiesGallerySection'
+import ActivitiesTestimonialSection from '@/components/activities/ActivitiesTestimonialSection'
 
 export default function ActivitiesPage() {
     return (
@@ -17,13 +17,13 @@ export default function ActivitiesPage() {
             />
 
             {/* Section 2: Agenda Tahunan */}
-            <AgendaCards />
+            <ActivitiesAgendaSection />
 
             {/* Section 3: Gallery */}
-            <GalleryCarousel />
+            <ActivitiesGallerySection />
 
             {/* Section 4: Testimonials */}
-            <TestimonialCards />
+            <ActivitiesTestimonialSection />
         </>
     )
 }

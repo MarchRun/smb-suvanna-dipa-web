@@ -42,8 +42,8 @@
   --neutral-900: #171717;
 
   /* Backgrounds - WHITE based */
-  --bg-primary: #FFFFFF;
-  /* White for main background */
+  --bg-primary: #FFF4EC;
+  /* Cream for main background */
   --bg-secondary: #FAFAFA;
   /* Very light gray for sections */
   --bg-tertiary: #F5F5F5;
@@ -55,19 +55,11 @@
   --text-primary: #1A1A1A;
   --text-secondary: #4A4A4A;
   --text-muted: #888888;
-  --background: #FFFFFF;
-  /* Page background */
+  --background: #FFF4EC;
+  /* Page background - Cream */
 }
 
-/* ========================================
-   DARK MODE (Future Implementation)
-   ======================================== */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+
 
 /* ========================================
    BASE STYLES
@@ -226,62 +218,4 @@ h6 {
 /* ========================================
    DARK MODE COLORS
    ======================================== */
-.dark {
-  /* Primary - Brighter Orange for ACCENTS in Dark Mode */
-  --primary-50: #fff7ed;
-  --primary-100: #ffedd5;
-  --primary-200: #fed7aa;
-  --primary-300: #fdba74;
-  --primary-400: #fb923c;
-  /* Brighter orange for highlights */
-  --primary-500: #f97316;
-  /* Bright orange for buttons */
-  --primary-600: #ff6b35;
-  /* VERY BRIGHT orange for main accents */
-  --primary-700: #ff5722;
-  /* Vibrant orange */
-  --primary-800: #e64a19;
-  --primary-900: #d84315;
-  --primary-950: #bf360c;
-
-  /* Accent - Override yellow with dark blue in Dark Mode */
-  --accent-50: #f0f9ff;
-  --accent-100: #e0f2fe;
-  --accent-200: #075985;
-  /* OVERRIDE: Dark blue instead of yellow for Hero section */
-  --accent-300: #fcd34d;
-  --accent-400: #fbbf24;
-  --accent-500: #f59e0b;
-  --accent-600: #d97706;
-  --accent-700: #b45309;
-  --accent-800: #92400e;
-  --accent-900: #78350f;
-  --accent-950: #451a03;
-
-  /* Neutral - Dark Cool Grays for backgrounds */
-  --neutral-50: #f8fafc;
-  --neutral-100: #f1f5f9;
-  --neutral-200: #e2e8f0;
-  --neutral-300: #cbd5e1;
-  --neutral-400: #94a3b8;
-  --neutral-500: #64748b;
-  --neutral-600: #475569;
-  --neutral-700: #334155;
-  --neutral-800: #1e293b;
-  --neutral-900: #0f172a;
-  --neutral-950: #020617;
-
-  /* Backgrounds - DARK MODE uses Deep Blue */
-  --bg-primary: #0c4a6e;
-  /* Dark blue for sections in DARK mode */
-  --bg-secondary: #075985;
-  /* Slightly lighter blue for cards */
-  --bg-tertiary: #0369a1;
-  /* Even lighter for hover */
-
-  /* Text */
-  --foreground: #f0f9ff;
-  /* Very light blue-white for text */
-  --background: #082f49;
-  /* Darkest blue for page background */
-}
+/* Dark Mode Removed - Light Mode Enforced */

@@ -9,6 +9,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { getCurrentUserProfile } from '@/actions/auth/profile'
 import { createClient } from '@/lib/supabase/client'
@@ -29,7 +30,8 @@ interface DashboardSidebarProps {
 
 // Default icons for common menu items
 const getDefaultIcon = (label: string, color: string, isActive: boolean) => {
-    const iconColor = isActive ? '#ffffff' : color
+    // Inactive icons are white, Active are White (matching text)
+    const iconColor = isActive ? '#FFFFFF' : '#FFFFFF'
     const strokeWidth = 2
 
     const icons: Record<string, React.ReactNode> = {
@@ -132,10 +134,11 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
         fetchUserProfile()
     }, [])
 
-    // Colors - Use consistent orange theme
-    const sidebarBg = 'var(--accent-100)'
-    const textColor = '#E57526' // Logo orange
-    const hoverItemBg = 'rgba(229, 117, 38, 0.1)'
+    // Colors
+    const sidebarBg = '#1A1A1A' // Footer Dark Gray
+    const activeColor = '#E57526' // Orange
+    const inactiveColor = '#FFFFFF' // White
+    const hoverItemBg = 'rgba(255, 255, 255, 0.05)'
 
     const handleLogout = async () => {
         try {
@@ -147,6 +150,16 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
             console.error('Logout error:', error)
             // Force redirect anyway
             window.location.href = '/'
+        }
+    }
+
+    // Determine dashboard root link based on role
+    const getDashboardRoot = () => {
+        switch (role) {
+            case 'Admin': return '/admin/dashboard'
+            case 'Pembina': return '/teacher/dashboard'
+            case 'Siswa': return '/student/dashboard'
+            default: return '/'
         }
     }
 
@@ -162,81 +175,52 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
 
             {/* Sidebar - Sticky on desktop, fixed on mobile */}
             <aside
-                className={`fixed lg:sticky top-0 left-0 w-64 z-50 transform transition-transform duration-300 ease-in-out flex flex-col
+                className={`fixed lg:sticky top-0 left-0 w-64 z-50 transform transition-transform duration-300 ease-in-out flex flex-col shadow-xl
                     ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
                 style={{
                     backgroundColor: sidebarBg,
                     height: '100vh',
-                    minHeight: '100vh'
+                    minHeight: '100vh',
+                    borderRight: '1px solid rgba(255,255,255,0.05)'
                 }}
             >
-                {/* Profile Card Header - Left aligned with avatar */}
-                <div
-                    className="flex items-center gap-3 px-4 py-4 border-b"
-                    style={{
-                        backgroundColor: sidebarBg,
-                        borderBottomColor: 'rgba(229, 117, 38, 0.2)',
-                        borderBottomWidth: '1px',
-                        minHeight: '80px'
-                    }}
-                >
-                    {/* Avatar Circle with Profile Picture or Initials */}
-                    <div
-                        className="flex items-center justify-center rounded-full flex-shrink-0 overflow-hidden"
-                        style={{
-                            width: '48px',
-                            height: '48px',
-                            backgroundColor: profilePicture ? 'transparent' : textColor,
-                            color: '#ffffff',
-                            fontWeight: 700,
-                            fontSize: '1.125rem',
-                            fontFamily: 'var(--font-brand)'
-                        }}
-                    >
-                        {profilePicture ? (
-                            <img
-                                src={profilePicture}
-                                alt={userName}
-                                className="w-full h-full object-cover"
+                {/* Logo Section - Top */}
+                <div className="flex justify-center items-center py-6 relative overflow-hidden shrink-0">
+                    <Link href={getDashboardRoot()} onClick={onClose} className="relative z-10 hover:scale-105 transition-transform duration-200">
+                        {/* Blob Background - Similar to Navbar but simpler/smaller */}
+                        <svg
+                            viewBox="0 0 200 200"
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="absolute w-[200%] h-[200%] -z-10"
+                            style={{
+                                left: '50%',
+                                top: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                opacity: 0.8
+                            }}
+                        >
+                            <path
+                                fill="#ffffff"
+                                d="M57.1,-22.4C68.6,-9.3,69.1,11.5,60.5,27.1C51.9,42.7,34.2,53.1,16.2,55.9C-1.8,58.7,-20.1,53.9,-35,41.9C-49.9,29.9,-61.4,10.7,-58.5,-3.8C-55.6,-18.3,-38.3,-28.1,-23.1,-39.8C-7.9,-51.5,5.2,-65.1,15.8,-63.1C26.4,-61.1,34.5,-43.5,45.6,-31Z"
+                                transform="translate(100 100) scale(1.1)"
                             />
-                        ) : (
-                            userInitials.toUpperCase()
-                        )}
-                    </div>
+                        </svg>
 
-                    {/* User Info */}
-                    <div className="flex-1 min-w-0">
-                        {/* User Name */}
-                        <h2
-                            className="font-bold truncate"
-                            style={{
-                                color: '#4A4A4A', // Dark gray for readability
-                                fontSize: '1rem',
-                                lineHeight: '1.25'
-                            }}
-                        >
-                            {userName}
-                        </h2>
-
-                        {/* Role Badge */}
-                        <div
-                            className="text-sm font-semibold mt-1"
-                            style={{
-                                color: 'rgba(74, 74, 74, 0.8)', // Gray
-                                fontSize: '0.875rem'
-                            }}
-                        >
-                            {role}
-                        </div>
-                    </div>
+                        <Image
+                            src="/images/logo-smbsd-v2.png"
+                            alt="SMB Suvanna Dipa"
+                            width={120}
+                            height={120}
+                            className="h-16 w-auto object-contain"
+                            style={{ mixBlendMode: 'multiply' }}
+                            priority
+                        />
+                    </Link>
                 </div>
 
                 {/* Navigation Menu - flex-1 to take remaining space */}
-                <nav className="flex-1 py-6 overflow-y-auto border-b" style={{
-                    borderBottomColor: 'rgba(229, 117, 38, 0.2)',
-                    borderBottomWidth: '1px'
-                }}>
-                    <ul className="space-y-2 px-4">
+                <nav className="flex-1 py-4 overflow-y-auto">
+                    <ul className="space-y-1 px-3">
                         {menuItems.map((item) => {
                             const isActive = pathname === item.href
                             return (
@@ -244,13 +228,11 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
                                     <Link
                                         href={item.href}
                                         onClick={onClose}
-                                        className="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200"
+                                        className="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 relative overflow-hidden group font-bold"
                                         style={{
-                                            // Active: SMB color background, white text
-                                            backgroundColor: isActive ? textColor : 'transparent',
-                                            color: isActive ? '#ffffff' : textColor,
-                                            fontWeight: 700,
-                                            fontSize: '1.125rem' // Increased from 1rem
+                                            backgroundColor: isActive ? activeColor : 'transparent',
+                                            color: isActive ? '#FFFFFF' : inactiveColor,
+                                            // Removed border left
                                         }}
                                         onMouseEnter={(e) => {
                                             if (!isActive) {
@@ -263,11 +245,10 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
                                             }
                                         }}
                                     >
-                                        {/* Icon - use provided icon or default based on label */}
-                                        <span className="w-5 h-5 flex-shrink-0">
-                                            {item.icon || getDefaultIcon(item.label, textColor, isActive)}
+                                        <span className="w-5 h-5 flex-shrink-0 relative z-10 transition-transform duration-200 group-hover:scale-110">
+                                            {item.icon || getDefaultIcon(item.label, activeColor, isActive)}
                                         </span>
-                                        <span>{item.label}</span>
+                                        <span className="relative z-10">{item.label}</span>
                                     </Link>
                                 </li>
                             )
@@ -275,29 +256,49 @@ export default function DashboardSidebar({ role, menuItems, isOpen, onClose }: D
                     </ul>
                 </nav>
 
-                {/* Logout Button - No border, same background as sidebar */}
-                <div
-                    className="shrink-0 p-4"
-                    style={{
-                        backgroundColor: sidebarBg
-                    }}
-                >
+                {/* Bottom Section: Profile & Logout */}
+                <div className="shrink-0 p-4 space-y-2 border-t border-gray-800 bg-black/20">
+                    {/* Profile Summary */}
+                    <div className="flex items-center gap-3 px-2 mb-2">
+                        {/* Avatar */}
+                        <div
+                            className="flex items-center justify-center rounded-full flex-shrink-0 overflow-hidden ring-2 ring-orange-500/50"
+                            style={{
+                                width: '40px',
+                                height: '40px',
+                                backgroundColor: profilePicture ? 'transparent' : activeColor,
+                                color: '#ffffff',
+                                fontWeight: 700,
+                                fontSize: '1rem',
+                                fontFamily: 'var(--font-brand)'
+                            }}
+                        >
+                            {profilePicture ? (
+                                <img
+                                    src={profilePicture}
+                                    alt={userName}
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                userInitials.toUpperCase()
+                            )}
+                        </div>
+                        {/* Info */}
+                        <div className="flex-1 min-w-0">
+                            <h2 className="text-white text-sm font-bold truncate">
+                                {userName}
+                            </h2>
+                            <p className="text-gray-400 text-xs truncate font-bold">
+                                {role}
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Logout Button */}
                     <button
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200"
-                        style={{
-                            color: textColor,
-                            fontWeight: 700,
-                            fontSize: '1.125rem' // Increased font size
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = hoverItemBg
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = 'transparent'
-                        }}
+                        className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-200 hover:bg-white/10 text-red-400 hover:text-red-300 text-sm font-bold"
                     >
-                        {/* Logout Icon */}
                         <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                         </svg>

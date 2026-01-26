@@ -81,7 +81,7 @@ export default function PageHeader({
 
     // Dynamic colors - White theme with orange accent
     const titleColor = '#FFFFFF' // Logo orange
-    const bgColor = '#FFFFFF' // White background
+    const bgColor = 'var(--background)' // Cream background
 
     return (
         <>

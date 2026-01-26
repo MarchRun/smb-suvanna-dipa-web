@@ -9,20 +9,18 @@
 import { useState, useEffect } from 'react'
 import DashboardLayout from '@/components/shared/DashboardLayout'
 import StatCard from '@/components/shared/StatCard'
-import StatsGrid from '@/components/shared/StatsGrid'
 import VisitorChart from '@/components/shared/VisitorChart'
 import { getDashboardStats, type DashboardStats } from '@/actions/admin/stats'
 import { getCurrentUserProfile } from '@/actions/auth/profile'
 import { useDarkMode } from '@/hooks/useDarkMode'
 import { getTextColor } from '@/lib/utils/colorHelpers'
 
-// Menu items for Admin
 const adminMenuItems = [
     { label: 'Dashboard', href: '/admin/dashboard' },
-    { label: 'Pengguna', href: '/admin/pengguna' },
-    { label: 'Hadiah', href: '/admin/hadiah' },
-    { label: 'Konten Publik', href: '/admin/konten' },
-    { label: 'Profil', href: '/admin/profil' },
+    { label: 'Pengguna', href: '/admin/users' },
+    { label: 'Hadiah', href: '/admin/rewards' },
+    { label: 'Konten Publik', href: '/admin/content' },
+    { label: 'Profil', href: '/admin/profile' },
 ]
 
 export default function AdminDashboardPage() {
@@ -67,7 +65,7 @@ export default function AdminDashboardPage() {
                 </h1>
 
                 {/* Stat Cards - Real-time data from Supabase */}
-                <StatsGrid>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <StatCard
                         title="Jumlah Siswa"
                         value={stats?.totalSiswa ?? 0}
@@ -83,7 +81,7 @@ export default function AdminDashboardPage() {
                         value={stats?.totalPembina ?? 0}
                         loading={loading}
                     />
-                </StatsGrid>
+                </div>
 
                 {/* Grafik Widget - Matching StatCard styling */}
                 <div
@@ -99,7 +97,7 @@ export default function AdminDashboardPage() {
                         GRAFIK JUMLAH PENGUNJUNG
                     </h2>
                     <p className="text-white/70 text-center mb-6" style={{ fontSize: '1rem' }}>
-                        Statistik pengunjung halaman publik (Beranda, Tentang, Aktivitas, Kontak)
+                        Statistik pengunjung halaman publik
                     </p>
 
                     {/* Visitor Chart */}

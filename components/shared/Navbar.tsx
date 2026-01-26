@@ -21,12 +21,12 @@ export default function Navbar() {
     useEffect(() => {
         const handleScroll = () => {
             // Change background after scrolling past 100px
-            setScrolled(window.scrollY > 100)
+            if (window.scrollY > 20) {
+                setScrolled(true)
+            } else {
+                setScrolled(false)
+            }
         }
-
-        // Check initial scroll position
-        handleScroll()
-
         window.addEventListener('scroll', handleScroll)
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
@@ -53,7 +53,7 @@ export default function Navbar() {
         <nav
             className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
             style={{
-                backgroundColor: scrolled ? 'rgba(255, 255, 255, 0.95)' : 'transparent',
+                backgroundColor: scrolled ? 'var(--background)' : 'transparent',
                 backdropFilter: scrolled ? 'blur(12px)' : 'none',
                 boxShadow: 'none'
             }}

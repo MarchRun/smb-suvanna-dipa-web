@@ -8,7 +8,7 @@
 
 import { useState, useEffect } from 'react'
 import PageHeader from '@/components/shared/PageHeader'
-import ContactCards from '@/components/contact/ContactCards'
+import ContactInfoSection from '@/components/contact/ContactInfoSection'
 
 export default function ContactPage() {
     const [isDarkMode, setIsDarkMode] = useState(false)
@@ -27,8 +27,8 @@ export default function ContactPage() {
         return () => observer.disconnect()
     }, [])
 
-    // Dynamic colors - White theme with orange accent
-    const bgColor = '#FFFFFF' // White background
+    // Dynamic colors - Cream theme with orange accent
+    const bgColor = 'var(--background)' // Cream background
     const borderColor = '#E57526' // Logo orange
 
     return (
@@ -69,7 +69,7 @@ export default function ContactPage() {
                     </div>
 
                     {/* Contact Info Cards - Merged into same section */}
-                    <ContactCards />
+                    <ContactInfoSection />
                 </div>
             </section>
         </div>

@@ -3,18 +3,18 @@
  * Assembles all homepage sections
  */
 
-import Hero from '@/components/home/Hero'
-import AboutPreview from '@/components/home/AboutPreview'
-import ProgramCards from '@/components/home/ProgramCards'
-import CTASection from '@/components/home/CTASection'
+import HomeHeroSection from '@/components/home/HomeHeroSection'
+import HomeProgramsSection from '@/components/home/HomeProgramsSection'
+import HomeAboutSection from '@/components/home/HomeAboutSection'
+import HomeCTASection from '@/components/home/HomeCTASection'
 
 export default function HomePage() {
     return (
         <>
-            <Hero />
-            <AboutPreview />
-            <ProgramCards />
-            <CTASection />
+            <HomeHeroSection />
+            <HomeAboutSection />
+            <HomeProgramsSection />
+            <HomeCTASection />
         </>
     )
 }

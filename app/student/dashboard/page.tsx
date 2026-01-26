@@ -13,13 +13,12 @@ import { getCurrentUserProfile } from '@/actions/auth/profile'
 import { useDarkMode } from '@/hooks/useDarkMode'
 import { getTextColor } from '@/lib/utils/colorHelpers'
 
-// Menu items for Siswa
 const siswaMenuItems = [
     { label: 'Dashboard', href: '/student/dashboard' },
-    { label: 'Jadwal', href: '/student/jadwal' },
-    { label: 'Poin', href: '/student/poin' },
-    { label: 'Presensi', href: '/student/presensi' },
-    { label: 'Profil', href: '/student/profil' },
+    { label: 'Jadwal', href: '/student/schedule' },
+    { label: 'Poin', href: '/student/points' },
+    { label: 'Presensi', href: '/student/attendance' },
+    { label: 'Profil', href: '/student/profile' },
 ]
 
 export default function StudentDashboardPage() {

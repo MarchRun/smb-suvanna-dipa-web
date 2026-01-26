@@ -9,8 +9,8 @@
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import PageHeader from '@/components/shared/PageHeader'
-import VisionMission from '@/components/about/VisionMission'
-import Quote from '@/components/about/Quote'
+import AboutVisionMissionSection from '@/components/about/AboutVisionMissionSection'
+import AboutQuoteSection from '@/components/about/AboutQuoteSection'
 
 export default function AboutPage() {
     const [section2Visible, setSection2Visible] = useState(false)
@@ -52,8 +52,8 @@ export default function AboutPage() {
         }
     }, [])
 
-    // Dynamic colors - White theme with orange accent
-    const bgColor = '#FFFFFF' // White background
+    // Dynamic colors - Dark text on Cream background
+    const bgColor = 'var(--background)' // Cream background
     const textColor = '#4A4A4A' // Gray text for readability
 
     return (
@@ -101,10 +101,10 @@ export default function AboutPage() {
             </div>
 
             {/* Section 3: Vision & Mission */}
-            < VisionMission />
+            < AboutVisionMissionSection />
 
             {/* Section 4: Quote */}
-            < Quote />
+            < AboutQuoteSection />
         </>
     )
 }
