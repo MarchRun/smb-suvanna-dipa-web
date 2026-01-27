@@ -9,6 +9,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Card from '@/components/shared/Card'
+import SectionHeader from '@/components/shared/SectionHeader'
 import { useDarkMode } from '@/hooks/useDarkMode'
 import { getPublicContentBySection, type TestimonialItem } from '@/actions/admin/publicContent'
 
@@ -72,7 +73,9 @@ export default function ActivitiesTestimonialSection() {
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
-                setIsVisible(entry.isIntersecting)
+                if (entry.isIntersecting) {
+                    setIsVisible(true)
+                }
             },
             { threshold: 0.2 }
         )
@@ -99,17 +102,17 @@ export default function ActivitiesTestimonialSection() {
             <section
                 id="testimonials"
                 ref={sectionRef}
-                className="py-8 sm:py-10 scroll-mt-40"
+                className="py-8 sm:py-10 md:py-12 scroll-mt-40 min-h-[30vh] flex flex-col justify-center"
                 style={{ backgroundColor: bgColor }}
             >
-                <div className="max-w-6xl mx-auto px-4">
+                <div className="max-w-7xl mx-auto px-4">
                     {/* Section Title */}
-                    <h2
-                        className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                        style={{ color: titleColor }}
-                    >
-                        Testimoni
-                    </h2>
+                    <SectionHeader
+                        title="Testimoni"
+                        color={titleColor}
+                        isVisible={isVisible}
+                        className="mb-6 sm:mb-8"
+                    />
 
                     {loading ? (
                         <div className="text-center py-8" style={{ color: titleColor }}>Loading...</div>

@@ -8,6 +8,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Card from '@/components/shared/Card'
+import SectionHeader from '@/components/shared/SectionHeader'
 import { useDarkMode } from '@/hooks/useDarkMode'
 
 export default function HomeProgramsSection() {
@@ -38,8 +39,7 @@ export default function HomeProgramsSection() {
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
-                    setIsVisible(false)
-                    setTimeout(() => setIsVisible(true), 50)
+                    setIsVisible(true)
                 }
             },
             {
@@ -90,24 +90,15 @@ export default function HomeProgramsSection() {
         <>
             <section
                 ref={sectionRef}
-                className="py-12 sm:py-16 md:py-20"
+                className="py-8 sm:py-10 md:py-12 min-h-[30vh] flex flex-col justify-center"
                 style={{ backgroundColor: 'var(--background)' }} // Cream background
             >
-                <div className="max-w-6xl mx-auto px-4">
-                    <div className={`flex items-center justify-center gap-4 mb-8 sm:mb-12 ${isVisible ? 'animate-slideUpFade' : 'opacity-0'}`}>
-                        {/* Left Line */}
-                        <div className="hidden sm:block h-1 w-12 sm:w-24 bg-[#E57526] opacity-80 rounded-full"></div>
-
-                        <h2
-                            className="text-3xl sm:text-4xl md:text-5xl font-bold text-center"
-                            style={{ color: '#E57526' }} // Logo orange
-                        >
-                            Program Unggulan Kami
-                        </h2>
-
-                        {/* Right Line */}
-                        <div className="hidden sm:block h-1 w-12 sm:w-24 bg-[#E57526] opacity-80 rounded-full"></div>
-                    </div>
+                <div className="max-w-7xl mx-auto px-4">
+                    <SectionHeader
+                        title="Program Unggulan Kami"
+                        color="#E57526"
+                        isVisible={isVisible}
+                    />
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
                         {programs.map((program, index) => (

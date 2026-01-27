@@ -51,11 +51,12 @@ export default function Navbar() {
 
     return (
         <nav
-            className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
+            className="fixed top-0 left-0 right-0 z-50 transition-all duration-500 min-h-[20vh]"
             style={{
                 backgroundColor: scrolled ? 'var(--background)' : 'transparent',
                 backdropFilter: scrolled ? 'blur(12px)' : 'none',
-                boxShadow: 'none'
+                boxShadow: 'none',
+                borderBottom: scrolled ? '2px solid #E57526' : 'none'
             }}
         >
             <div className="max-w-6xl mx-auto px-4">

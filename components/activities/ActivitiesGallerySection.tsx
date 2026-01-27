@@ -1,37 +1,67 @@
 /**
  * Gallery Carousel Component
- * Elegant 5 image slider with featured center card
- * With dark mode support - Fetches from database
+ * Uses Swiper for robust sliding, matching Chelnox Portfolio design
+ * Includes rigorous 404 prevention for missing images
  */
 
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { useDarkMode } from '@/hooks/useDarkMode'
+import SectionHeader from '@/components/shared/SectionHeader'
 import { getPublicContentBySection, type GalleryItem } from '@/actions/admin/publicContent'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Navigation, Pagination, Autoplay, EffectCoverflow } from 'swiper/modules'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+
+// Swiper styles
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+import 'swiper/css/effect-coverflow'
 
 export default function ActivitiesGallerySection() {
-    const [currentIndex, setCurrentIndex] = useState(0)
     const [isVisible, setIsVisible] = useState(false)
     const [images, setImages] = useState<{ id: number; src: string; caption: string }[]>([])
     const [loading, setLoading] = useState(true)
-    const isDarkMode = useDarkMode()
     const sectionRef = useRef<HTMLElement>(null)
+    const [isMobile, setIsMobile] = useState(false)
 
-    // Fetch gallery data from database
+    // Check screen size
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768)
+        }
+        checkMobile()
+        window.addEventListener('resize', checkMobile)
+        return () => window.removeEventListener('resize', checkMobile)
+    }, [])
+
+    // Fetch gallery data
     useEffect(() => {
         const fetchGallery = async () => {
             try {
                 const result = await getPublicContentBySection('gallery')
                 if (result.success && result.data?.content?.items) {
                     const dbItems: GalleryItem[] = result.data.content.items
-                    // Map database items to image format
-                    const mappedImages = dbItems.map((item, index) => ({
-                        id: index + 1,
-                        src: item.image_url || '/images/slider-image1.png',
-                        caption: item.caption || `Kegiatan ${index + 1}`
-                    })).filter(img => img.src) // Only include items with valid images
+
+                    // Sanitize paths immediately to prevent 404 requests
+                    // If the DB has 'slider-image', assume it's broken unless proven otherwise
+                    // The user confirmed these files are missing
+                    const mappedImages = dbItems.map((item, index) => {
+                        let validSrc = item.image_url || '/images/smbsd-bg-hd.jpg'
+
+                        if (validSrc.includes('slider-image')) {
+                            validSrc = '/images/smbsd-bg-hd.jpg'
+                        }
+
+                        return {
+                            id: index + 1,
+                            src: validSrc,
+                            caption: item.caption || `Kegiatan ${index + 1}`
+                        }
+                    })
+
                     setImages(mappedImages)
                 }
             } catch (error) {
@@ -43,12 +73,13 @@ export default function ActivitiesGallerySection() {
         fetchGallery()
     }, [])
 
-
     // Intersection Observer
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
-                setIsVisible(entry.isIntersecting)
+                if (entry.isIntersecting) {
+                    setIsVisible(true)
+                }
             },
             { threshold: 0.2 }
         )
@@ -64,284 +95,137 @@ export default function ActivitiesGallerySection() {
         }
     }, [])
 
-    const goToPrevious = () => {
-        setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))
-    }
-
-    const goToNext = () => {
-        setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))
-    }
-
-    const goToSlide = (index: number) => {
-        setCurrentIndex(index)
-    }
-
-    // Get index with wrapping
-    const getIndex = (offset: number) => {
-        return (currentIndex + offset + images.length) % images.length
-    }
-
-    // Dynamic colors - White theme with orange accent
-    const sectionBgColor = '#E57526' // Logo orange
-    const captionBgColor = '#C25F1D' // Darker orange for captions
-    const captionShadow = '0 4px 15px rgba(229, 117, 38, 0.4)'
-    const buttonBgColor = '#FFFFFF' // White buttons
-    const buttonIconColor = '#E57526' // Orange icons
+    const sectionBgColor = '#E57526'
 
     return (
-        <>
-            <section
-                id="gallery"
-                ref={sectionRef}
-                className="py-12 sm:py-16 md:py-20 relative overflow-hidden scroll-mt-40"
-                style={{
-                    backgroundColor: sectionBgColor
-                }}
-            >
-                {/* Top-left trapezoid - hidden on mobile */}
-                <div
-                    className={`hidden sm:block ${isVisible ? 'animate-slideFromLeft' : 'opacity-0'}`}
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: 'clamp(150px, 20vw, 300px)',
-                        height: 'clamp(40px, 5vw, 80px)',
-                        backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                        clipPath: 'polygon(0 0, 100% 0, 70% 100%, 0 100%)',
-                        zIndex: 1
-                    }}
+        <section
+            id="gallery"
+            ref={sectionRef}
+            className="py-12 md:py-16 relative overflow-hidden scroll-mt-40 min-h-[50vh] flex flex-col justify-center"
+            style={{
+                backgroundColor: sectionBgColor
+            }}
+        >
+            {/* Background Decoration */}
+            <div className="absolute inset-0 pointer-events-none opacity-10">
+                <div className="absolute top-0 left-0 w-full h-full bg-[url('/images/pattern-batik.png')] bg-repeat opacity-20"></div>
+            </div>
+
+            <div className="max-w-7xl mx-auto px-4 relative z-10 w-full">
+                {/* Section Title */}
+                <SectionHeader
+                    title="Galeri Kegiatan"
+                    color="#ffffff"
+                    isVisible={isVisible}
+                    className="mb-8 md:mb-12"
                 />
 
-                {/* Bottom-right trapezoid - hidden on mobile */}
-                <div
-                    className={`hidden sm:block ${isVisible ? 'animate-slideFromRight' : 'opacity-0'}`}
-                    style={{
-                        position: 'absolute',
-                        bottom: 0,
-                        right: 0,
-                        width: 'clamp(150px, 20vw, 300px)',
-                        height: 'clamp(40px, 5vw, 80px)',
-                        backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                        clipPath: 'polygon(30% 0, 100% 0, 100% 100%, 0 100%)',
-                        zIndex: 1
-                    }}
-                />
+                {loading ? (
+                    <div className="text-center text-white py-12">Loading...</div>
+                ) : images.length === 0 ? (
+                    <div className="text-center text-white py-12 opacity-70">
+                        Belum ada gambar galeri. Silakan tambahkan melalui halaman admin.
+                    </div>
+                ) : (
+                    <div className="relative">
+                        <Swiper
+                            effect={'coverflow'}
+                            grabCursor={true}
+                            centeredSlides={true}
+                            slidesPerView={'auto'}
+                            initialSlide={Math.floor(images.length / 2)}
+                            coverflowEffect={{
+                                rotate: 0,
+                                stretch: 0,
+                                depth: 100,
+                                modifier: 2.5,
+                                slideShadows: false,
+                            }}
+                            pagination={{
+                                clickable: true,
+                                dynamicBullets: true
+                            }}
+                            navigation={{
+                                prevEl: '.swiper-button-prev-custom',
+                                nextEl: '.swiper-button-next-custom',
+                            }}
+                            autoplay={{
+                                delay: 3000,
+                                disableOnInteraction: false,
+                                pauseOnMouseEnter: true
+                            }}
+                            loop={true}
+                            modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
+                            className="gallery-swiper !pb-14"
+                        >
+                            {images.map((image) => (
+                                <SwiperSlide
+                                    key={image.id}
+                                    className="!w-[280px] !h-[280px] sm:!w-[400px] sm:!h-[300px] md:!w-[600px] md:!h-[400px] rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 border-4 border-white bg-white"
+                                >
+                                    <div className="w-full h-full relative group">
+                                        <Image
+                                            src={image.src}
+                                            alt={image.caption}
+                                            fill
+                                            className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                            onError={(e) => {
+                                                const target = e.target as HTMLImageElement;
+                                                target.srcset = ""
+                                                target.src = "/images/smbsd-bg-hd.jpg"
+                                            }}
+                                        />
 
-                <div className="max-w-7xl mx-auto px-4 relative z-10 my-8">
-                    {/* Section Title */}
-                    <h2
-                        className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-10 sm:mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                        style={{ color: '#ffffff' }}
-                    >
-                        Galeri Kegiatan SMB
-                    </h2>
+                                        {/* Caption Overlay */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6 pointer-events-none">
+                                            <p className="text-white font-bold text-lg px-4 text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                                                {image.caption}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
 
-                    {loading ? (
-                        <div className="text-center text-white py-12">Loading...</div>
-                    ) : images.length === 0 ? (
-                        <div className="text-center text-white py-12 opacity-70">
-                            Belum ada gambar galeri. Silakan tambahkan melalui halaman admin.
+                        {/* Custom Navigation Buttons (Outside Swipe Area for Desktop) */}
+                        <div className="hidden md:flex items-center justify-center gap-8 mt-4">
+                            <button className="swiper-button-prev-custom w-12 h-12 rounded-full border-2 border-white text-white hover:bg-white hover:text-[#E57526] flex items-center justify-center transition-all duration-300 z-10 cursor-pointer">
+                                <ChevronLeft size={24} />
+                            </button>
+                            <button className="swiper-button-next-custom w-12 h-12 rounded-full border-2 border-white text-white hover:bg-white hover:text-[#E57526] flex items-center justify-center transition-all duration-300 z-10 cursor-pointer">
+                                <ChevronRight size={24} />
+                            </button>
                         </div>
-                    ) : (
-                        <>
-                            {/* Carousel Container */}
-                            <div className="relative flex items-center justify-center gap-3 sm:gap-6">
-                                {/* Previous Arrow */}
-                                <button
-                                    onClick={goToPrevious}
-                                    className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full transition-all hover:scale-110 z-20 flex items-center justify-center"
-                                    style={{
-                                        backgroundColor: buttonBgColor,
-                                        color: buttonIconColor,
-                                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
-                                    }}
-                                    aria-label="Previous image"
-                                >
-                                    <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                                    </svg>
-                                </button>
+                    </div>
+                )}
+            </div>
 
-                                {/* Slider Cards */}
-                                <div className="flex items-center justify-center gap-3 sm:gap-6 overflow-hidden py-4">
-                                    {/* Left Card - Polaroid style */}
-                                    <div
-                                        className="hidden md:block cursor-pointer card-side"
-                                        onClick={goToPrevious}
-                                    >
-                                        <div
-                                            className="overflow-hidden rounded-xl"
-                                            style={{
-                                                backgroundColor: captionBgColor,
-                                                boxShadow: captionShadow
-                                            }}
-                                        >
-                                            <div className="w-64 lg:w-72 h-40 lg:h-44 overflow-hidden relative">
-                                                <Image
-                                                    src={images[getIndex(-1)].src}
-                                                    alt={images[getIndex(-1)].caption}
-                                                    fill
-                                                    className="object-cover"
-                                                />
-                                            </div>
-                                            <div
-                                                className="px-2 py-2"
-                                                style={{ backgroundColor: captionBgColor }}
-                                            >
-                                                <p className="text-xs font-medium text-center text-white">
-                                                    {images[getIndex(-1)].caption}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Center Card - Featured, polaroid style */}
-                                    <div className="z-10 card-center">
-                                        <div
-                                            className="overflow-hidden rounded-xl"
-                                            style={{
-                                                backgroundColor: captionBgColor,
-                                                boxShadow: captionShadow
-                                            }}
-                                        >
-                                            <div className="w-[320px] sm:w-[560px] md:w-[640px] lg:w-[720px] h-48 sm:h-64 md:h-72 lg:h-80 overflow-hidden relative rounded-t-xl">
-                                                <Image
-                                                    src={images[currentIndex].src}
-                                                    alt={images[currentIndex].caption}
-                                                    fill
-                                                    className="object-cover"
-                                                />
-                                            </div>
-                                            <div
-                                                className="px-3 py-3 sm:px-4 sm:py-3 rounded-b-xl"
-                                                style={{ backgroundColor: captionBgColor }}
-                                            >
-                                                <p className="text-sm sm:text-base font-semibold text-center text-white">
-                                                    {images[currentIndex].caption}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Right Card - Polaroid style */}
-                                    <div
-                                        className="hidden md:block cursor-pointer card-side"
-                                        onClick={goToNext}
-                                    >
-                                        <div
-                                            className="overflow-hidden rounded-xl"
-                                            style={{
-                                                backgroundColor: captionBgColor,
-                                                boxShadow: captionShadow
-                                            }}
-                                        >
-                                            <div className="w-64 lg:w-72 h-40 lg:h-44 overflow-hidden relative">
-                                                <Image
-                                                    src={images[getIndex(1)].src}
-                                                    alt={images[getIndex(1)].caption}
-                                                    fill
-                                                    className="object-cover"
-                                                />
-                                            </div>
-                                            <div
-                                                className="px-2 py-2"
-                                                style={{ backgroundColor: captionBgColor }}
-                                            >
-                                                <p className="text-xs font-medium text-center text-white">
-                                                    {images[getIndex(1)].caption}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Next Arrow */}
-                                <button
-                                    onClick={goToNext}
-                                    className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full transition-all hover:scale-110 z-20 flex items-center justify-center"
-                                    style={{
-                                        backgroundColor: buttonBgColor,
-                                        color: buttonIconColor,
-                                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
-                                    }}
-                                    aria-label="Next image"
-                                >
-                                    <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </button>
-                            </div>
-
-                            {/* Dot Indicators */}
-                            <div className="flex justify-center items-center gap-3 mt-8">
-                                {images.map((_, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => goToSlide(index)}
-                                        className="transition-all duration-300 rounded-full"
-                                        style={{
-                                            width: index === currentIndex ? '28px' : '10px',
-                                            height: '10px',
-                                            backgroundColor: index === currentIndex
-                                                ? '#ffffff'
-                                                : 'rgba(255, 255, 255, 0.4)',
-                                        }}
-                                        aria-label={`Go to slide ${index + 1}`}
-                                    />
-                                ))}
-                            </div>
-                        </>
-                    )}
-                </div>
-            </section>
-
-            <style jsx>{`
-                @keyframes slideFromLeft {
-                    from {
-                        transform: translateX(-100%);
-                        opacity: 0;
-                    }
-                    to {
-                        transform: translateX(0);
-                        opacity: 1;
-                    }
+            <style jsx global>{`
+                .gallery-swiper .swiper-pagination-bullet {
+                    background: rgba(255, 255, 255, 0.5);
+                    width: 10px;
+                    height: 10px;
+                    opacity: 1;
+                    transition: all 0.3s;
                 }
-
-                @keyframes slideFromRight {
-                    from {
-                        transform: translateX(100%);
-                        opacity: 0;
-                    }
-                    to {
-                        transform: translateX(0);
-                        opacity: 1;
-                    }
+                .gallery-swiper .swiper-pagination-bullet-active {
+                    background: #ffffff;
+                    width: 30px;
+                    border-radius: 5px;
                 }
-
-                :global(.animate-slideFromLeft) {
-                    animation: slideFromLeft 0.8s ease-out forwards;
+                .gallery-swiper .swiper-slide {
+                    filter: blur(2px) brightness(0.7);
+                    transform: scale(0.9);
+                    transition: all 0.5s ease;
                 }
-
-                :global(.animate-slideFromRight) {
-                    animation: slideFromRight 0.8s ease-out forwards;
-                }
-
-                .card-side {
-                    opacity: 0.6;
-                    transition: all 0.3s ease;
-                }
-
-                .card-side:hover {
-                    opacity: 0.85;
-                    transform: scale(1.02);
-                }
-
-                .card-center {
-                    transition: all 0.3s ease;
+                .gallery-swiper .swiper-slide-active {
+                    filter: blur(0px) brightness(1);
+                    transform: scale(1);
+                    z-index: 10;
+                    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
                 }
             `}</style>
-        </>
+        </section>
     )
 }
-

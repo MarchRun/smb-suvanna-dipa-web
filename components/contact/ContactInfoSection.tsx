@@ -8,6 +8,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Card from '@/components/shared/Card'
+import SectionHeader from '@/components/shared/SectionHeader'
 import { useDarkMode } from '@/hooks/useDarkMode'
 
 export default function ContactInfoSection() {
@@ -42,7 +43,9 @@ export default function ContactInfoSection() {
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
-                setIsVisible(entry.isIntersecting)
+                if (entry.isIntersecting) {
+                    setIsVisible(true)
+                }
             },
             { threshold: 0.2 }
         )
@@ -106,44 +109,54 @@ export default function ContactInfoSection() {
         <>
             <div
                 ref={sectionRef}
-                className="w-full mt-8 sm:mt-12"
+                className="w-full py-8 sm:py-10 md:py-12"
             >
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-                    {contacts.map((contact, index) => (
-                        <div
-                            key={index}
-                            className={`${isVisible ? 'animate-scaleIn' : 'opacity-0'}`}
-                            style={{ animationDelay: `${index * 0.15}s` }}
-                        >
-                            <Card
-                                className="text-center h-full"
-                                hoverable={true}
-                                customStyle={{
-                                    backgroundColor: cardBgColor,
-                                    boxShadow: cardShadow,
-                                    borderRadius: '32px'
-                                }}
-                            >
-                                {/* Icon */}
-                                <div className="mb-4 flex justify-center">
-                                    {renderIcon(contact.iconType)}
-                                </div>
+                <div className="max-w-7xl mx-auto px-4 z-10 relative">
+                    {/* Section Header */}
+                    <SectionHeader
+                        title="Informasi Kontak"
+                        color="#E57526" // Orange to match other sections
+                        isVisible={isVisible}
+                        className="mb-8 sm:mb-12"
+                    />
 
-                                <h3
-                                    className="text-lg sm:text-xl font-bold mb-2"
-                                    style={{ color: '#ffffff' }}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+                        {contacts.map((contact, index) => (
+                            <div
+                                key={index}
+                                className={`${isVisible ? 'animate-scaleIn' : 'opacity-0'}`}
+                                style={{ animationDelay: `${index * 0.15}s` }}
+                            >
+                                <Card
+                                    className="text-center h-full"
+                                    hoverable={true}
+                                    customStyle={{
+                                        backgroundColor: cardBgColor,
+                                        boxShadow: cardShadow,
+                                        borderRadius: '32px'
+                                    }}
                                 >
-                                    {contact.title}
-                                </h3>
-                                <p
-                                    className="text-sm sm:text-base font-bold"
-                                    style={{ color: '#ffffff' }}
-                                >
-                                    {contact.info}
-                                </p>
-                            </Card>
-                        </div>
-                    ))}
+                                    {/* Icon */}
+                                    <div className="mb-4 flex justify-center">
+                                        {renderIcon(contact.iconType)}
+                                    </div>
+
+                                    <h3
+                                        className="text-lg sm:text-xl font-bold mb-2"
+                                        style={{ color: '#ffffff' }}
+                                    >
+                                        {contact.title}
+                                    </h3>
+                                    <p
+                                        className="text-sm sm:text-base font-bold"
+                                        style={{ color: '#ffffff' }}
+                                    >
+                                        {contact.info}
+                                    </p>
+                                </Card>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
 

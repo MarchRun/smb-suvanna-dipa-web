@@ -41,7 +41,7 @@ export default function ContactPage() {
             {/* Map Section - Fills remaining space */}
             <section
                 id="location"
-                className="scroll-mt-40 flex-grow flex flex-col"
+                className="scroll-mt-40 min-h-[80vh] flex flex-col justify-center"
                 style={{
                     backgroundColor: bgColor,
                     padding: '0' // Remove padding from section to allow full edge-to-edge if needed, but inner div handles it

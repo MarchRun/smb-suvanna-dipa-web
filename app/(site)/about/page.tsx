@@ -9,6 +9,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import PageHeader from '@/components/shared/PageHeader'
+import SectionHeader from '@/components/shared/SectionHeader'
 import AboutVisionMissionSection from '@/components/about/AboutVisionMissionSection'
 import AboutQuoteSection from '@/components/about/AboutQuoteSection'
 
@@ -35,8 +36,9 @@ export default function AboutPage() {
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
-                // Track both entering and leaving
-                setSection2Visible(entry.isIntersecting)
+                if (entry.isIntersecting) {
+                    setSection2Visible(true)
+                }
             },
             { threshold: 0.2 }
         )
@@ -68,15 +70,21 @@ export default function AboutPage() {
                 <section
                     id="profile"
                     ref={section2Ref}
-                    className="pb-12 sm:pb-16 scroll-mt-40 flex-grow flex flex-col justify-center"
+                    className="pt-8 sm:pt-16 pb-8 sm:pb-12 scroll-mt-40 min-h-[80vh] flex flex-col justify-center"
                     style={{ backgroundColor: bgColor }}
                 >
                     <div
-                        className={`max-w-6xl mx-auto px-4 transition-all duration-700 ${section2Visible
+                        className={`max-w-7xl mx-auto px-4 relative z-10 transition-all duration-700 ${section2Visible
                             ? 'opacity-100 translate-y-0'
                             : 'opacity-0 translate-y-12'
                             }`}
                     >
+                        {/* Section Header */}
+                        <SectionHeader
+                            title="Profil"
+                            color="#E57526"
+                            isVisible={section2Visible}
+                        />
                         {/* SMB SD Logo */}
                         <div className="mb-6 sm:mb-8 flex justify-center">
                             <div className="relative w-full max-w-xs aspect-video rounded-lg overflow-hidden">

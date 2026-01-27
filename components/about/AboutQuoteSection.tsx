@@ -7,6 +7,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import SectionHeader from '@/components/shared/SectionHeader'
 import { useDarkMode } from '@/hooks/useDarkMode'
 
 export default function AboutQuoteSection() {
@@ -17,8 +18,9 @@ export default function AboutQuoteSection() {
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
-                // Track both entering and leaving for refresh effect
-                setIsVisible(entry.isIntersecting)
+                if (entry.isIntersecting) {
+                    setIsVisible(true)
+                }
             },
             { threshold: 0.3 }
         )
@@ -41,13 +43,20 @@ export default function AboutQuoteSection() {
     return (
         <section
             ref={sectionRef}
-            className="py-8 sm:py-12"
+            className="py-8 sm:py-10 md:py-12 min-h-[20vh] flex flex-col justify-center"
             style={{ backgroundColor: bgColor }}
         >
             <div
-                className={`max-w-6xl mx-auto px-4 transition-all duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'
+                className={`max-w-7xl mx-auto px-4 transition-all duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'
                     }`}
             >
+                {/* Section Header */}
+                <SectionHeader
+                    title="Kutipan Bijak"
+                    color="#E57526"
+                    isVisible={isVisible}
+                    className="mb-8"
+                />
                 <div className="relative py-12 px-6 sm:py-16 sm:px-12 max-w-4xl mx-auto">
                     {/* Corner Ornaments (Ukiran) - Complex Floral/Baroque Style */}
                     {/* Top Left */}

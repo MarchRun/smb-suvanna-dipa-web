@@ -12,10 +12,11 @@ export default function Footer() {
     const isDarkMode = useDarkMode()
     return (
         <footer
-            className="py-12"
+            className="py-12 min-h-[30vh]"
             style={{
                 backgroundColor: '#1A1A1A', // Dark Gray / Black
-                boxShadow: 'none'
+                boxShadow: 'none',
+                borderTop: '2px solid #E57526' // Medium orange border
             }}
         >
             <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-8">

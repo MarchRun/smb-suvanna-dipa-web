@@ -8,6 +8,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import SectionHeader from '@/components/shared/SectionHeader'
 import Button from '@/components/shared/Button'
 import { useDarkMode } from '@/hooks/useDarkMode'
 
@@ -23,9 +24,8 @@ export default function HomeAboutSection() {
             ([entry]) => {
                 // Trigger animation when section becomes visible
                 if (entry.isIntersecting) {
-                    setIsVisible(false) // Reset first
-                    // Small delay to ensure CSS animation restarts
-                    setTimeout(() => setIsVisible(true), 50)
+                    setIsVisible(true)
+                    observer.unobserve(entry.target) // Stop observing once visible
                 }
             },
             {
@@ -48,56 +48,21 @@ export default function HomeAboutSection() {
         <>
             <section
                 ref={sectionRef}
-                className="py-12 sm:py-16 md:py-20 relative overflow-hidden"
+                className="py-8 sm:py-10 md:py-12 relative overflow-hidden min-h-[30vh] flex flex-col justify-center"
                 style={{
                     backgroundColor: '#E57526' // Logo orange
                 }}
             >
-                {/* Top-left trapezoid - hidden on mobile */}
-                <div
-                    className={`hidden sm:block ${isVisible ? 'animate-slideFromLeft' : 'opacity-0'}`}
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: 'clamp(150px, 20vw, 300px)',
-                        height: 'clamp(40px, 5vw, 80px)',
-                        backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                        clipPath: 'polygon(0 0, 100% 0, 70% 100%, 0 100%)',
-                        zIndex: 1
-                    }}
-                />
 
-                {/* Bottom-right trapezoid - hidden on mobile */}
-                <div
-                    className={`hidden sm:block ${isVisible ? 'animate-slideFromRight' : 'opacity-0'}`}
-                    style={{
-                        position: 'absolute',
-                        bottom: 0,
-                        right: 0,
-                        width: 'clamp(150px, 20vw, 300px)',
-                        height: 'clamp(40px, 5vw, 80px)',
-                        backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                        clipPath: 'polygon(30% 0, 100% 0, 100% 100%, 0 100%)',
-                        zIndex: 1
-                    }}
-                />
 
                 <div className={`max-w-7xl mx-auto px-4 text-center relative z-10 ${isVisible ? 'animate-slideUpFade' : 'opacity-0'}`}>
-                    <div className="flex items-center justify-center gap-4 mb-4 sm:mb-6">
-                        {/* Left Line */}
-                        <div className="hidden sm:block h-[2px] w-12 sm:w-24 bg-white opacity-80 rounded-full"></div>
-
-                        <h2
-                            className="text-3xl sm:text-4xl md:text-5xl font-bold"
-                            style={{ color: '#ffffff' }}
-                        >
-                            Mengenal SMB Suvanna Dipa
-                        </h2>
-
-                        {/* Right Line */}
-                        <div className="hidden sm:block h-[2px] w-12 sm:w-24 bg-white opacity-80 rounded-full"></div>
-                    </div>
+                    {/* Section Header */}
+                    <SectionHeader
+                        title="Tentang Kami"
+                        color="#ffffff"
+                        isVisible={isVisible}
+                        className="mb-8"
+                    />
                     <p
                         className="text-base sm:text-lg mb-6 sm:mb-8 mx-auto font-semibold px-4 sm:px-8 md:px-12 text-justify"
                         style={{ color: '#ffffff' }}

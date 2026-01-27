@@ -116,11 +116,11 @@ export default function KontenPublikPage() {
     // Data state
     const [agenda, setAgenda] = useState<string[]>(['', '', '', ''])
     const [gallery, setGallery] = useState<GalleryItem[]>([
-        { image_url: '', caption: '' },
-        { image_url: '', caption: '' },
-        { image_url: '', caption: '' },
-        { image_url: '', caption: '' },
-        { image_url: '', caption: '' }
+        { image_url: '/images/smbsd-bg-hd.jpg', caption: 'Kegiatan 1' },
+        { image_url: '/images/smbsd-bg-hd.jpg', caption: 'Kegiatan 2' },
+        { image_url: '/images/smbsd-bg-hd.jpg', caption: 'Kegiatan 3' },
+        { image_url: '/images/smbsd-bg-hd.jpg', caption: 'Kegiatan 4' },
+        { image_url: '/images/smbsd-bg-hd.jpg', caption: 'Kegiatan 5' },
     ])
     const [testimonials, setTestimonials] = useState<TestimonialItem[]>([
         { name: '', description: '' },

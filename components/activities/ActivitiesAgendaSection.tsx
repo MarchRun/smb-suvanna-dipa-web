@@ -9,6 +9,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Card from '@/components/shared/Card'
+import SectionHeader from '@/components/shared/SectionHeader'
 import { useDarkMode } from '@/hooks/useDarkMode'
 import { getPublicContentBySection } from '@/actions/admin/publicContent'
 
@@ -69,7 +70,9 @@ export default function ActivitiesAgendaSection() {
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
-                setIsVisible(entry.isIntersecting)
+                if (entry.isIntersecting) {
+                    setIsVisible(true)
+                }
             },
             { threshold: 0.2 }
         )
@@ -96,17 +99,17 @@ export default function ActivitiesAgendaSection() {
             <section
                 id="agenda"
                 ref={sectionRef}
-                className="py-20 sm:py-24 md:py-32 scroll-mt-40"
+                className="py-8 sm:py-10 md:py-12 scroll-mt-40 min-h-[20vh] flex flex-col justify-center"
                 style={{ backgroundColor: bgColor }}
             >
-                <div className="max-w-6xl mx-auto px-4">
+                <div className="max-w-7xl mx-auto px-4">
                     {/* Section Title */}
-                    <h2
-                        className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-8 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                        style={{ color: titleColor }}
-                    >
-                        Agenda Tahunan Kegiatan SMB
-                    </h2>
+                    <SectionHeader
+                        title="Agenda Tahunan Kegiatan"
+                        color={titleColor}
+                        isVisible={isVisible}
+                        className="mb-6 sm:mb-8"
+                    />
 
                     {loading ? (
                         <div className="text-center py-8" style={{ color: titleColor }}>Loading...</div>
@@ -167,7 +170,7 @@ export default function ActivitiesAgendaSection() {
                                 </div>
                             ) : (
                                 /* Desktop Grid */
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-16">
                                     {activities.map((activity, index) => (
                                         <div
                                             key={index}

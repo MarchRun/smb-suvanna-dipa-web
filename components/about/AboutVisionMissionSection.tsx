@@ -9,6 +9,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Card from '@/components/shared/Card'
+import SectionHeader from '@/components/shared/SectionHeader'
 import { useDarkMode } from '@/hooks/useDarkMode'
 
 export default function AboutVisionMissionSection() {
@@ -19,8 +20,9 @@ export default function AboutVisionMissionSection() {
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
-                // Track both entering and leaving for refresh effect
-                setIsVisible(entry.isIntersecting)
+                if (entry.isIntersecting) {
+                    setIsVisible(true)
+                }
             },
             { threshold: 0.3 }
         )
@@ -45,43 +47,22 @@ export default function AboutVisionMissionSection() {
             <section
                 id="vision"
                 ref={sectionRef}
-                className="py-12 sm:py-16 md:py-20 relative overflow-hidden scroll-mt-40"
+                className="py-8 sm:py-10 md:py-12 relative overflow-hidden scroll-mt-40 min-h-[30vh] flex flex-col justify-center"
                 style={{
                     backgroundColor: '#E57526' // Logo orange
                 }}
             >
-                {/* Top-left trapezoid - hidden on mobile */}
-                <div
-                    className={`hidden sm:block ${isVisible ? 'animate-slideFromLeft' : 'opacity-0'}`}
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: 'clamp(150px, 20vw, 300px)',
-                        height: 'clamp(40px, 5vw, 80px)',
-                        backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                        clipPath: 'polygon(0 0, 100% 0, 70% 100%, 0 100%)',
-                        zIndex: 1
-                    }}
-                />
 
-                {/* Bottom-right trapezoid - hidden on mobile */}
-                <div
-                    className={`hidden sm:block ${isVisible ? 'animate-slideFromRight' : 'opacity-0'}`}
-                    style={{
-                        position: 'absolute',
-                        bottom: 0,
-                        right: 0,
-                        width: 'clamp(150px, 20vw, 300px)',
-                        height: 'clamp(40px, 5vw, 80px)',
-                        backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                        clipPath: 'polygon(30% 0, 100% 0, 100% 100%, 0 100%)',
-                        zIndex: 1
-                    }}
-                />
 
-                <div className="max-w-6xl mx-auto px-4 relative z-10 my-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+                <div className="max-w-7xl mx-auto px-4 relative z-10 my-4">
+                    {/* Section Header */}
+                    <SectionHeader
+                        title="Visi & Misi"
+                        color="#ffffff"
+                        isVisible={isVisible}
+                        className="mb-8 sm:mb-12"
+                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16">
                         {/* Visi */}
                         <div
                             className={`${isVisible ? 'animate-scaleIn' : 'opacity-0'}`}
@@ -104,10 +85,10 @@ export default function AboutVisionMissionSection() {
                                     VISI
                                 </h3>
                                 <p
-                                    className="text-sm sm:text-base font-bold text-justify"
+                                    className="text-sm sm:text-base font-bold text-justify px-4 sm:px-6"
                                     style={{ color: '#ffffff' }}
                                 >
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus at tellus eget eros hendrerit mattis. Pellentesque orci magna, dignissim ut fringilla non, imperdiet et arcu. Fusce cursus, orci eu mollis posuere, augue ipsum dignissim enim, sit amet mollis ipsum nisl eu ante.
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus at tellus eget eros hendrerit mattis.
                                 </p>
                             </Card>
                         </div>
@@ -134,10 +115,10 @@ export default function AboutVisionMissionSection() {
                                     MISI
                                 </h3>
                                 <p
-                                    className="text-sm sm:text-base font-bold text-justify"
+                                    className="text-sm sm:text-base font-bold text-justify px-4 sm:px-6"
                                     style={{ color: '#ffffff' }}
                                 >
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus at tellus eget eros hendrerit mattis. Pellentesque orci magna, dignissim ut fringilla non, imperdiet et arcu. Fusce cursus, orci eu mollis posuere, augue ipsum dignissim enim, sit amet mollis ipsum nisl eu ante.
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus at tellus eget eros hendrerit mattis.
                                 </p>
                             </Card>
                         </div>
