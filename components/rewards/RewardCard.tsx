@@ -1,26 +1,41 @@
 /**
- * Reward Card Component
- * Grid card for displaying product/hadiah info
+ * Unified Reward Card Component
+ * Displays product/hadiah with variant-based actions
+ * - admin: edit/delete buttons
+ * - student: tukar button with point check
  */
 
 'use client'
 
-import { useState, useEffect } from 'react'
 import type { Product } from '@/actions/admin/products'
-import { useDarkMode } from '@/hooks/useDarkMode'
 
 interface RewardCardProps {
     reward: Product
-    onEdit: (reward: Product) => void
-    onDelete: (reward: Product) => void
+    variant: 'admin' | 'student'
+    // Student-only props
+    studentPoints?: number
+    onRedeem?: (reward: Product) => void
+    // Admin-only props
+    onEdit?: (reward: Product) => void
+    onDelete?: (reward: Product) => void
 }
 
-export default function RewardCard({ reward, onEdit, onDelete }: RewardCardProps) {
-    const isDarkMode = useDarkMode()
+export default function RewardCard({
+    reward,
+    variant,
+    studentPoints = 0,
+    onRedeem,
+    onEdit,
+    onDelete
+}: RewardCardProps) {
+    const textColor = '#E57526'
+    const bgColor = '#ffffff'
+    const borderColor = '#E57526'
 
-    const textColor = isDarkMode ? '#ea580c' : '#E57526'
-    const bgColor = isDarkMode ? '#1e293b' : '#ffffff'
-    const borderColor = isDarkMode ? '#ea580c' : '#E57526'
+    // Student variant calculations
+    const canAfford = studentPoints >= reward.price
+    const inStock = reward.stock > 0
+    const canRedeem = canAfford && inStock
 
     return (
         <div
@@ -61,45 +76,69 @@ export default function RewardCard({ reward, onEdit, onDelete }: RewardCardProps
                 <div className="space-y-1">
                     <p
                         className="text-sm font-semibold"
-                        style={{ color: isDarkMode ? '#cbd5e1' : '#64748b' }}
+                        style={{ color: '#64748b' }}
                     >
                         Stok: {reward.stock}
                     </p>
                     <p
                         className="text-sm font-semibold"
-                        style={{ color: isDarkMode ? '#cbd5e1' : '#64748b' }}
+                        style={{ color: '#64748b' }}
                     >
                         Harga: {reward.price} poin
                     </p>
                 </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col gap-2">
-                {/* Edit Button */}
-                <button
-                    onClick={() => onEdit(reward)}
-                    className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 hover:opacity-80"
-                    style={{ backgroundColor: textColor }}
-                    title="Edit"
-                >
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                </button>
+            {/* Action Buttons - Variant Based */}
+            {variant === 'admin' ? (
+                <div className="flex flex-col gap-2">
+                    {/* Edit Button */}
+                    <button
+                        onClick={() => onEdit?.(reward)}
+                        className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 hover:opacity-80"
+                        style={{ backgroundColor: textColor }}
+                        title="Edit"
+                    >
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                    </button>
 
-                {/* Delete Button */}
-                <button
-                    onClick={() => onDelete(reward)}
-                    className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 hover:opacity-80"
-                    style={{ backgroundColor: '#dc2626' }}
-                    title="Hapus"
-                >
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                </button>
-            </div>
+                    {/* Delete Button */}
+                    <button
+                        onClick={() => onDelete?.(reward)}
+                        className="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 hover:opacity-80"
+                        style={{ backgroundColor: '#dc2626' }}
+                        title="Hapus"
+                    >
+                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </button>
+                </div>
+            ) : (
+                <div className="flex flex-col justify-center">
+                    <button
+                        onClick={() => onRedeem?.(reward)}
+                        disabled={!canRedeem}
+                        className={`px-6 py-3 rounded-xl font-bold text-white transition-all duration-200 
+                            ${canRedeem
+                                ? 'hover:opacity-80 cursor-pointer'
+                                : 'opacity-50 cursor-not-allowed'
+                            }`}
+                        style={{ backgroundColor: textColor }}
+                        title={
+                            !inStock
+                                ? 'Stok habis'
+                                : !canAfford
+                                    ? 'Poin tidak cukup'
+                                    : 'Tukar hadiah'
+                        }
+                    >
+                        Tukar
+                    </button>
+                </div>
+            )}
         </div>
     )
 }

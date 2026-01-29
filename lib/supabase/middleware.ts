@@ -1,7 +1,3 @@
-/**
- * Helper untuk Supabase di Middleware
- */
-
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
@@ -33,7 +29,6 @@ export async function updateSession(request: NextRequest) {
         }
     )
 
-    // Refresh session jika ada
     const {
         data: { user },
     } = await supabase.auth.getUser()

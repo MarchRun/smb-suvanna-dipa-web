@@ -1,18 +1,10 @@
-/**
- * Reset Password Form Component
- * Allows users to set new password after clicking email link
- * Styled to match LoginForm and ForgotPasswordForm with dark mode support
- */
-
 'use client'
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import Input from '@/components/shared/Input'
-import Button from '@/components/shared/Button'
+import { Input, Button } from '@/components/shared/ui/FormElements'
 import { resetPassword } from '@/actions/auth/password'
-import { useDarkMode } from '@/hooks/useDarkMode'
 
 // Password strength calculator
 function calculatePasswordStrength(password: string): { score: number; label: string; color: string } {
@@ -44,13 +36,11 @@ export default function ResetPasswordForm({ token, email }: ResetPasswordFormPro
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
     const [success, setSuccess] = useState(false)
-    const isDarkMode = useDarkMode()
 
     const passwordStrength = password ? calculatePasswordStrength(password) : null
     const passwordsMatch = password === confirmPassword && confirmPassword !== ''
 
-    // Dynamic colors based on dark mode
-    const primaryColor = isDarkMode ? 'var(--primary-600)' : '#E57526'
+    const primaryColor = '#E57526'
     const borderGlow = 'none'
 
     const handleSubmit = async (e: React.FormEvent) => {

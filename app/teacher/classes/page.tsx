@@ -8,8 +8,8 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import DashboardLayout from '@/components/shared/DashboardLayout'
-import StudentTable from '@/components/teacher/StudentTable'
+import DashboardLayout from '@/components/shared/layout/Dashboard'
+import UsersTable from '@/components/shared/specialized/UsersTable'
 import GivePointsModal from '@/components/teacher/GivePointsModal'
 import { getTeacherStudents, getTeacherClassInfo, givePoints } from '@/actions/teacher/students'
 import type { Profile } from '@/types'
@@ -27,7 +27,6 @@ export default function KelasPage() {
     const [students, setStudents] = useState<Profile[]>([])
     const [className, setClassName] = useState<string>('')
     const [loading, setLoading] = useState(true)
-    const [isDarkMode, setIsDarkMode] = useState(false)
 
     // Search state
     const [search, setSearch] = useState('')
@@ -36,20 +35,6 @@ export default function KelasPage() {
     const [pointsModalOpen, setPointsModalOpen] = useState(false)
     const [selectedStudent, setSelectedStudent] = useState<Profile | null>(null)
     const [modalLoading, setModalLoading] = useState(false)
-
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
 
     // Fetch class info
     useEffect(() => {
@@ -103,7 +88,7 @@ export default function KelasPage() {
         setModalLoading(false)
     }
 
-    const textColor = isDarkMode ? '#ea580c' : 'var(--primary-900)'
+    const textColor = 'var(--primary-900)'
 
     return (
         <DashboardLayout role="Pembina" menuItems={pembinaMenuItems}>
@@ -157,8 +142,9 @@ export default function KelasPage() {
                 </div>
 
                 {/* Students Table */}
-                <StudentTable
-                    students={students}
+                <UsersTable
+                    data={students} // Variant teacher maps 'data' to students list
+                    variant="teacher"
                     onView={handleView}
                     onGivePoints={handleGivePointsClick}
                     isLoading={loading}

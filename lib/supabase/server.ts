@@ -1,8 +1,3 @@
-/**
- * Supabase Client untuk Server-Side (Server Components & Actions)
- * Menggunakan cookies untuk maintain session
- */
-
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
@@ -23,7 +18,6 @@ export async function createClient() {
                             cookieStore.set(name, value, options)
                         )
                     } catch {
-                        // Handler untuk middleware (tidak bisa set cookies)
                     }
                 },
             },

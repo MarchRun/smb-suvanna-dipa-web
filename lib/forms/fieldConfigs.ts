@@ -1,13 +1,6 @@
-/**
- * Centralized Form Field Configurations
- * Reusable field configs for all forms in the application
- * All forms can use these standardized configs
- */
-
-import { FieldConfig } from '@/components/shared/UniversalForm'
+import { FieldConfig } from '@/components/shared/forms/UniversalForm'
 import type { Class } from '@/types'
 
-// User Form Fields (for UserFormModal and UserForm)
 export const getUserFormFields = (classes: Class[]): FieldConfig[] => [
     {
         name: 'full_name',
@@ -81,7 +74,7 @@ export const getUserFormFields = (classes: Class[]): FieldConfig[] => [
         type: 'file',
         label: 'Foto Profil',
         accept: 'image/jpeg,image/jpg,image/png',
-        maxSize: 1 * 1024 * 1024, // 1MB
+        maxSize: 1 * 1024 * 1024,
         helperText: 'Format: JPEG, PNG. Maksimal 1MB.',
         columnSpan: 2
     },
@@ -96,7 +89,6 @@ export const getUserFormFields = (classes: Class[]): FieldConfig[] => [
     }
 ]
 
-// Profile Edit Form Fields
 export const profileEditFormFields: FieldConfig[] = [
     {
         name: 'full_name',
@@ -140,7 +132,6 @@ export const profileEditFormFields: FieldConfig[] = [
     }
 ]
 
-// Contact Form Fields
 export const contactFormFields: FieldConfig[] = [
     {
         name: 'full_name',
@@ -189,7 +180,6 @@ export const contactFormFields: FieldConfig[] = [
     }
 ]
 
-// Reward/Product Form Fields
 export const productFormFields: FieldConfig[] = [
     {
         name: 'name',
@@ -220,13 +210,12 @@ export const productFormFields: FieldConfig[] = [
         type: 'file',
         label: 'Gambar Produk',
         accept: 'image/jpeg,image/jpg,image/png',
-        maxSize: 1 * 1024 * 1024, // 1MB
+        maxSize: 1 * 1024 * 1024,
         helperText: 'Format: JPEG, PNG. Maksimal 1MB.',
         columnSpan: 2
     }
 ]
 
-// Login Form Fields
 export const loginFormFields: FieldConfig[] = [
     {
         name: 'email',
@@ -246,7 +235,6 @@ export const loginFormFields: FieldConfig[] = [
     }
 ]
 
-// Export all configs
 export const formConfigs = {
     getUserFormFields,
     profileEditFormFields,

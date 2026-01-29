@@ -8,7 +8,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import SectionHeader from '@/components/shared/SectionHeader'
+import SectionHeader from '@/components/shared/layout/SectionHeader'
 import { getPublicContentBySection, type GalleryItem } from '@/actions/admin/publicContent'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination, Autoplay, EffectCoverflow } from 'swiper/modules'

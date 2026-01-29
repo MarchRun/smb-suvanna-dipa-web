@@ -8,10 +8,10 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import DashboardLayout from '@/components/shared/DashboardLayout'
-import ScheduleTable from '@/components/teacher/ScheduleTable'
+import DashboardLayout from '@/components/shared/layout/Dashboard'
+import ScheduleTable from '@/components/shared/specialized/ScheduleTable'
 import ScheduleFormModal from '@/components/teacher/ScheduleFormModal'
-import ConfirmDialog from '@/components/shared/ConfirmDialog'
+import { ConfirmDialog } from '@/components/shared/ui/Modals'
 import {
     getTeacherSchedules,
     createSchedule,
@@ -32,7 +32,6 @@ export default function JadwalPage() {
     const router = useRouter()
     const [schedules, setSchedules] = useState<Schedule[]>([])
     const [loading, setLoading] = useState(true)
-    const [isDarkMode, setIsDarkMode] = useState(false)
 
     // Filter state
     const currentDate = new Date()
@@ -48,20 +47,6 @@ export default function JadwalPage() {
     // Delete confirmation
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
     const [scheduleToDelete, setScheduleToDelete] = useState<Schedule | null>(null)
-
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
 
     // Fetch schedules
     const fetchSchedules = useCallback(async () => {
@@ -134,7 +119,7 @@ export default function JadwalPage() {
         }
     }
 
-    const textColor = isDarkMode ? '#ea580c' : 'var(--primary-900)'
+    const textColor = 'var(--primary-900)'
 
     // Month options
     const months = [
@@ -228,6 +213,7 @@ export default function JadwalPage() {
                 {/* Schedule Table */}
                 <ScheduleTable
                     schedules={schedules}
+                    variant="teacher"
                     onView={handleView}
                     onEdit={handleEditClick}
                     onDelete={handleDeleteClick}

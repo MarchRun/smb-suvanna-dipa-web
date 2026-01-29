@@ -1,20 +1,8 @@
-/**
- * UniversalForm Component
- * THE ONLY form component needed in the application
- * Handles all form types: create, edit, filter, etc.
- * Features: title, sections, validation, 2-column grid, auth-style buttons
- */
-
 'use client'
 
 import { useState, FormEvent } from 'react'
-import Input from '@/components/shared/Input'
-import Select from '@/components/shared/Select'
-import Textarea from '@/components/shared/Textarea'
-import FileUpload from '@/components/shared/FileUpload'
-import { useDarkMode } from '@/hooks/useDarkMode'
+import { Input, Select, Textarea, FileUpload } from '@/components/shared/ui/FormElements'
 
-// Field type options
 export type FieldType =
     | 'text'
     | 'email'
@@ -26,13 +14,11 @@ export type FieldType =
     | 'textarea'
     | 'file'
 
-// Select option interface
 export interface SelectOption {
     value: string | number
     label: string
 }
 
-// Field configuration interface
 export interface FieldConfig {
     name: string
     type: FieldType
@@ -40,8 +26,6 @@ export interface FieldConfig {
     placeholder?: string
     required?: boolean
     disabled?: boolean
-
-    // Type-specific props
     options?: SelectOption[]
     rows?: number
     accept?: string
@@ -50,20 +34,16 @@ export interface FieldConfig {
     max?: number | string
     maxLength?: number
     showCharCount?: boolean
-
     helperText?: string
     columnSpan?: 1 | 2
-
     validate?: (value: any) => string | undefined
 }
 
-// Section interface for grouped fields
 export interface FormSection {
     sectionTitle?: string
     fields: FieldConfig[]
 }
 
-// Main component props
 export interface UniversalFormProps {
     title: string
     mode?: 'create' | 'edit'
@@ -89,15 +69,12 @@ export default function UniversalForm({
     onCancel,
     isLoading = false
 }: UniversalFormProps) {
-    const isDarkMode = useDarkMode()
     const [formData, setFormData] = useState<Record<string, any>>(initialData)
     const [errors, setErrors] = useState<Record<string, string>>({})
 
-    // Determine submit label based on mode
     const defaultSubmitLabel = mode === 'create' ? 'Tambah' : 'Konfirmasi Perubahan'
     const finalSubmitLabel = submitLabel || defaultSubmitLabel
 
-    // Validate field
     const validateField = (field: FieldConfig, value: any): string | undefined => {
         if (field.required && (!value || value === '')) {
             return `${field.label} wajib diisi`
@@ -124,7 +101,6 @@ export default function UniversalForm({
         return undefined
     }
 
-    // Validate all fields
     const validateForm = (): boolean => {
         const newErrors: Record<string, string> = {}
         const allFields = sections
@@ -143,7 +119,6 @@ export default function UniversalForm({
         return Object.keys(newErrors).length === 0
     }
 
-    // Handle field change
     const handleFieldChange = (fieldName: string, value: any) => {
         setFormData(prev => ({ ...prev, [fieldName]: value }))
 
@@ -156,7 +131,6 @@ export default function UniversalForm({
         }
     }
 
-    // Handle form submit
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()
 
@@ -167,7 +141,6 @@ export default function UniversalForm({
         await onSubmit(formData)
     }
 
-    // Render individual field
     const renderField = (field: FieldConfig) => {
         const value = formData[field.name] || ''
         const error = errors[field.name]
@@ -243,12 +216,11 @@ export default function UniversalForm({
         }
     }
 
-    // Render section
     const renderSection = (section: FormSection, index: number) => {
         return (
             <div key={index} className="space-y-4">
                 {section.sectionTitle && (
-                    <h3 className="text-xl font-bold text-orange-800 dark:text-orange-600 border-b-2 border-orange-300 pb-2">
+                    <h3 className="text-xl font-bold text-orange-800 border-b-2 border-orange-300 pb-2">
                         {section.sectionTitle}
                     </h3>
                 )}
@@ -266,13 +238,11 @@ export default function UniversalForm({
         )
     }
 
-    // Colors based on dark mode
-    const titleColor = isDarkMode ? '#ea580c' : '#9a3412'
-    const buttonBgColor = isDarkMode ? '#E57526' : '#9a3412'
+    const titleColor = '#9a3412'
+    const buttonBgColor = '#9a3412'
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Form Title */}
             <h2
                 className="text-2xl md:text-3xl font-bold"
                 style={{ color: titleColor }}
@@ -280,7 +250,6 @@ export default function UniversalForm({
                 {title}
             </h2>
 
-            {/* Fields or Sections */}
             {sections ? (
                 <div className="space-y-8">
                     {sections.map((section, index) => renderSection(section, index))}
@@ -298,7 +267,6 @@ export default function UniversalForm({
                 </div>
             ) : null}
 
-            {/* Action Buttons - Auth Style */}
             <div className="flex gap-4 pt-4">
                 {onCancel && (
                     <button
@@ -307,7 +275,7 @@ export default function UniversalForm({
                         disabled={isLoading}
                         className="flex-1 py-3 px-6 rounded-xl border-2 font-bold
                                  border-orange-600 text-orange-600 
-                                 hover:bg-orange-50 dark:hover:bg-orange-900/20
+                                 hover:bg-orange-50
                                  transition-all disabled:opacity-50"
                     >
                         {cancelLabel}

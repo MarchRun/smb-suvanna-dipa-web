@@ -8,14 +8,12 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import Card from '@/components/shared/Card'
-import SectionHeader from '@/components/shared/SectionHeader'
-import { useDarkMode } from '@/hooks/useDarkMode'
+import { Card } from '@/components/shared/ui/Cards'
+import SectionHeader from '@/components/shared/layout/SectionHeader'
 import { getPublicContentBySection, type TestimonialItem } from '@/actions/admin/publicContent'
 
 export default function ActivitiesTestimonialSection() {
     const [isVisible, setIsVisible] = useState(false)
-    const isDarkMode = useDarkMode()
     const [currentIndex, setCurrentIndex] = useState(0)
     const [isMobile, setIsMobile] = useState(false)
     const [testimonials, setTestimonials] = useState<{ name: string; text: string }[]>([])

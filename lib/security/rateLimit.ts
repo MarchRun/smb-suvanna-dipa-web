@@ -1,8 +1,3 @@
-/**
- * Rate Limiting Utility
- * Prevents brute force attacks and API abuse
- */
-
 interface RateLimitStore {
     [key: string]: {
         count: number
@@ -13,29 +8,21 @@ interface RateLimitStore {
 const store: RateLimitStore = {}
 
 export interface RateLimitConfig {
-    interval: number // in milliseconds
+    interval: number
     maxRequests: number
 }
 
-/**
- * Rate limiter function
- * @param identifier - Unique identifier (e.g., IP address, user ID)
- * @param config - Rate limit configuration
- * @returns true if request is allowed, false if rate limited
- */
 export function rateLimit(
     identifier: string,
-    config: RateLimitConfig = { interval: 60000, maxRequests: 10 } // Default: 10 requests per minute
+    config: RateLimitConfig = { interval: 60000, maxRequests: 10 }
 ): { success: boolean; remaining: number; resetTime: number } {
     const now = Date.now()
     const key = identifier
 
-    // Clean up expired entries
     if (store[key] && store[key].resetTime < now) {
         delete store[key]
     }
 
-    // Initialize or get current state
     if (!store[key]) {
         store[key] = {
             count: 0,
@@ -45,7 +32,6 @@ export function rateLimit(
 
     const current = store[key]
 
-    // Check if limit exceeded
     if (current.count >= config.maxRequests) {
         return {
             success: false,
@@ -54,7 +40,6 @@ export function rateLimit(
         }
     }
 
-    // Increment count
     current.count++
 
     return {
@@ -64,11 +49,7 @@ export function rateLimit(
     }
 }
 
-/**
- * Get client identifier from request
- */
 export function getClientIdentifier(request: Request): string {
-    // Try to get IP from various headers
     const forwarded = request.headers.get('x-forwarded-for')
     const realIp = request.headers.get('x-real-ip')
     const cfConnectingIp = request.headers.get('cf-connecting-ip')
@@ -78,9 +59,6 @@ export function getClientIdentifier(request: Request): string {
     return ip
 }
 
-/**
- * Clean up old entries periodically
- */
 setInterval(() => {
     const now = Date.now()
     Object.keys(store).forEach(key => {
@@ -88,4 +66,4 @@ setInterval(() => {
             delete store[key]
         }
     })
-}, 60000) // Clean up every minute
+}, 60000)

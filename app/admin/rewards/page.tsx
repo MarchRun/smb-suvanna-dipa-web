@@ -7,8 +7,8 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import DashboardLayout from '@/components/shared/DashboardLayout'
-import Modal from '@/components/shared/Modal'
+import DashboardLayout from '@/components/shared/layout/Dashboard'
+import { Modal } from '@/components/shared/ui/Modals'
 import RewardCard from '@/components/rewards/RewardCard'
 import RewardForm from '@/components/rewards/RewardForm'
 import FilterForm from '@/components/rewards/FilterForm'
@@ -22,7 +22,6 @@ import {
     type ProductSort
 } from '@/actions/admin/products'
 import { uploadProfilePicture } from '@/actions/profile/uploadPicture'
-import { useDarkMode } from '@/hooks/useDarkMode'
 
 const adminMenuItems = [
     { label: 'Dashboard', href: '/admin/dashboard' },
@@ -34,7 +33,6 @@ const adminMenuItems = [
 
 export default function HadiahPage() {
     const router = useRouter()
-    const isDarkMode = useDarkMode()
     const [products, setProducts] = useState<Product[]>([])
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState('')
@@ -164,7 +162,7 @@ export default function HadiahPage() {
         }
     }
 
-    const textColor = isDarkMode ? '#ea580c' : '#E57526'
+    const textColor = '#E57526'
 
     return (
         <DashboardLayout role="Admin" menuItems={adminMenuItems}>
@@ -252,6 +250,7 @@ export default function HadiahPage() {
                         {products.map((product) => (
                             <RewardCard
                                 key={product.id}
+                                variant="admin"
                                 reward={product}
                                 onEdit={(p) => {
                                     setSelectedProduct(p)

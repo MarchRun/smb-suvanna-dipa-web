@@ -1,7 +1,8 @@
 /**
- * Student Schedule Table Component
- * Read-only schedule table for students (View only, no Edit/Delete)
- * Styled consistently with ScheduleTable
+ * Unified Schedule Table Component
+ * Displays list of schedules/events with variant-based actions
+ * - teacher: view, edit, delete buttons
+ * - student: view button only
  */
 
 'use client'
@@ -9,20 +10,30 @@
 import { useState } from 'react'
 import type { Schedule } from '@/types'
 
-interface StudentScheduleTableProps {
+interface ScheduleTableProps {
     schedules: Schedule[]
+    variant: 'teacher' | 'student'
     onView: (schedule: Schedule) => void
+    // Teacher-only props
+    onEdit?: (schedule: Schedule) => void
+    onDelete?: (schedule: Schedule) => void
     isLoading?: boolean
     itemsPerPage?: number
 }
 
-export default function StudentScheduleTable({
+export default function ScheduleTable({
     schedules,
+    variant,
     onView,
+    onEdit,
+    onDelete,
     isLoading = false,
     itemsPerPage = 10
-}: StudentScheduleTableProps) {
+}: ScheduleTableProps) {
     const [currentPage, setCurrentPage] = useState(1)
+
+    // Theme colors
+    const themeColor = '#E57526'
 
     // Calculate pagination
     const totalItems = schedules.length
@@ -75,9 +86,9 @@ export default function StudentScheduleTable({
 
     if (isLoading) {
         return (
-            <div className="overflow-hidden border-2" style={{ borderColor: '#E57526' }}>
+            <div className="overflow-hidden border-2" style={{ borderColor: themeColor }}>
                 <div className="animate-pulse p-8">
-                    <div className="h-10 rounded mb-4" style={{ backgroundColor: '#E57526', opacity: 0.3 }}></div>
+                    <div className="h-10 rounded mb-4" style={{ backgroundColor: themeColor, opacity: 0.3 }}></div>
                     {[1, 2, 3, 4, 5].map((i) => (
                         <div key={i} className="h-14 bg-gray-100 dark:bg-gray-700 rounded mb-2"></div>
                     ))}
@@ -88,34 +99,27 @@ export default function StudentScheduleTable({
 
     if (schedules.length === 0) {
         return (
-            <div className="border-2 p-8 text-center" style={{ borderColor: '#E57526' }}>
+            <div className="border-2 p-8 text-center" style={{ borderColor: themeColor }}>
                 <p className="text-gray-500 dark:text-gray-400">
-                    Tidak ada jadwal kegiatan
+                    Tidak ada data jadwal
                 </p>
             </div>
         )
     }
 
-    const headerBg = '#E57526'
-    const borderColor = '#E57526'
-
     return (
         <div>
-            <div className="overflow-hidden border-2" style={{ borderColor }}>
+            <div className="overflow-hidden border-2" style={{ borderColor: themeColor }}>
                 <table className="w-full border-collapse">
                     <thead>
-                        <tr style={{ backgroundColor: headerBg }}>
-                            <th
-                                className="px-4 py-3 text-center text-sm font-bold text-white w-16 border-r-2 border-white/30"
-                            >
+                        <tr style={{ backgroundColor: themeColor }}>
+                            <th className="px-4 py-3 text-center text-sm font-bold text-white w-16 border-r-2 border-white/30">
                                 No
                             </th>
-                            <th
-                                className="px-4 py-3 text-left text-sm font-bold text-white border-r-2 border-white/30"
-                            >
+                            <th className="px-4 py-3 text-left text-sm font-bold text-white border-r-2 border-white/30">
                                 Nama Kegiatan
                             </th>
-                            <th className="px-4 py-3 text-center text-sm font-bold text-white w-24">
+                            <th className={`px-4 py-3 text-center text-sm font-bold text-white ${variant === 'teacher' ? 'w-40' : 'w-24'}`}>
                                 Aksi
                             </th>
                         </tr>
@@ -125,17 +129,17 @@ export default function StudentScheduleTable({
                             <tr
                                 key={schedule.id}
                                 className="border-t-2 hover:bg-orange-50 dark:hover:bg-gray-700/50 transition-colors"
-                                style={{ borderColor: borderColor }}
+                                style={{ borderColor: themeColor }}
                             >
                                 <td
                                     className="px-4 py-4 text-center text-gray-700 dark:text-gray-300 font-medium border-r-2"
-                                    style={{ borderColor }}
+                                    style={{ borderColor: themeColor }}
                                 >
                                     {startIndex + index + 1}
                                 </td>
                                 <td
                                     className="px-4 py-4 border-r-2"
-                                    style={{ borderColor }}
+                                    style={{ borderColor: themeColor }}
                                 >
                                     <div>
                                         <span className="font-medium text-gray-900 dark:text-white">
@@ -147,8 +151,8 @@ export default function StudentScheduleTable({
                                     </div>
                                 </td>
                                 <td className="px-4 py-4">
-                                    <div className="flex items-center justify-center">
-                                        {/* View Button Only */}
+                                    <div className="flex items-center justify-center gap-1">
+                                        {/* View Button - for both */}
                                         <button
                                             onClick={() => onView(schedule)}
                                             className="p-2 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition-colors"
@@ -159,6 +163,31 @@ export default function StudentScheduleTable({
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                             </svg>
                                         </button>
+
+                                        {/* Actions for teacher only */}
+                                        {variant === 'teacher' && (
+                                            <>
+                                                <button
+                                                    onClick={() => onEdit?.(schedule)}
+                                                    className="p-2 text-yellow-600 hover:bg-yellow-100 dark:hover:bg-yellow-900/30 rounded-lg transition-colors"
+                                                    title="Edit"
+                                                >
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                    </svg>
+                                                </button>
+
+                                                <button
+                                                    onClick={() => onDelete?.(schedule)}
+                                                    className="p-2 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg transition-colors"
+                                                    title="Hapus"
+                                                >
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                </button>
+                                            </>
+                                        )}
                                     </div>
                                 </td>
                             </tr>
@@ -167,17 +196,14 @@ export default function StudentScheduleTable({
                 </table>
             </div>
 
-            {/* Pagination */}
+            {/* Pagination settings... same as before */}
             {totalPages > 0 && (
                 <div className="flex flex-col sm:flex-row items-center justify-between mt-4 gap-4 px-2">
-                    {/* Entries Info */}
                     <div className="text-sm text-gray-600 dark:text-gray-400">
                         Menampilkan {startIndex + 1} - {endIndex} dari {totalItems} entri
                     </div>
 
-                    {/* Page Navigation */}
                     <div className="flex items-center gap-1">
-                        {/* Previous Button */}
                         <button
                             onClick={() => goToPage(currentPage - 1)}
                             disabled={currentPage === 1}
@@ -188,7 +214,6 @@ export default function StudentScheduleTable({
                             &lt; Sebelumnya
                         </button>
 
-                        {/* Page Numbers */}
                         {getPageNumbers().map((page, index) => (
                             page === '...' ? (
                                 <span key={`ellipsis-${index}`} className="px-2 text-gray-500">...</span>
@@ -201,14 +226,13 @@ export default function StudentScheduleTable({
                                             ? 'text-white'
                                             : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                                         }`}
-                                    style={currentPage === page ? { backgroundColor: '#E57526' } : {}}
+                                    style={currentPage === page ? { backgroundColor: themeColor } : {}}
                                 >
                                     {page}
                                 </button>
                             )
                         ))}
 
-                        {/* Next Button */}
                         <button
                             onClick={() => goToPage(currentPage + 1)}
                             disabled={currentPage === totalPages}

@@ -1,16 +1,9 @@
-/**
- * Teacher - Detail Siswa Page
- * Displays student profile in read-only mode with back button
- * Only shows students in teacher's class
- */
-
 'use client'
 
 import { use, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import DashboardLayout from '@/components/shared/DashboardLayout'
+import DashboardLayout from '@/components/shared/layout/Dashboard'
 import { getStudentById } from '@/actions/teacher/students'
-import { useDarkMode } from '@/hooks/useDarkMode'
 import type { Profile } from '@/types'
 
 const pembinaMenuItems = [
@@ -23,7 +16,6 @@ const pembinaMenuItems = [
 export default function StudentDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params)
     const router = useRouter()
-    const isDarkMode = useDarkMode()
     const [student, setStudent] = useState<Profile | null>(null)
     const [loading, setLoading] = useState(true)
 
@@ -49,8 +41,8 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
         setLoading(false)
     }
 
-    const textColor = isDarkMode ? '#ea580c' : '#E57526'
-    const dataTextColor = isDarkMode ? '#fdba74' : '#9a3412'
+    const textColor = '#E57526'
+    const dataTextColor = '#9a3412'
 
     return (
         <DashboardLayout role="Pembina" menuItems={pembinaMenuItems}>

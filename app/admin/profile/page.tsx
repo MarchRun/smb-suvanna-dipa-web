@@ -6,10 +6,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import DashboardLayout from '@/components/shared/DashboardLayout'
-import ProfileEditModal from '@/components/shared/ProfileEditModal'
+import DashboardLayout from '@/components/shared/layout/Dashboard'
+import ProfileEditModal from '@/components/shared/forms/ProfileEditModal'
 import { getCurrentUserProfile } from '@/actions/auth/profile'
-import { useDarkMode } from '@/hooks/useDarkMode'
 import type { UserProfile } from '@/types'
 
 const adminMenuItems = [
@@ -21,7 +20,6 @@ const adminMenuItems = [
 ]
 
 export default function AdminProfilPage() {
-    const isDarkMode = useDarkMode()
     const [profile, setProfile] = useState<UserProfile | null>(null)
     const [loading, setLoading] = useState(true)
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -48,8 +46,8 @@ export default function AdminProfilPage() {
         loadProfile() // Reload profile after update
     }
 
-    const textColor = isDarkMode ? '#ea580c' : '#E57526'
-    const dataTextColor = isDarkMode ? '#fdba74' : '#9a3412'
+    const textColor = '#E57526'
+    const dataTextColor = '#9a3412'
 
     return (
         <DashboardLayout role="Admin" menuItems={adminMenuItems}>

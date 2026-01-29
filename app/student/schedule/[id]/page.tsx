@@ -1,15 +1,9 @@
-/**
- * Student - Detail Kegiatan Page
- * Read-only schedule detail view for students
- */
-
 'use client'
 
 import { use, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import DashboardLayout from '@/components/shared/DashboardLayout'
+import DashboardLayout from '@/components/shared/layout/Dashboard'
 import { getStudentScheduleById } from '@/actions/student/schedule'
-import { useDarkMode } from '@/hooks/useDarkMode'
 import type { Schedule } from '@/types'
 
 const studentMenuItems = [
@@ -23,7 +17,6 @@ const studentMenuItems = [
 export default function StudentScheduleDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params)
     const router = useRouter()
-    const isDarkMode = useDarkMode()
     const [schedule, setSchedule] = useState<Schedule | null>(null)
     const [loading, setLoading] = useState(true)
 
@@ -60,8 +53,8 @@ export default function StudentScheduleDetailPage({ params }: { params: Promise<
         })
     }
 
-    const textColor = isDarkMode ? '#ea580c' : '#E57526'
-    const dataTextColor = isDarkMode ? '#fdba74' : '#9a3412'
+    const textColor = '#E57526'
+    const dataTextColor = '#9a3412'
 
     return (
         <DashboardLayout role="Siswa" menuItems={studentMenuItems}>

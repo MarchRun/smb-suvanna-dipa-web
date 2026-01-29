@@ -10,7 +10,7 @@ import { createClient as createServiceClient } from '@supabase/supabase-js'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { isValidEmail, sanitizeHtml } from '@/lib/security/sanitize'
-import { normalizeEmail } from '@/lib/utils/formatters'
+import { normalizeEmail } from '@/lib/utils'
 import type { ActionResponse } from '@/types'
 
 interface LoginData {

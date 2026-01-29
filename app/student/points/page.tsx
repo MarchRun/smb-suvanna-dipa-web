@@ -7,9 +7,9 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import DashboardLayout from '@/components/shared/DashboardLayout'
-import Modal from '@/components/shared/Modal'
-import StudentRewardCard from '@/components/rewards/StudentRewardCard'
+import DashboardLayout from '@/components/shared/layout/Dashboard'
+import { Modal } from '@/components/shared/ui/Modals'
+import RewardCard from '@/components/rewards/RewardCard'
 import FilterForm from '@/components/rewards/FilterForm'
 import {
     getAvailableProducts,
@@ -18,7 +18,6 @@ import {
     type ProductFilters
 } from '@/actions/student/products'
 import type { Product } from '@/types'
-import { useDarkMode } from '@/hooks/useDarkMode'
 
 const siswaMenuItems = [
     { label: 'Dashboard', href: '/student/dashboard' },
@@ -30,7 +29,6 @@ const siswaMenuItems = [
 
 export default function StudentPoinPage() {
     const router = useRouter()
-    const isDarkMode = useDarkMode()
     const [products, setProducts] = useState<Product[]>([])
     const [studentPoints, setStudentPoints] = useState<number>(0)
     const [loading, setLoading] = useState(true)
@@ -106,7 +104,7 @@ export default function StudentPoinPage() {
         }
     }
 
-    const textColor = isDarkMode ? '#ea580c' : '#E57526'
+    const textColor = '#E57526'
 
     return (
         <DashboardLayout role="Siswa" menuItems={siswaMenuItems}>
@@ -183,8 +181,9 @@ export default function StudentPoinPage() {
                 ) : (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         {products.map((product) => (
-                            <StudentRewardCard
+                            <RewardCard
                                 key={product.id}
+                                variant="student"
                                 reward={product}
                                 studentPoints={studentPoints}
                                 onRedeem={handleRedeem}
@@ -226,19 +225,19 @@ export default function StudentPoinPage() {
                         </p>
                         <div
                             className="p-4 rounded-lg mb-6"
-                            style={{ backgroundColor: isDarkMode ? '#1e293b' : '#f1f5f9' }}
+                            style={{ backgroundColor: '#f1f5f9' }}
                         >
                             <div className="flex justify-between mb-2">
-                                <span style={{ color: isDarkMode ? '#cbd5e1' : '#64748b' }}>Poin Kamu:</span>
+                                <span style={{ color: '#64748b' }}>Poin Kamu:</span>
                                 <span className="font-bold" style={{ color: textColor }}>{studentPoints}</span>
                             </div>
                             <div className="flex justify-between mb-2">
-                                <span style={{ color: isDarkMode ? '#cbd5e1' : '#64748b' }}>Harga Hadiah:</span>
+                                <span style={{ color: '#64748b' }}>Harga Hadiah:</span>
                                 <span className="font-bold" style={{ color: textColor }}>-{selectedProduct.price}</span>
                             </div>
                             <hr className="my-2 border-gray-300 dark:border-gray-600" />
                             <div className="flex justify-between">
-                                <span style={{ color: isDarkMode ? '#cbd5e1' : '#64748b' }}>Sisa Poin:</span>
+                                <span style={{ color: '#64748b' }}>Sisa Poin:</span>
                                 <span className="font-bold" style={{ color: textColor }}>
                                     {studentPoints - selectedProduct.price}
                                 </span>

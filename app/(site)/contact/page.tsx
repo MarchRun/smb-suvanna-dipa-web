@@ -41,7 +41,7 @@ export default function ContactPage() {
             {/* Map Section - Fills remaining space */}
             <section
                 id="location"
-                className="scroll-mt-40 min-h-[80vh] flex flex-col justify-center"
+                className="scroll-mt-40 min-h-[115vh] flex flex-col justify-center"
                 style={{
                     backgroundColor: bgColor,
                     padding: '0' // Remove padding from section to allow full edge-to-edge if needed, but inner div handles it
@@ -52,7 +52,7 @@ export default function ContactPage() {
                         className="mb-0 rounded-none overflow-hidden shadow-lg relative group w-full mx-auto"
                         style={{
                             border: `4px solid ${borderColor}`,
-                            height: '250px',
+                            height: '450px',
                             backgroundColor: isDarkMode ? '#1f2937' : '#f3f4f6'
                         }}
                     >

@@ -1,15 +1,9 @@
-/**
- * Admin - Detail Pengguna Page
- * Displays user profile in read-only mode with back button
- */
-
 'use client'
 
 import { use, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import DashboardLayout from '@/components/shared/DashboardLayout'
+import DashboardLayout from '@/components/shared/layout/Dashboard'
 import { getUserById } from '@/actions/admin/users'
-import { useDarkMode } from '@/hooks/useDarkMode'
 import type { Profile } from '@/types'
 
 const adminMenuItems = [
@@ -23,7 +17,6 @@ const adminMenuItems = [
 export default function UserDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params)
     const router = useRouter()
-    const isDarkMode = useDarkMode()
     const [user, setUser] = useState<Profile | null>(null)
     const [loading, setLoading] = useState(true)
 
@@ -49,8 +42,8 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
         setLoading(false)
     }
 
-    const textColor = isDarkMode ? '#ea580c' : '#E57526'
-    const dataTextColor = isDarkMode ? '#fdba74' : '#9a3412'
+    const textColor = '#E57526'
+    const dataTextColor = '#9a3412'
 
     return (
         <DashboardLayout role="Admin" menuItems={adminMenuItems}>

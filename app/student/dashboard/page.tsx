@@ -1,17 +1,10 @@
-/**
- * Student Dashboard Page
- * Main dashboard for students (Siswa)
- */
-
 'use client'
 
 import { useState, useEffect } from 'react'
-import DashboardLayout from '@/components/shared/DashboardLayout'
-import StatCard from '@/components/shared/StatCard'
+import DashboardLayout from '@/components/shared/layout/Dashboard'
+import { StatCard } from '@/components/shared/ui/Cards'
 import { getStudentDashboardStats, type StudentDashboardStats } from '@/actions/student/stats'
 import { getCurrentUserProfile } from '@/actions/auth/profile'
-import { useDarkMode } from '@/hooks/useDarkMode'
-import { getTextColor } from '@/lib/utils/colorHelpers'
 
 const siswaMenuItems = [
     { label: 'Dashboard', href: '/student/dashboard' },
@@ -22,7 +15,6 @@ const siswaMenuItems = [
 ]
 
 export default function StudentDashboardPage() {
-    const isDarkMode = useDarkMode()
     const [stats, setStats] = useState<StudentDashboardStats | null>(null)
     const [userName, setUserName] = useState<string>('')
     const [loading, setLoading] = useState(true)
@@ -49,7 +41,7 @@ export default function StudentDashboardPage() {
         fetchData()
     }, [])
 
-    const textColor = getTextColor(isDarkMode)
+    const textColor = '#E57526'
 
     return (
         <DashboardLayout role="Siswa" menuItems={siswaMenuItems}>
@@ -93,9 +85,7 @@ export default function StudentDashboardPage() {
                     className="rounded-xl p-6 md:p-8"
                     style={{
                         backgroundColor: textColor,
-                        boxShadow: isDarkMode
-                            ? '0 4px 15px rgba(234, 88, 12, 0.3)'
-                            : '0 4px 15px rgba(124, 45, 18, 0.3)'
+                        boxShadow: '0 4px 15px rgba(124, 45, 18, 0.3)'
                     }}
                 >
                     <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-2">

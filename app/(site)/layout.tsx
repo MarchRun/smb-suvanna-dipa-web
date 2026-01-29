@@ -3,8 +3,7 @@
  * Wraps all public-facing pages
  */
 
-import Navbar from '@/components/shared/Navbar'
-import Footer from '@/components/shared/Footer'
+import { Navbar, Footer } from '@/components/shared/layout/Navigation'
 
 export default function SiteLayout({
     children,

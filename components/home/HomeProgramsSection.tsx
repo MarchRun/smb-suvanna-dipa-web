@@ -1,19 +1,11 @@
-/**
- * Program Cards Section
- * 3 cards showcasing programs
- * Responsive: 1 column mobile, 3 columns desktop
- */
-
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import Card from '@/components/shared/Card'
-import SectionHeader from '@/components/shared/SectionHeader'
-import { useDarkMode } from '@/hooks/useDarkMode'
+import { Card } from '@/components/shared/ui/Cards'
+import SectionHeader from '@/components/shared/layout/SectionHeader'
 
 export default function HomeProgramsSection() {
     const [isVisible, setIsVisible] = useState(false)
-    const isDarkMode = useDarkMode()
     const sectionRef = useRef<HTMLElement>(null)
 
     const programs = [

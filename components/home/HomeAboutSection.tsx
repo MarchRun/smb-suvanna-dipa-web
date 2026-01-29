@@ -1,21 +1,13 @@
-/**
- * About Preview Section
- * Gray background with heading, description, and CTA button
- * Responsive layout
- */
-
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import SectionHeader from '@/components/shared/SectionHeader'
-import Button from '@/components/shared/Button'
-import { useDarkMode } from '@/hooks/useDarkMode'
+import SectionHeader from '@/components/shared/layout/SectionHeader'
+import { Button } from '@/components/shared/ui/FormElements'
 
 export default function HomeAboutSection() {
     const router = useRouter()
     const [isVisible, setIsVisible] = useState(false)
-    const isDarkMode = useDarkMode()
     const sectionRef = useRef<HTMLElement>(null)
 
     // Intersection Observer to detect when section is visible

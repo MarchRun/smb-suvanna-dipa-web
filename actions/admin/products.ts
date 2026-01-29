@@ -8,24 +8,15 @@
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { revalidatePath } from 'next/cache'
-import type { ActionResponse } from '@/types'
+import type { ActionResponse, Product } from '@/types'
 
-// Admin client for bypassing RLS
+export type { Product }
+
 function getAdminClient() {
     return createAdminClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
-}
-
-export interface Product {
-    id: number
-    name: string
-    price: number
-    stock: number
-    image_url: string | null
-    created_at: string
-    updated_at: string
 }
 
 export interface ProductFilters {

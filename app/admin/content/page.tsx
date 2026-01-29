@@ -7,9 +7,9 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import DashboardLayout from '@/components/shared/DashboardLayout'
-import ImageModal from '@/components/shared/ImageModal'
-import PublicContentEditModal from '@/components/shared/PublicContentEditModal'
+import DashboardLayout from '@/components/shared/layout/Dashboard'
+import { ImageModal } from '@/components/shared/ui/Modals'
+import PublicContentEditModal from '@/components/shared/specialized/PublicContentEditModal'
 import {
     getPublicContentBySection,
     updateActivities,
@@ -19,7 +19,6 @@ import {
     type TestimonialItem
 } from '@/actions/admin/publicContent'
 import { uploadProfilePicture } from '@/actions/profile/uploadPicture'
-import { useDarkMode } from '@/hooks/useDarkMode'
 
 const adminMenuItems = [
     { label: 'Dashboard', href: '/admin/dashboard' },
@@ -109,7 +108,6 @@ function CollapsibleSection({
 }
 
 export default function KontenPublikPage() {
-    const isDarkMode = useDarkMode()
     const [isEditModalOpen, setIsEditModalOpen] = useState(false)
     const [loading, setLoading] = useState(true)
 
@@ -214,10 +212,9 @@ export default function KontenPublikPage() {
         loadContent() // Reload data
     }
 
-    // Colors - consistent across all sections
-    const textColor = isDarkMode ? '#ea580c' : '#E57526'
-    const inputBgColor = isDarkMode ? 'rgb(75, 85, 99)' : 'rgb(229, 231, 235)' // gray-600 / gray-200
-    const dataTextColor = isDarkMode ? '#e5e7eb' : '#374151'
+    const textColor = '#E57526'
+    const inputBgColor = 'rgb(229, 231, 235)'
+    const dataTextColor = '#374151'
 
     // Get display image
     const getGalleryImage = (item: GalleryItem, index: number) => {
@@ -391,7 +388,6 @@ export default function KontenPublikPage() {
                     onSubmit={handleSave}
                     onImageUpload={handleImageUpload}
                     uploadingIndex={uploadingIndex}
-                    isDarkMode={isDarkMode}
                 />
 
                 {/* Image Modal */}

@@ -7,8 +7,8 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import DashboardLayout from '@/components/shared/DashboardLayout'
-import StudentScheduleTable from '@/components/student/StudentScheduleTable'
+import DashboardLayout from '@/components/shared/layout/Dashboard'
+import ScheduleTable from '@/components/shared/specialized/ScheduleTable'
 import { getStudentSchedules } from '@/actions/student/schedule'
 import type { Schedule } from '@/types'
 
@@ -25,26 +25,11 @@ export default function StudentJadwalPage() {
     const router = useRouter()
     const [schedules, setSchedules] = useState<Schedule[]>([])
     const [loading, setLoading] = useState(true)
-    const [isDarkMode, setIsDarkMode] = useState(false)
 
     // Filter state
     const currentDate = new Date()
     const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth() + 1) // 1-12
     const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear())
-
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
 
     // Fetch schedules
     const fetchSchedules = useCallback(async () => {
@@ -65,7 +50,7 @@ export default function StudentJadwalPage() {
         router.push(`/student/jadwal/${schedule.id}`)
     }
 
-    const textColor = isDarkMode ? '#ea580c' : 'var(--primary-900)'
+    const textColor = 'var(--primary-900)'
 
     // Month options
     const months = [
@@ -150,8 +135,9 @@ export default function StudentJadwalPage() {
                 </div>
 
                 {/* Schedule Table */}
-                <StudentScheduleTable
+                <ScheduleTable
                     schedules={schedules}
+                    variant="student"
                     onView={handleView}
                     isLoading={loading}
                 />

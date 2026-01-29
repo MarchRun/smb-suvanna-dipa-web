@@ -8,12 +8,11 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import DashboardLayout from '@/components/shared/DashboardLayout'
-import UserTable from '@/components/admin/UserTable'
-import FilterModal, { type FilterValues } from '@/components/shared/FilterModal'
-import ExportFilterModal from '@/components/shared/ExportFilterModal'
+import DashboardLayout from '@/components/shared/layout/Dashboard'
+import UsersTable from '@/components/shared/specialized/UsersTable'
+import { FilterModal, type FilterValues, ConfirmDialog } from '@/components/shared/ui/Modals'
+import ExportFilterModal from '@/components/shared/specialized/ExportFilterModal'
 import UserFormModal, { type UserFormData } from '@/components/admin/UserFormModal'
-import ConfirmDialog from '@/components/shared/ConfirmDialog'
 import { getUsers, getUserById, createUser, updateUser, deleteUser, type UserFilters, type UserSort } from '@/actions/admin/users'
 import type { Profile, Class } from '@/types'
 
@@ -31,7 +30,6 @@ export default function PenggunaPage() {
     const [users, setUsers] = useState<Profile[]>([])
     const [classes, setClasses] = useState<Class[]>([])
     const [loading, setLoading] = useState(true)
-    const [isDarkMode, setIsDarkMode] = useState(false)
 
     // Search and filter states
     const [search, setSearch] = useState('')
@@ -56,20 +54,6 @@ export default function PenggunaPage() {
         user: null,
         isLoading: false
     })
-
-    // Dark mode detection
-    useEffect(() => {
-        const checkDarkMode = () => {
-            setIsDarkMode(document.documentElement.classList.contains('dark'))
-        }
-        checkDarkMode()
-        const observer = new MutationObserver(checkDarkMode)
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        })
-        return () => observer.disconnect()
-    }, [])
 
     // Fetch classes for filter
     useEffect(() => {
@@ -199,7 +183,7 @@ export default function PenggunaPage() {
         setFilters(newFilters)
     }
 
-    const textColor = isDarkMode ? '#ea580c' : 'var(--primary-900)'
+    const textColor = 'var(--primary-900)'
 
     return (
         <DashboardLayout role="Admin" menuItems={adminMenuItems}>
@@ -278,8 +262,9 @@ export default function PenggunaPage() {
                 </div>
 
                 {/* Users Table */}
-                <UserTable
-                    users={users}
+                <UsersTable
+                    data={users}
+                    variant="admin"
                     onSort={setSort}
                     currentSort={sort}
                     onView={handleView}

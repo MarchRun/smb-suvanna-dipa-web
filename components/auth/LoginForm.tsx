@@ -1,23 +1,15 @@
-/**
- * Login Form Component
- * Connected to Supabase Auth via server action
- */
-
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { login } from '@/actions/auth/login'
-import Input from '@/components/shared/Input'
-import Button from '@/components/shared/Button'
-import { useDarkMode } from '@/hooks/useDarkMode'
+import { Input, Button } from '@/components/shared/ui/FormElements'
 
 export default function LoginForm() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
-    const isDarkMode = useDarkMode()
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()

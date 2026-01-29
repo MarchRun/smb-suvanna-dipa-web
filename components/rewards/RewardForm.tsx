@@ -5,7 +5,7 @@
 
 'use client'
 
-import UniversalForm, { FieldConfig } from '@/components/shared/UniversalForm'
+import UniversalForm, { FieldConfig } from '@/components/shared/forms/UniversalForm'
 import { productFormFields } from '@/lib/forms/fieldConfigs'
 import type { Product } from '@/actions/admin/products'
 

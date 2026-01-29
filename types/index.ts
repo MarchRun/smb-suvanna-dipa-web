@@ -1,25 +1,15 @@
-/**
- * Custom Types & Interfaces
- * All column names match database schema (English)
- */
-
-// User Role Type
 export type UserRole = 'admin' | 'pembina' | 'siswa'
 
-// Order Status
 export type OrderStatus = 'pending' | 'approved' | 'rejected'
 
-// Content Section
 export type ContentSection = 'hero' | 'about' | 'activities' | 'testimonials' | 'gallery'
 
-// Server Action Response Type
 export type ActionResponse<T = unknown> = {
     success: boolean
     data?: T
     error?: string
 }
 
-// Profile
 export interface Profile {
     id: string
     full_name: string | null
@@ -36,7 +26,6 @@ export interface Profile {
     updated_at: string
 }
 
-// Class
 export interface Class {
     id: number
     name: string
@@ -45,7 +34,6 @@ export interface Class {
     updated_at: string | null
 }
 
-// Schedule
 export interface Schedule {
     id: number
     name: string
@@ -58,7 +46,6 @@ export interface Schedule {
     updated_at: string | null
 }
 
-// Product (Hadiah)
 export interface Product {
     id: number
     name: string
@@ -69,7 +56,6 @@ export interface Product {
     updated_at: string | null
 }
 
-// Product Order
 export interface ProductOrder {
     id: number
     user_id: string
@@ -80,7 +66,6 @@ export interface ProductOrder {
     updated_at: string | null
 }
 
-// Point History
 export interface PointHistory {
     id: number
     user_id: string
@@ -91,7 +76,6 @@ export interface PointHistory {
     created_at: string
 }
 
-// Public Content
 export interface PublicContent {
     id: number
     section: ContentSection
@@ -104,7 +88,6 @@ export interface PublicContent {
     updated_at: string | null
 }
 
-// Password Reset Token
 export interface PasswordResetToken {
     id: string
     user_id: string
@@ -115,7 +98,6 @@ export interface PasswordResetToken {
     created_at: string
 }
 
-// Extended Types with Relations
 export interface ClassWithTeacher extends Class {
     teacher: {
         full_name: string
@@ -138,5 +120,4 @@ export interface OrderWithDetails extends ProductOrder {
     } | null
 }
 
-// Type Alias for backward compatibility
 export type UserProfile = Profile

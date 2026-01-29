@@ -1,24 +1,15 @@
-/**
- * Forgot Password Form Component
- * Allows users to request password reset email
- * Styled to match LoginForm design with dark mode support
- */
-
 'use client'
 
 import { useState } from 'react'
 import Link from 'next/link'
-import Input from '@/components/shared/Input'
-import Button from '@/components/shared/Button'
+import { Input, Button } from '@/components/shared/ui/FormElements'
 import { requestPasswordReset } from '@/actions/auth/password'
-import { useDarkMode } from '@/hooks/useDarkMode'
 
 export default function ForgotPasswordForm() {
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
     const [error, setError] = useState('')
-    const isDarkMode = useDarkMode()
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -40,8 +31,7 @@ export default function ForgotPasswordForm() {
         }
     }
 
-    // Dynamic colors based on dark mode
-    const primaryColor = isDarkMode ? 'var(--primary-600)' : '#E57526'
+    const primaryColor = '#E57526'
     const borderGlow = 'none'
 
     if (success) {

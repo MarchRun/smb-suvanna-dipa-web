@@ -1,15 +1,48 @@
-/**
- * Stat Card Component
- * Displays a statistic with title and value
- * Used for dashboard widgets (Status Presensi, Jumlah Siswa, etc.)
- * Color matches textColor from theme
- */
-
 'use client'
 
-import { useDarkMode } from '@/hooks/useDarkMode'
+import React from 'react'
 
-interface StatCardProps {
+// --- Card Component ---
+export interface CardProps {
+    children: React.ReactNode
+    className?: string
+    hoverable?: boolean
+    customStyle?: React.CSSProperties
+    padding?: 'none' | 'sm' | 'md' | 'lg'
+}
+
+export function Card({
+    children,
+    className = "",
+    hoverable = false,
+    customStyle = {},
+    padding = 'md'
+}: CardProps) {
+    const hoverStyles = hoverable ? "hover:scale-105 transition-all duration-300" : ""
+
+    const paddingStyles = {
+        none: 'p-0',
+        sm: 'p-3 sm:p-4',
+        md: 'p-4 sm:p-6',
+        lg: 'p-6 sm:p-8'
+    }
+
+    return (
+        <div
+            className={`rounded-2xl ${paddingStyles[padding]} ${hoverStyles} ${className}`}
+            style={{
+                backgroundColor: 'var(--bg-primary)',
+                border: 'none',
+                ...customStyle
+            }}
+        >
+            {children}
+        </div>
+    )
+}
+
+// --- StatCard Component ---
+export interface StatCardProps {
     title: string
     value: string | number
     icon?: React.ReactNode
@@ -17,11 +50,8 @@ interface StatCardProps {
     loading?: boolean
 }
 
-export default function StatCard({ title, value, icon, className = '', loading = false }: StatCardProps) {
-    const isDarkMode = useDarkMode()
-
-    // Card background matches textColor (orange)
-    const cardBg = '#E57526' // Logo orange
+export function StatCard({ title, value, icon, className = '', loading = false }: StatCardProps) {
+    const cardBg = '#E57526'
     const textColor = '#ffffff'
 
     return (
@@ -32,14 +62,12 @@ export default function StatCard({ title, value, icon, className = '', loading =
                 boxShadow: '0 4px 15px rgba(229, 117, 38, 0.3)'
             }}
         >
-            {/* Icon (optional) */}
             {icon && (
                 <div className="mb-3 text-white/80 text-center">
                     {icon}
                 </div>
             )}
 
-            {/* Title - Centered, Bold, Same size as value */}
             <h3
                 className="text-2xl md:text-3xl font-bold mb-2 text-center"
                 style={{ color: textColor }}
@@ -47,7 +75,6 @@ export default function StatCard({ title, value, icon, className = '', loading =
                 {title}
             </h3>
 
-            {/* Value - Centered */}
             <p
                 className="text-2xl md:text-3xl font-bold text-center"
                 style={{ color: textColor }}

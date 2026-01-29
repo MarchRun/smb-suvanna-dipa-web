@@ -7,11 +7,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Modal from '@/components/shared/Modal'
-import UniversalForm from '@/components/shared/UniversalForm'
-import type { FieldConfig } from '@/components/shared/UniversalForm'
+import { Modal } from '@/components/shared/ui/Modals'
+import UniversalForm from '@/components/shared/forms/UniversalForm'
+import type { FieldConfig } from '@/components/shared/forms/UniversalForm'
 import type { Schedule } from '@/types'
-import { useDarkMode } from '@/hooks/useDarkMode'
 
 interface ScheduleFormData {
     name: string
@@ -36,8 +35,6 @@ export default function ScheduleFormModal({
     onSubmit,
     isLoading = false
 }: ScheduleFormModalProps) {
-    const isDarkMode = useDarkMode()
-
     // Form fields configuration
     const formFields: FieldConfig[] = [
         {
@@ -90,7 +87,6 @@ export default function ScheduleFormModal({
         })
     }
 
-    const textColor = isDarkMode ? '#ea580c' : '#E57526'
 
     return (
         <Modal

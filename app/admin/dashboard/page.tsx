@@ -1,19 +1,11 @@
-/**
- * Admin Dashboard Page
- * Main dashboard for administrators
- * Shows real-time statistics and visitor chart
- */
-
 'use client'
 
 import { useState, useEffect } from 'react'
-import DashboardLayout from '@/components/shared/DashboardLayout'
-import StatCard from '@/components/shared/StatCard'
-import VisitorChart from '@/components/shared/VisitorChart'
+import DashboardLayout from '@/components/shared/layout/Dashboard'
+import { StatCard } from '@/components/shared/ui/Cards'
+import VisitorChart from '@/components/shared/specialized/VisitorChart'
 import { getDashboardStats, type DashboardStats } from '@/actions/admin/stats'
 import { getCurrentUserProfile } from '@/actions/auth/profile'
-import { useDarkMode } from '@/hooks/useDarkMode'
-import { getTextColor } from '@/lib/utils/colorHelpers'
 
 const adminMenuItems = [
     { label: 'Dashboard', href: '/admin/dashboard' },
@@ -24,7 +16,6 @@ const adminMenuItems = [
 ]
 
 export default function AdminDashboardPage() {
-    const isDarkMode = useDarkMode()
     const [stats, setStats] = useState<DashboardStats | null>(null)
     const [userName, setUserName] = useState<string>('')
     const [loading, setLoading] = useState(true)
@@ -51,7 +42,7 @@ export default function AdminDashboardPage() {
         fetchData()
     }, [])
 
-    const textColor = getTextColor(isDarkMode)
+    const textColor = '#E57526'
 
     return (
         <DashboardLayout role="Admin" menuItems={adminMenuItems}>
@@ -88,9 +79,7 @@ export default function AdminDashboardPage() {
                     className="rounded-xl p-6 md:p-8 mt-8"
                     style={{
                         backgroundColor: textColor,
-                        boxShadow: isDarkMode
-                            ? '0 4px 15px rgba(234, 88, 12, 0.3)'
-                            : '0 4px 15px rgba(124, 45, 18, 0.3)'
+                        boxShadow: '0 4px 15px rgba(124, 45, 18, 0.3)'
                     }}
                 >
                     <h2 className="text-2xl md:text-3xl font-bold text-white text-center mb-2">

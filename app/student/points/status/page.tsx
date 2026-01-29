@@ -7,8 +7,8 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import DashboardLayout from '@/components/shared/DashboardLayout'
-import Modal from '@/components/shared/Modal'
+import DashboardLayout from '@/components/shared/layout/Dashboard'
+import { Modal } from '@/components/shared/ui/Modals'
 import {
     getStudentRedemptions,
     getStudentPoints,
@@ -16,7 +16,6 @@ import {
     type StudentRedemption
 } from '@/actions/student/products'
 import type { OrderStatus } from '@/types'
-import { useDarkMode } from '@/hooks/useDarkMode'
 
 const siswaMenuItems = [
     { label: 'Dashboard', href: '/student/dashboard' },
@@ -28,7 +27,6 @@ const siswaMenuItems = [
 
 export default function StatusTukarPoinPage() {
     const router = useRouter()
-    const isDarkMode = useDarkMode()
     const [redemptions, setRedemptions] = useState<StudentRedemption[]>([])
     const [studentPoints, setStudentPoints] = useState<number>(0)
     const [loading, setLoading] = useState(true)
@@ -128,18 +126,18 @@ export default function StatusTukarPoinPage() {
     const getStatusBadge = (status: OrderStatus) => {
         const styles = {
             pending: {
-                bg: isDarkMode ? '#854d0e' : '#fef3c7',
-                text: isDarkMode ? '#fde68a' : '#92400e',
+                bg: '#fef3c7',
+                text: '#92400e',
                 label: 'Pending'
             },
             approved: {
-                bg: isDarkMode ? '#166534' : '#dcfce7',
-                text: isDarkMode ? '#86efac' : '#166534',
+                bg: '#dcfce7',
+                text: '#166534',
                 label: 'Disetujui'
             },
             rejected: {
-                bg: isDarkMode ? '#991b1b' : '#fee2e2',
-                text: isDarkMode ? '#fca5a5' : '#991b1b',
+                bg: '#fee2e2',
+                text: '#991b1b',
                 label: 'Ditolak'
             }
         }
@@ -162,10 +160,10 @@ export default function StatusTukarPoinPage() {
         })
     }
 
-    const textColor = isDarkMode ? '#ea580c' : '#E57526'
-    const bgColor = isDarkMode ? '#1e293b' : '#ffffff'
-    const borderColor = isDarkMode ? '#334155' : '#e2e8f0'
-    const headerBg = isDarkMode ? '#0f172a' : '#f8fafc'
+    const textColor = '#E57526'
+    const bgColor = '#ffffff'
+    const borderColor = '#e2e8f0'
+    const headerBg = '#f8fafc'
 
     return (
         <DashboardLayout role="Siswa" menuItems={siswaMenuItems}>

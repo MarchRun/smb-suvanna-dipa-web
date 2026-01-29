@@ -1,14 +1,7 @@
-/**
- * Hero Section Component - VIBRANT Warm Sunny Theme
- * Strong orange gradient background with rotating images
- * Mobile: Collapsible login form with smooth animations
- */
-
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
 import LoginForm from '@/components/auth/LoginForm'
-import { useDarkMode } from '@/hooks/useDarkMode'
 
 export default function HomeHeroSection() {
     // Single vihara background image
@@ -19,7 +12,6 @@ export default function HomeHeroSection() {
     const [isVisible, setIsVisible] = useState(false)
     const [showLoginForm, setShowLoginForm] = useState(false)
     const [isMobile, setIsMobile] = useState(false)
-    const isDarkMode = useDarkMode()
     const sectionRef = useRef<HTMLElement>(null)
     useEffect(() => {
         const checkMobile = () => {
@@ -83,7 +75,7 @@ export default function HomeHeroSection() {
                 {backgroundImages.map((image, index) => (
                     <div
                         key={index}
-                        className="absolute inset-0"
+                        className="absolute inset-0 opacity-40"
                     >
                         {/* Grayscale Image Layer */}
                         <div

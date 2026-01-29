@@ -7,10 +7,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Modal from '@/components/shared/Modal'
-import Input from '@/components/shared/Input'
-import Textarea from '@/components/shared/Textarea'
-import { useDarkMode } from '@/hooks/useDarkMode'
+import { Modal } from '@/components/shared/ui/Modals'
+import { Input, Textarea } from '@/components/shared/ui/FormElements'
 import type { Profile } from '@/types'
 
 interface GivePointsModalProps {
@@ -28,7 +26,6 @@ export default function GivePointsModal({
     onSubmit,
     isLoading = false
 }: GivePointsModalProps) {
-    const isDarkMode = useDarkMode()
     const [amount, setAmount] = useState('')
     const [reason, setReason] = useState('')
     const [error, setError] = useState('')
@@ -61,8 +58,8 @@ export default function GivePointsModal({
         await onSubmit(pointAmount, reason.trim())
     }
 
-    const textColor = isDarkMode ? '#ea580c' : '#E57526'
-    const buttonBgColor = isDarkMode ? '#E57526' : '#9a3412'
+    const textColor = '#E57526'
+    const buttonBgColor = '#9a3412'
 
     return (
         <Modal

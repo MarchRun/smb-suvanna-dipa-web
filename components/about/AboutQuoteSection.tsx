@@ -7,12 +7,10 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import SectionHeader from '@/components/shared/SectionHeader'
-import { useDarkMode } from '@/hooks/useDarkMode'
+import SectionHeader from '@/components/shared/layout/SectionHeader'
 
 export default function AboutQuoteSection() {
     const [isVisible, setIsVisible] = useState(false)
-    const isDarkMode = useDarkMode()
     const sectionRef = useRef<HTMLElement>(null)
 
     useEffect(() => {

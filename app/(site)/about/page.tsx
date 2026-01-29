@@ -8,8 +8,8 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import PageHeader from '@/components/shared/PageHeader'
-import SectionHeader from '@/components/shared/SectionHeader'
+import PageHeader from '@/components/shared/layout/PageHeader'
+import SectionHeader from '@/components/shared/layout/SectionHeader'
 import AboutVisionMissionSection from '@/components/about/AboutVisionMissionSection'
 import AboutQuoteSection from '@/components/about/AboutQuoteSection'
 

@@ -10,7 +10,6 @@ import { updateProfile, type ProfileUpdateData } from '@/actions/profile/update'
 import { uploadProfilePicture, deleteOldProfilePicture } from '@/actions/profile/uploadPicture'
 import UniversalForm, { FieldConfig } from '@/components/shared/UniversalForm'
 import Modal from '@/components/shared/Modal'
-import { useDarkMode } from '@/hooks/useDarkMode'
 
 interface ProfileEditModalProps {
     isOpen: boolean
@@ -27,7 +26,6 @@ interface ProfileEditModalProps {
 }
 
 export default function ProfileEditModal({ isOpen, onClose, currentData, onSuccess }: ProfileEditModalProps) {
-    const isDarkMode = useDarkMode()
     const [loading, setLoading] = useState(false)
     const [uploadingPicture, setUploadingPicture] = useState(false)
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
@@ -193,7 +191,7 @@ export default function ProfileEditModal({ isOpen, onClose, currentData, onSucce
         address: currentData.address || ''
     }
 
-    const textColor = isDarkMode ? '#ea580c' : '#E57526'
+    const textColor = '#E57526'
 
     return (
         <Modal

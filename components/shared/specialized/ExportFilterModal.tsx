@@ -6,8 +6,8 @@
 'use client'
 
 import { useState } from 'react'
-import UniversalForm, { FieldConfig } from '@/components/shared/UniversalForm'
-import Modal from '@/components/shared/Modal'
+import UniversalForm, { FieldConfig } from '@/components/shared/forms/UniversalForm'
+import { Modal } from '@/components/shared/ui/Modals'
 import type { Class } from '@/types'
 import { getUsersForExport } from '@/actions/admin/users'
 import XLSX from 'xlsx-js-style'

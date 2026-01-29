@@ -7,14 +7,13 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import DashboardLayout from '@/components/shared/DashboardLayout'
+import DashboardLayout from '@/components/shared/layout/Dashboard'
 import {
     getPendingOrders,
     approveOrder,
     rejectOrder,
     type ProductOrder
 } from '@/actions/admin/productOrders'
-import { useDarkMode } from '@/hooks/useDarkMode'
 
 const adminMenuItems = [
     { label: 'Dashboard', href: '/admin/dashboard' },
@@ -26,7 +25,6 @@ const adminMenuItems = [
 
 export default function ValidasiPage() {
     const router = useRouter()
-    const isDarkMode = useDarkMode()
     const [orders, setOrders] = useState<ProductOrder[]>([])
     const [loading, setLoading] = useState(true)
     const [processingId, setProcessingId] = useState<number | null>(null)
@@ -116,8 +114,8 @@ export default function ValidasiPage() {
         setProcessingId(null)
     }
 
-    const textColor = isDarkMode ? '#ea580c' : '#E57526'
-    const bgColor = isDarkMode ? '#0f172a' : '#f5f5f5'
+    const textColor = '#E57526'
+    const bgColor = '#f5f5f5'
 
     return (
         <DashboardLayout role="Admin" menuItems={adminMenuItems}>

@@ -6,7 +6,7 @@
 'use client'
 
 import { useState } from 'react'
-import UniversalForm, { FieldConfig } from '@/components/shared/UniversalForm'
+import UniversalForm, { FieldConfig } from '@/components/shared/forms/UniversalForm'
 
 interface FilterFormProps {
     onApply: (filters: {

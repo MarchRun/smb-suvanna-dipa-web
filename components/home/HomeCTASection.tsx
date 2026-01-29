@@ -1,22 +1,13 @@
-/**
- * CTA Section Component
- * Call-to-action for community joining
- * Gray background with button
- */
-
 'use client'
 
 import { useRef, useEffect, useState } from 'react'
-import Link from 'next/link'
-import SectionHeader from '@/components/shared/SectionHeader'
+import SectionHeader from '@/components/shared/layout/SectionHeader'
 import { useRouter } from 'next/navigation'
-import Button from '@/components/shared/Button'
-import { useDarkMode } from '@/hooks/useDarkMode'
+import { Button } from '@/components/shared/ui/FormElements'
 
 export default function HomeCTASection() {
     const router = useRouter()
     const [isVisible, setIsVisible] = useState(false)
-    const isDarkMode = useDarkMode()
     const sectionRef = useRef<HTMLElement>(null)
 
     // Intersection Observer to detect when section is visible

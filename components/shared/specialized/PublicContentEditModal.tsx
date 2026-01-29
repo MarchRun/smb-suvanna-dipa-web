@@ -6,10 +6,8 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import Modal from '@/components/shared/Modal'
-import Input from '@/components/shared/Input'
-import Textarea from '@/components/shared/Textarea'
-import { useDarkMode } from '@/hooks/useDarkMode'
+import { Modal } from '@/components/shared/ui/Modals'
+import { Input, Textarea } from '@/components/shared/ui/FormElements'
 import type { GalleryItem, TestimonialItem } from '@/actions/admin/publicContent'
 
 interface PublicContentEditModalProps {
@@ -25,7 +23,6 @@ interface PublicContentEditModalProps {
     }) => Promise<void>
     onImageUpload: (index: number, file: File) => Promise<void>
     uploadingIndex: number | null
-    isDarkMode: boolean
 }
 
 // Compact file upload component for gallery
@@ -43,8 +40,7 @@ function CompactFileUpload({
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [fileName, setFileName] = useState('')
     const [error, setError] = useState('')
-    const isDarkMode = useDarkMode()
-    const textColor = isDarkMode ? '#ea580c' : '#E57526'
+    const textColor = '#E57526'
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
@@ -117,12 +113,10 @@ export default function PublicContentEditModal({
     initialTestimonials,
     onSubmit,
     onImageUpload,
-    uploadingIndex,
-    isDarkMode: propDarkMode
+    uploadingIndex
 }: PublicContentEditModalProps) {
-    const isDarkMode = useDarkMode()
-    const textColor = isDarkMode ? '#ea580c' : '#E57526'
-    const buttonBgColor = isDarkMode ? '#E57526' : '#9a3412'
+    const textColor = '#E57526'
+    const buttonBgColor = '#9a3412'
 
     // Form state
     const [agenda, setAgenda] = useState<string[]>(initialAgenda)

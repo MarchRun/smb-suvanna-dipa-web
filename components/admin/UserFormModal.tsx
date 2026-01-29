@@ -7,10 +7,9 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { uploadProfilePicture, deleteOldProfilePicture } from '@/actions/profile/uploadPicture'
-import UniversalForm from '@/components/shared/UniversalForm'
-import Modal from '@/components/shared/Modal'
+import UniversalForm from '@/components/shared/forms/UniversalForm'
+import { Modal } from '@/components/shared/ui/Modals'
 import { getUserFormFields } from '@/lib/forms/fieldConfigs'
-import { useDarkMode } from '@/hooks/useDarkMode'
 import type { Class, UserRole } from '@/types'
 
 export interface UserFormData {
@@ -45,7 +44,6 @@ export default function UserFormModal({
     onSubmit,
     isLoading = false
 }: UserFormModalProps) {
-    const isDarkMode = useDarkMode()
     const [profilePictureUrl, setProfilePictureUrl] = useState(initialData?.profile_picture || '')
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
     const [previewUrl, setPreviewUrl] = useState<string | null>(null)
@@ -163,7 +161,7 @@ export default function UserFormModal({
         })
     }
 
-    const textColor = isDarkMode ? '#ea580c' : '#E57526'
+    const textColor = '#E57526'
 
     return (
         <Modal
