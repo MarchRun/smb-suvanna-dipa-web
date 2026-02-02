@@ -65,6 +65,7 @@ export const getUserFormFields = (classes: Class[]): FieldConfig[] => [
         label: 'Peran',
         required: true,
         options: [
+            { value: '', label: 'Pilih Peran' },
             { value: 'siswa', label: 'Siswa' },
             { value: 'pembina', label: 'Pembina' }
         ]

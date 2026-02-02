@@ -11,6 +11,7 @@ import { Modal } from '@/components/shared/ui/Modals'
 import type { Class } from '@/types'
 import { getUsersForExport } from '@/actions/admin/users'
 import XLSX from 'xlsx-js-style'
+import { useToast } from '@/components/providers/ToastContext'
 
 interface ExportFilterModalProps {
     isOpen: boolean
@@ -24,6 +25,7 @@ export default function ExportFilterModal({
     classes
 }: ExportFilterModalProps) {
     const [isExporting, setIsExporting] = useState(false)
+    const { showToast } = useToast()
 
     // Field configuration
     const filterFields: FieldConfig[] = [
@@ -76,7 +78,7 @@ export default function ExportFilterModal({
             })
 
             if (!result.success || !result.data || result.data.length === 0) {
-                alert('Tidak ada data untuk diekspor')
+                showToast('Tidak ada data untuk diekspor', 'error')
                 setIsExporting(false)
                 return
             }
@@ -165,16 +167,16 @@ export default function ExportFilterModal({
 
             // Generate filename with timestamp
             const timestamp = new Date().toISOString().split('T')[0]
-            const filename = `Data_Pengguna_${timestamp}.xlsx`
+            const filename = `Rekap_Data_Pengguna_${timestamp}.xlsx`
 
             // Download file
             XLSX.writeFile(wb, filename)
 
-            alert(`Berhasil mengekspor ${result.data.length} data pengguna`)
+            showToast(`Berhasil mengekspor ${result.data.length} data pengguna`, 'success')
             onClose()
         } catch (error) {
             console.error('Error exporting:', error)
-            alert('Gagal mengekspor data')
+            showToast('Gagal mengekspor data', 'error')
         } finally {
             setIsExporting(false)
         }

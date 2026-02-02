@@ -1,24 +1,33 @@
 /**
  * Admin - Konten Publik Page
  * Manage public website content: Activities, Gallery, Testimonials
- * View mode with edit modal - Collapsible sections with smooth animation
+ * Layout: Flat sections (no collapsible), clean grid for agenda, improved placeholders for gallery
  */
 
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import DashboardLayout from '@/components/shared/layout/Dashboard'
-import { ImageModal } from '@/components/shared/ui/Modals'
 import PublicContentEditModal from '@/components/shared/specialized/PublicContentEditModal'
 import {
     getPublicContentBySection,
     updateActivities,
     updateGallery,
-    updateTestimonials,
-    type GalleryItem,
-    type TestimonialItem
+    updateTestimonials
 } from '@/actions/admin/publicContent'
 import { uploadProfilePicture } from '@/actions/profile/uploadPicture'
+import { useToast } from '@/components/providers/ToastContext'
+
+// Type definitions
+type GalleryItem = {
+    image_url: string
+    caption: string
+}
+
+type TestimonialItem = {
+    name: string
+    description: string
+}
 
 const adminMenuItems = [
     { label: 'Dashboard', href: '/admin/dashboard' },
@@ -28,88 +37,10 @@ const adminMenuItems = [
     { label: 'Profil', href: '/admin/profile' },
 ]
 
-// Default images for gallery preview
-const defaultGalleryImages = [
-    '/images/slider-image1.png',
-    '/images/slider-image2.png',
-    '/images/slider-image3.png',
-    '/images/slider-image4.png',
-    '/images/slider-image5.png'
-]
-
-// Collapsible Section Component with smooth animation
-function CollapsibleSection({
-    title,
-    children,
-    defaultOpen = true,
-    textColor,
-    borderColor
-}: {
-    title: string
-    children: React.ReactNode
-    defaultOpen?: boolean
-    textColor: string
-    borderColor: string
-}) {
-    const [isOpen, setIsOpen] = useState(defaultOpen)
-    const contentRef = useRef<HTMLDivElement>(null)
-    const [contentHeight, setContentHeight] = useState<number | undefined>(undefined)
-
-    useEffect(() => {
-        if (contentRef.current) {
-            setContentHeight(contentRef.current.scrollHeight)
-        }
-    }, [children])
-
-    return (
-        <div
-            className="rounded-xl border-2 overflow-hidden"
-            style={{ borderColor: textColor }}
-        >
-            {/* Header - Clickable */}
-            <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="w-full px-6 py-4 flex items-center justify-between bg-white/50 hover:bg-white/70 transition-colors"
-            >
-                <h2
-                    className="text-lg md:text-xl font-bold"
-                    style={{ color: textColor }}
-                >
-                    {title}
-                </h2>
-                <svg
-                    className={`w-5 h-5 transition-transform duration-300 ease-in-out ${isOpen ? 'rotate-180' : ''}`}
-                    fill="none"
-                    stroke={textColor}
-                    viewBox="0 0 24 24"
-                >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-            </button>
-
-            {/* Content with smooth animation */}
-            <div
-                className="overflow-hidden transition-all duration-300 ease-in-out"
-                style={{
-                    maxHeight: isOpen ? contentHeight : 0,
-                    opacity: isOpen ? 1 : 0
-                }}
-            >
-                <div
-                    ref={contentRef}
-                    className="px-6 py-5 border-t-2"
-                    style={{ borderColor: textColor }}
-                >
-                    {children}
-                </div>
-            </div>
-        </div>
-    )
-}
-
 export default function KontenPublikPage() {
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+    const { showToast } = useToast()
     const [loading, setLoading] = useState(true)
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
     // Data state
     const [agenda, setAgenda] = useState<string[]>(['', '', '', ''])
@@ -175,7 +106,7 @@ export default function KontenPublikPage() {
             updatedGallery[index] = { ...updatedGallery[index], image_url: result.data }
             setGallery(updatedGallery)
         } else {
-            alert(result.error || 'Gagal mengupload gambar')
+            showToast(result.error || 'Gagal mengupload gambar', 'error')
         }
 
         setUploadingIndex(null)
@@ -185,196 +116,206 @@ export default function KontenPublikPage() {
         // Update activities
         const activitiesResult = await updateActivities(data.agenda)
         if (!activitiesResult.success) {
-            alert(activitiesResult.error || 'Gagal mengupdate agenda')
+            showToast(activitiesResult.error || 'Gagal mengupdate agenda', 'error')
             return
         }
 
-        // Update gallery (merge with current images)
+        // Update gallery
         const mergedGallery = data.gallery.map((item, index) => ({
             ...item,
             image_url: gallery[index]?.image_url || item.image_url
         }))
         const galleryResult = await updateGallery(mergedGallery)
         if (!galleryResult.success) {
-            alert(galleryResult.error || 'Gagal mengupdate galeri')
+            showToast(galleryResult.error || 'Gagal mengupdate galeri', 'error')
             return
         }
 
         // Update testimonials
         const testimonialsResult = await updateTestimonials(data.testimonials)
         if (!testimonialsResult.success) {
-            alert(testimonialsResult.error || 'Gagal mengupdate testimoni')
+            showToast(testimonialsResult.error || 'Gagal mengupdate testimoni', 'error')
             return
         }
 
-        alert('Konten berhasil diupdate!')
+        showToast('Konten berhasil diupdate!', 'success')
         setIsEditModalOpen(false)
         loadContent() // Reload data
     }
 
     const textColor = '#E57526'
-    const inputBgColor = 'rgb(229, 231, 235)'
-    const dataTextColor = '#374151'
 
     // Get display image
     const getGalleryImage = (item: GalleryItem, index: number) => {
-        return item.image_url || defaultGalleryImages[index] || '/images/slider-image1.png'
+        return item.image_url || ''
     }
+
+    // Styles
+    const sectionTitleStyle = "text-xl md:text-2xl font-bold mb-4 pb-2 border-b-2 inline-block"
+    // Updated: border-2, rounded-2xl, and explicit borderColor will be applied inline
+    const cardStyle = "bg-white p-6 rounded-2xl border-2 shadow-sm h-full hover:shadow-md transition-shadow"
 
     return (
         <DashboardLayout role="Admin" menuItems={adminMenuItems}>
             <div className="p-6 md:p-8">
                 {/* Header */}
-                <h1
-                    className="text-2xl md:text-3xl font-bold mb-8"
-                    style={{ color: textColor }}
-                >
-                    Konten Publik
-                </h1>
+                <div className="mb-8">
+                    <h1
+                        className="text-2xl md:text-3xl font-bold"
+                        style={{ color: textColor }}
+                    >
+                        Konten Publik
+                    </h1>
+                </div>
 
                 {loading ? (
                     <div className="text-center py-12 text-gray-500">Loading...</div>
                 ) : (
-                    <div className="space-y-6 max-w-4xl mx-auto">
+                    <div className="space-y-8 max-w-7xl mx-auto pb-12">
 
                         {/* ===== SECTION 1: AGENDA ===== */}
-                        <CollapsibleSection
-                            title="Agenda Tahunan Kegiatan"
-                            textColor={textColor}
-                            borderColor={textColor}
-                        >
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <section>
+                            <h2
+                                className={sectionTitleStyle}
+                                style={{ color: textColor, borderColor: textColor }}
+                            >
+                                Agenda Tahunan Kegiatan
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4">
                                 {agenda.map((item, index) => (
-                                    <div key={index}>
-                                        <label
-                                            className="block text-sm font-bold mb-2"
-                                            style={{ color: textColor }}
-                                        >
-                                            Agenda {index + 1}
-                                        </label>
-                                        <div
-                                            className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center"
-                                            style={{
-                                                borderColor: textColor,
-                                                backgroundColor: inputBgColor,
-                                                color: dataTextColor
-                                            }}
-                                        >
-                                            {item || <span className="text-gray-400 italic">Belum diisi</span>}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </CollapsibleSection>
-
-                        {/* ===== SECTION 2: GALERI ===== */}
-                        <CollapsibleSection
-                            title="Galeri Kegiatan"
-                            textColor={textColor}
-                            borderColor={textColor}
-                        >
-                            <div className="space-y-4">
-                                {gallery.map((item, index) => (
-                                    <div
-                                        key={index}
-                                        className="flex flex-col md:flex-row gap-4 p-4 rounded-xl border-2"
-                                        style={{
-                                            borderColor: textColor,
-                                            backgroundColor: inputBgColor
-                                        }}
-                                    >
-                                        {/* Image Preview - Left side */}
-                                        <div
-                                            className="relative w-full md:w-48 h-32 flex-shrink-0 cursor-pointer group rounded-lg overflow-hidden"
-                                            onClick={() => setImageModal({
-                                                isOpen: true,
-                                                url: getGalleryImage(item, index),
-                                                caption: item.caption
-                                            })}
-                                        >
-                                            <img
-                                                src={getGalleryImage(item, index)}
-                                                alt={`Gambar ${index + 1}`}
-                                                className="w-full h-full object-cover"
-                                            />
-                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                                <span className="text-white font-semibold text-sm">Lihat</span>
+                                    <div key={index} className={cardStyle} style={{ borderColor: textColor }}>
+                                        <div className="flex flex-col h-full justify-between">
+                                            {/* Updated: Standard font, no uppercase, explicit color */}
+                                            <label className="text-sm font-bold mb-2" style={{ color: textColor }}>
+                                                Agenda {index + 1}
+                                            </label>
+                                            <div className="text-lg text-gray-800 break-words py-2 font-medium">
+                                                {item || <span className="text-gray-400 italic">Belum diisi</span>}
                                             </div>
                                         </div>
-
-                                        {/* Caption - Right side */}
-                                        <div className="flex-1">
-                                            <label
-                                                className="block text-sm font-bold mb-2"
-                                                style={{ color: textColor }}
-                                            >
-                                                Caption Gambar {index + 1}
-                                            </label>
-                                            <p
-                                                style={{ color: dataTextColor }}
-                                            >
-                                                {item.caption || <span className="text-gray-400 italic">Belum ada caption</span>}
-                                            </p>
-                                        </div>
                                     </div>
                                 ))}
                             </div>
-                        </CollapsibleSection>
+                        </section>
+
+                        {/* ===== SECTION 2: GALERI ===== */}
+                        <section>
+                            <h2
+                                className={sectionTitleStyle}
+                                style={{ color: textColor, borderColor: textColor }}
+                            >
+                                Galeri Kegiatan
+                            </h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {gallery.map((item, index) => {
+                                    const imgUrl = getGalleryImage(item, index)
+                                    return (
+                                        <div
+                                            key={index}
+                                            className="group bg-white rounded-2xl overflow-hidden shadow-sm border-2 hover:shadow-lg transition-all duration-300 flex flex-col"
+                                            style={{ borderColor: textColor }}
+                                        >
+                                            {/* Image Area */}
+                                            <div
+                                                className="aspect-video w-full bg-gray-50 relative overflow-hidden cursor-pointer"
+                                                onClick={() => imgUrl && setImageModal({
+                                                    isOpen: true,
+                                                    url: imgUrl,
+                                                    caption: item.caption
+                                                })}
+                                            >
+                                                {imgUrl ? (
+                                                    <img
+                                                        src={imgUrl}
+                                                        alt={`Gambar ${index + 1}`}
+                                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                                    />
+                                                ) : (
+                                                    <div className="flex flex-col items-center justify-center h-full text-gray-300 bg-gray-100">
+                                                        <svg className="w-12 h-12 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                        </svg>
+                                                        <span className="text-sm font-medium">No Image</span>
+                                                    </div>
+                                                )}
+
+                                                {imgUrl && (
+                                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                        <span className="text-white font-bold px-4 py-2 rounded-full border border-white/50 backdrop-blur-sm shadow-sm scale-90 group-hover:scale-100 transition-transform">
+                                                            Lihat Gambar
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* Caption Area */}
+                                            <div className="p-5 flex-1 flex flex-col justify-between">
+                                                <div>
+                                                    {/* Updated: Standard font, no uppercase, explicit color, bumped to text-sm */}
+                                                    <div className="text-sm font-bold mb-2" style={{ color: textColor }}>
+                                                        Caption {index + 1}
+                                                    </div>
+                                                    <p className="text-sm text-gray-700 leading-relaxed line-clamp-2">
+                                                        {item.caption || <span className="text-gray-400 italic">Belum ada caption</span>}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </section>
 
                         {/* ===== SECTION 3: TESTIMONI ===== */}
-                        <CollapsibleSection
-                            title="Testimoni"
-                            textColor={textColor}
-                            borderColor={textColor}
-                        >
-                            <div className="space-y-4">
+                        <section>
+                            <h2
+                                className={sectionTitleStyle}
+                                style={{ color: textColor, borderColor: textColor }}
+                            >
+                                Testimoni
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 {testimonials.map((item, index) => (
                                     <div
                                         key={index}
-                                        className="p-4 rounded-xl border-2"
-                                        style={{
-                                            borderColor: textColor,
-                                            backgroundColor: inputBgColor
-                                        }}
+                                        className="bg-white p-8 rounded-2xl shadow-sm border-2 relative mt-2 hover:shadow-md transition-all duration-300"
+                                        style={{ borderColor: textColor }}
                                     >
-                                        {/* Testimoni Label */}
-                                        <label
-                                            className="block text-sm font-bold mb-2"
-                                            style={{ color: textColor }}
-                                        >
-                                            Testimoni {index + 1}
-                                        </label>
 
-                                        {/* Name - Same style as label */}
-                                        <p
-                                            className="font-bold mb-3"
-                                            style={{ color: textColor }}
-                                        >
-                                            {item.name || <span className="text-gray-400 italic font-normal">Nama kosong</span>}
-                                        </p>
+                                        <div className="flex flex-col h-full justify-between">
+                                            <p className="text-gray-600 italic leading-relaxed mb-6">
+                                                {item.description ? `"${item.description}"` : <span className="text-gray-400 not-italic">Belum ada deskripsi testimoni</span>}
+                                            </p>
 
-                                        {/* Description */}
-                                        <p
-                                            className="leading-relaxed"
-                                            style={{ color: dataTextColor }}
-                                        >
-                                            {item.description || <span className="text-gray-400 italic">Belum ada deskripsi testimoni</span>}
-                                        </p>
+                                            {/* Removed profile icon, updated Text styling */}
+                                            <div className="flex items-center gap-3 pt-6 border-t border-gray-50">
+                                                <div>
+                                                    <div className="font-bold text-gray-900 line-clamp-1">
+                                                        {item.name || <span className="text-gray-400 font-normal italic">Nama kosong</span>}
+                                                    </div>
+                                                    {/* Updated: Font matched to Caption (text-sm font-bold) and explicit color */}
+                                                    <div className="text-sm font-bold" style={{ color: textColor }}>
+                                                        Testimoni {index + 1}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 ))}
                             </div>
-                        </CollapsibleSection>
+                        </section>
 
-                        {/* Action Button */}
-                        <div className="pt-4">
+                        {/* Action Button - Full Width matched to Profile Page */}
+                        <div className="pt-6">
                             <button
                                 onClick={() => setIsEditModalOpen(true)}
-                                className="w-full py-4 rounded-xl font-bold text-white text-lg transition-all duration-200 hover:opacity-90 hover:shadow-lg"
+                                className="w-full py-4 rounded-xl font-bold text-white text-lg transition-all duration-200 hover:opacity-90"
                                 style={{ backgroundColor: textColor }}
                             >
                                 Ubah Konten
                             </button>
                         </div>
+
                     </div>
                 )}
 
@@ -390,13 +331,37 @@ export default function KontenPublikPage() {
                     uploadingIndex={uploadingIndex}
                 />
 
-                {/* Image Modal */}
-                <ImageModal
-                    isOpen={imageModal.isOpen}
-                    imageUrl={imageModal.url}
-                    caption={imageModal.caption}
-                    onClose={() => setImageModal({ isOpen: false, url: '' })}
-                />
+                {/* Lightbox Modal for Gallery */}
+                {imageModal.isOpen && (
+                    <div
+                        className="fixed inset-0 z-[60] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+                        onClick={() => setImageModal({ isOpen: false, url: '' })}
+                    >
+                        <div className="relative max-w-5xl w-full max-h-[90vh] flex flex-col items-center">
+                            <button
+                                onClick={() => setImageModal({ isOpen: false, url: '' })}
+                                className="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors"
+                            >
+                                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+
+                            <img
+                                src={imageModal.url}
+                                alt={imageModal.caption || 'Gallery Image'}
+                                className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
+                                onClick={(e) => e.stopPropagation()}
+                            />
+
+                            {imageModal.caption && (
+                                <p className="mt-4 text-white/90 text-center text-lg font-medium px-4 py-2 rounded-full bg-black/50 backdrop-blur-md">
+                                    {imageModal.caption}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
         </DashboardLayout>
     )

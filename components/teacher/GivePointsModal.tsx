@@ -59,7 +59,7 @@ export default function GivePointsModal({
     }
 
     const textColor = '#E57526'
-    const buttonBgColor = '#9a3412'
+    const buttonBgColor = '#E57526'
 
     return (
         <Modal

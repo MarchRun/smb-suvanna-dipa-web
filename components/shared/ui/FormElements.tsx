@@ -59,11 +59,10 @@ export function Input({
                     onChange={onChange}
                     required={required}
                     disabled={disabled}
-                    className={`w-full px-4 py-2 sm:px-4 sm:py-2.5 rounded-full focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all placeholder:text-gray-500 ${isPassword ? 'pr-12' : ''}`}
+                    className={`w-full px-4 py-2 sm:px-4 sm:py-2.5 rounded-full focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all placeholder:text-gray-500 ${isPassword ? 'pr-12' : ''} ${value === '' ? 'text-gray-500' : 'text-gray-900'}`}
                     style={{
                         backgroundColor: '#ffffff',
-                        border: '2px solid #E57526',
-                        color: 'var(--neutral-900)'
+                        border: '2px solid #E57526'
                     }}
                     onFocus={(e) => {
                         e.currentTarget.style.borderColor = '#E57526'
@@ -143,9 +142,9 @@ export function Select({
                 onChange={handleChange}
                 disabled={disabled}
                 className={`w-full px-4 py-2.5 rounded-full border-2 font-semibold transition-all
-                           bg-white text-gray-900
-                           focus:outline-none focus:ring-2 focus:ring-orange-500
+                           bg-white focus:outline-none focus:ring-2 focus:ring-orange-500
                            disabled:opacity-50 disabled:cursor-not-allowed
+                           ${value === '' ? 'text-gray-500' : 'text-gray-900'}
                            ${error ? 'border-red-500' : ''}`}
                 style={{
                     borderColor: error ? '#ef4444' : borderColor
@@ -157,7 +156,11 @@ export function Select({
                     </option>
                 )}
                 {options.map((option) => (
-                    <option key={String(option.value)} value={option.value}>
+                    <option
+                        key={String(option.value)}
+                        value={option.value}
+                        className={option.value === '' ? 'text-gray-500' : 'text-gray-900'}
+                    >
                         {option.label}
                     </option>
                 ))}

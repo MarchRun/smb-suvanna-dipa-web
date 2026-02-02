@@ -7,7 +7,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import PageHeader from '@/components/shared/PageHeader'
+import PageHeader from '@/components/shared/layout/PageHeader'
 import ContactInfoSection from '@/components/contact/ContactInfoSection'
 
 export default function ContactPage() {
@@ -36,6 +36,7 @@ export default function ContactPage() {
             {/* PageHeader included in flow */}
             <PageHeader
                 title="Kontak"
+                backgroundImage="/images/smbsd-bg-hd.jpg"
             />
 
             {/* Map Section - Fills remaining space */}

@@ -7,7 +7,7 @@
 
 import UniversalForm, { FieldConfig } from '@/components/shared/forms/UniversalForm'
 import { productFormFields } from '@/lib/forms/fieldConfigs'
-import type { Product } from '@/actions/admin/products'
+import type { Product } from '@/types'
 
 interface RewardFormProps {
     mode: 'add' | 'edit'

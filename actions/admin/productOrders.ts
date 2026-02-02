@@ -5,37 +5,15 @@
 
 'use server'
 
-import { createClient as createAdminClient } from '@supabase/supabase-js'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
-import type { ActionResponse } from '@/types'
-
-function getAdminClient() {
-    return createAdminClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
-}
-
-export interface ProductOrder {
-    id: number
-    user_id: string
-    product_id: number
-    total_points: number
-    status: 'pending' | 'approved' | 'rejected'
-    created_at: string
-    updated_at: string
-    // Joined data
-    student_name?: string
-    student_points?: number
-    product_name?: string
-    product_price?: number
-}
+import type { ActionResponse, ProductOrder, OrderWithDetails } from '@/types'
 
 /**
  * Get pending product orders with student and product details
  */
-export async function getPendingOrders(): Promise<ActionResponse<ProductOrder[]>> {
-    const supabase = getAdminClient()
+export async function getPendingOrders(): Promise<ActionResponse<OrderWithDetails[]>> {
+    const supabase = createAdminClient()
 
     try {
         const { data, error } = await supabase
@@ -56,8 +34,8 @@ export async function getPendingOrders(): Promise<ActionResponse<ProductOrder[]>
 
         if (error) throw error
 
-        // Transform data
-        const orders: ProductOrder[] = (data || []).map((order: any) => ({
+        // Transform data to OrderWithDetails
+        const orders: OrderWithDetails[] = (data || []).map((order: any) => ({
             id: order.id,
             user_id: order.user_id,
             product_id: order.product_id,
@@ -65,10 +43,15 @@ export async function getPendingOrders(): Promise<ActionResponse<ProductOrder[]>
             status: order.status,
             created_at: order.created_at,
             updated_at: order.updated_at,
-            student_name: order.profiles?.full_name || 'Unknown',
-            student_points: order.profiles?.points || 0,
-            product_name: order.products?.name || 'Unknown',
-            product_price: order.products?.price || 0
+            // Nested user object
+            user: order.profiles ? {
+                full_name: order.profiles.full_name
+            } : null,
+            // Nested product object
+            product: order.products ? {
+                name: order.products.name,
+                price: order.products.price
+            } : null
         }))
 
         return {
@@ -93,7 +76,7 @@ export async function getPendingOrders(): Promise<ActionResponse<ProductOrder[]>
  * - Add point history
  */
 export async function approveOrder(orderId: number): Promise<ActionResponse> {
-    const supabase = getAdminClient()
+    const supabase = createAdminClient()
 
     try {
         // Get order details
@@ -167,7 +150,7 @@ export async function approveOrder(orderId: number): Promise<ActionResponse> {
 
         if (historyError) throw historyError
 
-        revalidatePath('/admin/hadiah/validasi')
+        revalidatePath('/admin/rewards/validation')
 
         return {
             success: true
@@ -186,7 +169,7 @@ export async function approveOrder(orderId: number): Promise<ActionResponse> {
  * - Update order status to 'rejected'
  */
 export async function rejectOrder(orderId: number): Promise<ActionResponse> {
-    const supabase = getAdminClient()
+    const supabase = createAdminClient()
 
     try {
         const { error } = await supabase
@@ -196,7 +179,7 @@ export async function rejectOrder(orderId: number): Promise<ActionResponse> {
 
         if (error) throw error
 
-        revalidatePath('/admin/hadiah/validasi')
+        revalidatePath('/admin/rewards/validation')
 
         return {
             success: true

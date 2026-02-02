@@ -15,6 +15,7 @@ import ExportFilterModal from '@/components/shared/specialized/ExportFilterModal
 import UserFormModal, { type UserFormData } from '@/components/admin/UserFormModal'
 import { getUsers, getUserById, createUser, updateUser, deleteUser, type UserFilters, type UserSort } from '@/actions/admin/users'
 import type { Profile, Class } from '@/types'
+import { useToast } from '@/components/providers/ToastContext'
 
 // Menu items for Admin
 const adminMenuItems = [
@@ -27,6 +28,7 @@ const adminMenuItems = [
 
 export default function PenggunaPage() {
     const router = useRouter()
+    const { showToast } = useToast()
     const [users, setUsers] = useState<Profile[]>([])
     const [classes, setClasses] = useState<Class[]>([])
     const [loading, setLoading] = useState(true)
@@ -134,7 +136,7 @@ export default function PenggunaPage() {
                 setFormModalOpen(false)
                 fetchUsers()
             } else {
-                alert(result.error || 'Gagal menambah pengguna')
+                showToast(result.error || 'Gagal menambah pengguna', 'error')
             }
         } else if (editingUser) {
             const result = await updateUser(editingUser.id, {
@@ -153,7 +155,7 @@ export default function PenggunaPage() {
                 setFormModalOpen(false)
                 fetchUsers()
             } else {
-                alert(result.error || 'Gagal mengubah pengguna')
+                showToast(result.error || 'Gagal mengubah pengguna', 'error')
             }
         }
 
@@ -173,7 +175,7 @@ export default function PenggunaPage() {
         if (result.success) {
             fetchUsers()
         } else {
-            alert(result.error || 'Gagal menghapus pengguna')
+            showToast(result.error || 'Gagal menghapus pengguna', 'error')
         }
 
         setDeleteDialog({ isOpen: false, user: null, isLoading: false })
@@ -183,7 +185,7 @@ export default function PenggunaPage() {
         setFilters(newFilters)
     }
 
-    const textColor = 'var(--primary-900)'
+    const textColor = '#E57526'
 
     return (
         <DashboardLayout role="Admin" menuItems={adminMenuItems}>
@@ -191,7 +193,7 @@ export default function PenggunaPage() {
                 {/* Page Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                     <h1
-                        className="text-2xl md:text-3xl font-bold"
+                        className="text-2xl md:text-3xl font-bold text-center"
                         style={{ color: textColor }}
                     >
                         Pengguna
@@ -307,7 +309,7 @@ export default function PenggunaPage() {
                 <ConfirmDialog
                     isOpen={deleteDialog.isOpen}
                     title="Hapus Pengguna"
-                    message={`Apakah Anda yakin ingin menghapus ${deleteDialog.user?.full_name || 'pengguna ini'}? Tindakan ini tidak dapat dibatalkan.`}
+                    message={`Apakah Anda yakin ingin menghapus ${deleteDialog.user?.full_name || 'pengguna ini'}?`}
                     confirmLabel="Hapus"
                     cancelLabel="Batal"
                     variant="danger"

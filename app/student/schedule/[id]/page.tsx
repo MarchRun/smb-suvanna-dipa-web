@@ -10,7 +10,6 @@ const studentMenuItems = [
     { label: 'Dashboard', href: '/student/dashboard' },
     { label: 'Jadwal', href: '/student/schedule' },
     { label: 'Poin', href: '/student/points' },
-    { label: 'Presensi', href: '/student/attendance' },
     { label: 'Profil', href: '/student/profile' }
 ]
 
@@ -54,7 +53,7 @@ export default function StudentScheduleDetailPage({ params }: { params: Promise<
     }
 
     const textColor = '#E57526'
-    const dataTextColor = '#9a3412'
+    const dataTextColor = '#E57526'
 
     return (
         <DashboardLayout role="Siswa" menuItems={studentMenuItems}>

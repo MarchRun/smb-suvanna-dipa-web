@@ -1,22 +1,24 @@
 'use client'
 
-import { use, useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/shared/layout/Dashboard'
-import { getUserById } from '@/actions/admin/users'
+import { getUserById, updateUser } from '@/actions/admin/users'
 import type { Profile } from '@/types'
+import { useToast } from '@/components/providers/ToastContext'
 
 const adminMenuItems = [
     { label: 'Dashboard', href: '/admin/dashboard' },
-    { label: 'Pengguna', href: '/admin/pengguna' },
-    { label: 'Hadiah', href: '/admin/hadiah' },
-    { label: 'Konten Publik', href: '/admin/konten' },
-    { label: 'Profil', href: '/admin/profil' },
+    { label: 'Pengguna', href: '/admin/users' },
+    { label: 'Hadiah', href: '/admin/rewards' },
+    { label: 'Konten Publik', href: '/admin/content' },
+    { label: 'Profil', href: '/admin/profile' },
 ]
 
 export default function UserDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params)
     const router = useRouter()
+    const { showToast } = useToast()
     const [user, setUser] = useState<Profile | null>(null)
     const [loading, setLoading] = useState(true)
 
@@ -32,18 +34,28 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
             if (result.success && result.data) {
                 setUser(result.data)
             } else {
-                alert('Pengguna tidak ditemukan')
-                router.push('/admin/pengguna')
+                showToast('Pengguna tidak ditemukan', 'error')
+                router.push('/admin/users')
             }
         } catch (error) {
             console.error('Failed to load user:', error)
-            router.push('/admin/pengguna')
+            router.push('/admin/users')
         }
         setLoading(false)
     }
 
+    // Generate initials from full name (2 letters like sidebar)
+    const getInitials = (fullName: string | null | undefined): string => {
+        if (!fullName) return '?'
+        const names = fullName.split(' ')
+        if (names.length >= 2) {
+            return names[0].charAt(0) + names[names.length - 1].charAt(0)
+        }
+        return fullName.substring(0, 2)
+    }
+
     const textColor = '#E57526'
-    const dataTextColor = '#9a3412'
+    const dataTextColor = '#000000' // Changed to black for read-only fields
 
     return (
         <DashboardLayout role="Admin" menuItems={adminMenuItems}>
@@ -58,7 +70,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                     </h1>
 
                     <button
-                        onClick={() => router.push('/admin/pengguna')}
+                        onClick={() => router.push('/admin/users')}
                         className="px-6 py-3 rounded-xl font-bold text-white transition-all duration-200 hover:opacity-90 flex items-center gap-2"
                         style={{ backgroundColor: textColor }}
                     >
@@ -84,7 +96,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                                     backgroundPosition: 'center'
                                 }}
                             >
-                                {!user.profile_picture && (user.full_name?.charAt(0)?.toUpperCase() || '?')}
+                                {!user.profile_picture && getInitials(user.full_name).toUpperCase()}
                             </div>
                         </div>
 
@@ -96,7 +108,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                                     Nama Lengkap
                                 </label>
                                 <div
-                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-[#D9D9D9] dark:bg-gray-700"
                                     style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {user.full_name || '-'}
@@ -109,7 +121,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                                     Email
                                 </label>
                                 <div
-                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-[#D9D9D9] dark:bg-gray-700"
                                     style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {user.email || '-'}
@@ -122,7 +134,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                                     Nomor Telepon
                                 </label>
                                 <div
-                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-[#D9D9D9] dark:bg-gray-700"
                                     style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {user.phone || '-'}
@@ -135,7 +147,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                                     Jenis Kelamin
                                 </label>
                                 <div
-                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-[#D9D9D9] dark:bg-gray-700"
                                     style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {user.gender || '-'}
@@ -148,7 +160,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                                     Tanggal Lahir
                                 </label>
                                 <div
-                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-[#D9D9D9] dark:bg-gray-700"
                                     style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {user.birth_date || '-'}
@@ -161,7 +173,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                                     Peran
                                 </label>
                                 <div
-                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center capitalize bg-gray-200 dark:bg-gray-600"
+                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center capitalize bg-[#D9D9D9] dark:bg-gray-700"
                                     style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {user.role || '-'}
@@ -174,7 +186,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                                     Kelas
                                 </label>
                                 <div
-                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-[#D9D9D9] dark:bg-gray-700"
                                     style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {(user as any).classes?.name || '-'}
@@ -187,7 +199,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                                     Points
                                 </label>
                                 <div
-                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-[#D9D9D9] dark:bg-gray-700"
                                     style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {user.points ?? 0}
@@ -201,7 +213,7 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
                                 Alamat Rumah
                             </label>
                             <div
-                                className="px-4 py-3 rounded-xl border-2 min-h-[100px] bg-gray-200 dark:bg-gray-600"
+                                className="px-4 py-3 rounded-xl border-2 min-h-[100px] bg-[#D9D9D9] dark:bg-gray-700"
                                 style={{ borderColor: textColor, color: dataTextColor }}
                             >
                                 {user.address || '-'}

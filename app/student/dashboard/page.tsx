@@ -10,7 +10,6 @@ const siswaMenuItems = [
     { label: 'Dashboard', href: '/student/dashboard' },
     { label: 'Jadwal', href: '/student/schedule' },
     { label: 'Poin', href: '/student/points' },
-    { label: 'Presensi', href: '/student/attendance' },
     { label: 'Profil', href: '/student/profile' },
 ]
 

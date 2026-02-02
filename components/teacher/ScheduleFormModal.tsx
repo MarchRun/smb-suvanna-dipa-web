@@ -12,7 +12,7 @@ import UniversalForm from '@/components/shared/forms/UniversalForm'
 import type { FieldConfig } from '@/components/shared/forms/UniversalForm'
 import type { Schedule } from '@/types'
 
-interface ScheduleFormData {
+export interface ScheduleFormData {
     name: string
     event_date: string
     description: string

@@ -45,8 +45,18 @@ export default function TeacherProfilPage() {
         loadProfile() // Reload profile after update
     }
 
+    // Generate initials from full name
+    const getInitials = (fullName: string | null | undefined): string => {
+        if (!fullName) return '?'
+        const names = fullName.split(' ')
+        if (names.length >= 2) {
+            return names[0].charAt(0) + names[names.length - 1].charAt(0)
+        }
+        return fullName.substring(0, 2)
+    }
+
     const textColor = '#E57526'
-    const dataTextColor = '#9a3412'
+    const dataTextColor = '#000000'
 
     return (
         <DashboardLayout role="Pembina" menuItems={teacherMenuItems}>
@@ -65,16 +75,17 @@ export default function TeacherProfilPage() {
                     <>
                         {/* Profile Picture */}
                         <div className="flex justify-center mb-8">
-                            <div className="w-32 h-32 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden">
-                                {profile?.profile_picture ? (
-                                    <img
-                                        src={profile.profile_picture}
-                                        alt="Profile"
-                                        className="w-full h-full object-cover"
-                                    />
-                                ) : (
-                                    <span className="text-6xl">👤</span>
-                                )}
+                            <div
+                                className="w-32 h-32 rounded-full flex items-center justify-center text-white text-4xl font-bold border-2"
+                                style={{
+                                    borderColor: textColor,
+                                    backgroundColor: profile?.profile_picture ? 'transparent' : textColor,
+                                    backgroundImage: profile?.profile_picture ? `url(${profile.profile_picture})` : 'none',
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center'
+                                }}
+                            >
+                                {!profile?.profile_picture && getInitials(profile?.full_name).toUpperCase()}
                             </div>
                         </div>
 
@@ -87,7 +98,7 @@ export default function TeacherProfilPage() {
                                         Nama Lengkap
                                     </label>
                                     <div
-                                        className="w-full px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                        className="w-full px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-[#D9D9D9] dark:bg-gray-700"
                                         style={{ borderColor: textColor, color: dataTextColor }}
                                     >
                                         {profile?.full_name || '-'}
@@ -98,7 +109,7 @@ export default function TeacherProfilPage() {
                                         Nomor Telepon
                                     </label>
                                     <div
-                                        className="w-full px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                        className="w-full px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-[#D9D9D9] dark:bg-gray-700"
                                         style={{ borderColor: textColor, color: dataTextColor }}
                                     >
                                         {profile?.phone || '-'}
@@ -113,7 +124,7 @@ export default function TeacherProfilPage() {
                                         Jenis Kelamin
                                     </label>
                                     <div
-                                        className="w-full px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                        className="w-full px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-[#D9D9D9] dark:bg-gray-700"
                                         style={{ borderColor: textColor, color: dataTextColor }}
                                     >
                                         {profile?.gender || '-'}
@@ -124,7 +135,7 @@ export default function TeacherProfilPage() {
                                         Tanggal Lahir
                                     </label>
                                     <div
-                                        className="w-full px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                        className="w-full px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-[#D9D9D9] dark:bg-gray-700"
                                         style={{ borderColor: textColor, color: dataTextColor }}
                                     >
                                         {profile?.birth_date || '-'}
@@ -138,7 +149,7 @@ export default function TeacherProfilPage() {
                                     Alamat Rumah
                                 </label>
                                 <div
-                                    className="w-full px-4 py-3 rounded-xl border-2 min-h-[100px] bg-gray-200 dark:bg-gray-600"
+                                    className="w-full px-4 py-3 rounded-xl border-2 min-h-[100px] bg-[#D9D9D9] dark:bg-gray-700"
                                     style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {profile?.address || '-'}

@@ -17,11 +17,12 @@ import {
     createProduct,
     updateProduct,
     deleteProduct,
-    type Product,
     type ProductFilters,
     type ProductSort
 } from '@/actions/admin/products'
 import { uploadProfilePicture } from '@/actions/profile/uploadPicture'
+import type { Product } from '@/types'
+import { useToast } from '@/components/providers/ToastContext'
 
 const adminMenuItems = [
     { label: 'Dashboard', href: '/admin/dashboard' },
@@ -33,6 +34,7 @@ const adminMenuItems = [
 
 export default function HadiahPage() {
     const router = useRouter()
+    const { showToast } = useToast()
     const [products, setProducts] = useState<Product[]>([])
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState('')
@@ -91,7 +93,7 @@ export default function HadiahPage() {
             if (uploadResult.success && uploadResult.data) {
                 imageUrl = uploadResult.data
             } else {
-                alert(uploadResult.error || 'Gagal upload gambar')
+                showToast(uploadResult.error || 'Gagal upload gambar', 'error')
                 return
             }
         }
@@ -104,11 +106,11 @@ export default function HadiahPage() {
         })
 
         if (result.success) {
-            alert('Hadiah berhasil ditambahkan!')
+            showToast('Hadiah berhasil ditambahkan!', 'success')
             setShowAddForm(false)
             loadProducts()
         } else {
-            alert(result.error || 'Gagal menambah hadiah')
+            showToast(result.error || 'Gagal menambah hadiah', 'error')
         }
     }
 
@@ -126,7 +128,7 @@ export default function HadiahPage() {
             if (uploadResult.success && uploadResult.data) {
                 imageUrl = uploadResult.data
             } else {
-                alert(uploadResult.error || 'Gagal upload gambar')
+                showToast(uploadResult.error || 'Gagal upload gambar', 'error')
                 return
             }
         }
@@ -139,12 +141,12 @@ export default function HadiahPage() {
         })
 
         if (result.success) {
-            alert('Hadiah berhasil diubah!')
+            showToast('Hadiah berhasil diubah!', 'success')
             setShowEditForm(false)
             setSelectedProduct(null)
             loadProducts()
         } else {
-            alert(result.error || 'Gagal mengubah hadiah')
+            showToast(result.error || 'Gagal mengubah hadiah', 'error')
         }
     }
 
@@ -153,12 +155,12 @@ export default function HadiahPage() {
 
         const result = await deleteProduct(selectedProduct.id)
         if (result.success) {
-            alert('Hadiah berhasil dihapus!')
+            showToast('Hadiah berhasil dihapus!', 'success')
             setShowDeleteConfirm(false)
             setSelectedProduct(null)
             loadProducts()
         } else {
-            alert(result.error || 'Gagal menghapus hadiah')
+            showToast(result.error || 'Gagal menghapus hadiah', 'error')
         }
     }
 
@@ -178,7 +180,7 @@ export default function HadiahPage() {
 
                     <div className="flex gap-3">
                         <button
-                            onClick={() => router.push('/admin/rewards/validasi')}
+                            onClick={() => router.push('/admin/rewards/validation')}
                             className="px-6 py-3 rounded-xl font-bold text-white transition-all duration-200 hover:opacity-90"
                             style={{ backgroundColor: textColor }}
                         >

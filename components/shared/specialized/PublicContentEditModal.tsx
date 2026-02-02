@@ -116,7 +116,7 @@ export default function PublicContentEditModal({
     uploadingIndex
 }: PublicContentEditModalProps) {
     const textColor = '#E57526'
-    const buttonBgColor = '#9a3412'
+    const buttonBgColor = '#E57526'
 
     // Form state
     const [agenda, setAgenda] = useState<string[]>(initialAgenda)

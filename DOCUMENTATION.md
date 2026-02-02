@@ -91,6 +91,7 @@
 - E2E Testing
 - Performance Optimization
 - Accessibility Audit
+- Upload Foto dan Edit Foto Testing
 
 ---
 

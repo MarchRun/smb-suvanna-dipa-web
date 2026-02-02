@@ -147,16 +147,21 @@ export default function UsersTable({
                             </th>
                             {/* Name Column - Sorting only for Admin */}
                             <th
-                                className={`px-4 py-3 text-left text-sm font-bold text-white border-r-2 border-white/30 ${variant === 'admin' ? 'cursor-pointer hover:brightness-110 transition-colors' : ''}`}
+                                className={`px-4 py-3 text-center text-sm font-bold text-white border-r-2 border-white/30 ${variant === 'admin' ? 'cursor-pointer hover:brightness-110 transition-colors' : ''}`}
                                 onClick={() => variant === 'admin' && handleSort('full_name')}
                             >
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center justify-center gap-2">
                                     {variant === 'admin' ? 'Nama Pengguna' : 'Nama Siswa'}
                                     {variant === 'admin' && <SortIcon column="full_name" />}
                                 </div>
                             </th>
 
                             {/* Variant Specific Column */}
+                            {variant === 'admin' && (
+                                <th className="px-4 py-3 text-center text-sm font-bold text-white border-r-2 border-white/30 w-32">
+                                    Kelas
+                                </th>
+                            )}
                             {variant === 'admin' && (
                                 <th
                                     className="px-4 py-3 text-center text-sm font-bold text-white cursor-pointer transition-colors border-r-2 border-white/30 w-32 hover:brightness-110"
@@ -194,13 +199,23 @@ export default function UsersTable({
                                 </td>
                                 <td
                                     className="px-4 py-4 border-r-2"
-                                    style={{ borderColor }}
+                                    style={{ borderColor, maxWidth: '250px' }}
                                 >
-                                    <span className="font-medium text-gray-900 dark:text-white">
+                                    <span className="font-medium text-gray-900 dark:text-white block truncate" title={item.full_name || '-'}>
                                         {item.full_name || '-'}
                                     </span>
                                 </td>
 
+                                {variant === 'admin' && (
+                                    <td
+                                        className="px-4 py-4 border-r-2"
+                                        style={{ borderColor }}
+                                    >
+                                        <span className="font-medium text-gray-700 dark:text-gray-300">
+                                            {item.class_name || '-'}
+                                        </span>
+                                    </td>
+                                )}
                                 {variant === 'admin' && (
                                     <td
                                         className="px-4 py-4 text-center border-r-2"

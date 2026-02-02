@@ -238,8 +238,8 @@ export default function UniversalForm({
         )
     }
 
-    const titleColor = '#9a3412'
-    const buttonBgColor = '#9a3412'
+    const titleColor = '#E57526'
+    const buttonBgColor = '#E57526'
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">

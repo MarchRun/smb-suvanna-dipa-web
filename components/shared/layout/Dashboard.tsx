@@ -60,6 +60,11 @@ const getDefaultIcon = (label: string, color: string, isActive: boolean) => {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
         ),
+        'Jadwal': (
+            <svg className="w-5 h-5" fill="none" stroke={iconColor} viewBox="0 0 24 24" strokeWidth={strokeWidth}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+        ),
         'Poin': (
             <svg className="w-5 h-5" fill="none" stroke={iconColor} viewBox="0 0 24 24" strokeWidth={strokeWidth}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
@@ -129,7 +134,7 @@ export function DashboardSidebar({ role, menuItems, isOpen, onClose }: Dashboard
     }, [])
 
     // Colors
-    const sidebarBg = '#1A1A1A' // Footer Dark Gray
+    const sidebarBg = '#2A2A2A' // Matches Footer Dark Gray
     const activeColor = '#E57526' // Orange
     const inactiveColor = '#FFFFFF' // White
     const hoverItemBg = 'rgba(255, 255, 255, 0.05)'
@@ -196,7 +201,7 @@ export function DashboardSidebar({ role, menuItems, isOpen, onClose }: Dashboard
                             <path
                                 fill="#ffffff"
                                 d="M57.1,-22.4C68.6,-9.3,69.1,11.5,60.5,27.1C51.9,42.7,34.2,53.1,16.2,55.9C-1.8,58.7,-20.1,53.9,-35,41.9C-49.9,29.9,-61.4,10.7,-58.5,-3.8C-55.6,-18.3,-38.3,-28.1,-23.1,-39.8C-7.9,-51.5,5.2,-65.1,15.8,-63.1C26.4,-61.1,34.5,-43.5,45.6,-31Z"
-                                transform="translate(100 100) scale(1.1)"
+                                transform="translate(100 100) scale(1.8 0.7)"
                             />
                         </svg>
 
@@ -369,7 +374,7 @@ export default function DashboardLayout({ role, menuItems, children }: Dashboard
                                 <path
                                     fill="#ffffff"
                                     d="M57.1,-22.4C68.6,-9.3,69.1,11.5,60.5,27.1C51.9,42.7,34.2,53.1,16.2,55.9C-1.8,58.7,-20.1,53.9,-35,41.9C-49.9,29.9,-61.4,10.7,-58.5,-3.8C-55.6,-18.3,-38.3,-28.1,-23.1,-39.8C-7.9,-51.5,5.2,-65.1,15.8,-63.1C26.4,-61.1,34.5,-43.5,45.6,-31Z"
-                                    transform="translate(100 100) scale(1.1)"
+                                    transform="translate(100 100) scale(1.8 0.7)"
                                 />
                             </svg>
                             <Image

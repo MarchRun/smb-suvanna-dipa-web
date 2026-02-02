@@ -64,6 +64,7 @@ export default function AboutPage() {
                 {/* Section 1: Page Header with dynamic background */}
                 <PageHeader
                     title="Tentang"
+                    backgroundImage="/images/smbsd-bg-hd.jpg"
                 />
 
                 {/* Section 2: Image + Long Description */}

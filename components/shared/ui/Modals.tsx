@@ -188,7 +188,7 @@ export function ConfirmDialog({
                 onClick={onCancel}
             />
             <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-bold mb-2" style={{ color: '#E57526' }}>
                     {title}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-6">

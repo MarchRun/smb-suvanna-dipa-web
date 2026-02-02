@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fredoka, Nunito, Montserrat } from "next/font/google";
 import "./globals.css";
+import { ToastProvider } from "@/components/providers/ToastContext";
 
 const fredoka = Fredoka({
   variable: "--font-heading",
@@ -42,7 +43,9 @@ export default function RootLayout({
       <body
         className={`${fredoka.variable} ${nunito.variable} ${montserrat.variable} antialiased`}
       >
-        {children}
+        <ToastProvider>
+          {children}
+        </ToastProvider>
       </body>
     </html>
   );

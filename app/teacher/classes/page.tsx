@@ -88,7 +88,7 @@ export default function KelasPage() {
         setModalLoading(false)
     }
 
-    const textColor = 'var(--primary-900)'
+    const textColor = '#E57526'
 
     return (
         <DashboardLayout role="Pembina" menuItems={pembinaMenuItems}>

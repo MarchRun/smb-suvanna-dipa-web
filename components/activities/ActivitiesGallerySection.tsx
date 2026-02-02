@@ -128,6 +128,12 @@ export default function ActivitiesGallerySection() {
                     </div>
                 ) : (
                     <div className="relative">
+                        {/* Left Slot/Pocket - Creates the effect of images emerging from the side */}
+                        <div className="absolute top-0 left-0 bottom-0 w-16 sm:w-24 md:w-48 z-20 bg-gradient-to-r from-[#E57526] via-[#E57526]/90 to-transparent pointer-events-none" />
+
+                        {/* Right Slot/Pocket */}
+                        <div className="absolute top-0 right-0 bottom-0 w-16 sm:w-24 md:w-48 z-20 bg-gradient-to-l from-[#E57526] via-[#E57526]/90 to-transparent pointer-events-none" />
+
                         <Swiper
                             effect={'coverflow'}
                             grabCursor={true}

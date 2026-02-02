@@ -142,7 +142,7 @@ export default function UserFormModal({
         gender: initialData?.gender || '',
         birth_date: initialData?.birth_date || '',
         address: initialData?.address || '',
-        role: initialData?.role || 'siswa',
+        role: initialData?.role || '',
         class_id: initialData?.class_id || ''
     }
 
@@ -186,7 +186,8 @@ export default function UserFormModal({
                     </label>
                     <div className="flex">
                         <div
-                            className="flex-1 px-4 py-3 rounded-l-full border-2 border-r-0 border-orange-800 dark:border-orange-600 bg-white dark:bg-gray-700 flex items-center cursor-pointer"
+                            className="flex-1 px-4 py-3 rounded-l-full border-2 border-r-0 bg-white dark:bg-gray-700 flex items-center cursor-pointer"
+                            style={{ borderColor: '#E57526' }}
                             onClick={() => !isLoading && !uploadingPicture && fileInputRef.current?.click()}
                         >
                             <span className="text-gray-500 dark:text-gray-400 truncate">

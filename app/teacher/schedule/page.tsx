@@ -9,8 +9,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/shared/layout/Dashboard'
+import ScheduleFormModal, { ScheduleFormData } from '@/components/teacher/ScheduleFormModal'
 import ScheduleTable from '@/components/shared/specialized/ScheduleTable'
-import ScheduleFormModal from '@/components/teacher/ScheduleFormModal'
 import { ConfirmDialog } from '@/components/shared/ui/Modals'
 import {
     getTeacherSchedules,
@@ -19,17 +19,19 @@ import {
     deleteSchedule
 } from '@/actions/teacher/schedule'
 import type { Schedule } from '@/types'
+import { useToast } from '@/components/providers/ToastContext'
 
 // Menu items for Pembina
 const pembinaMenuItems = [
     { label: 'Dashboard', href: '/teacher/dashboard' },
-    { label: 'Jadwal', href: '/teacher/jadwal' },
-    { label: 'Kelas', href: '/teacher/kelas' },
-    { label: 'Profil', href: '/teacher/profil' },
+    { label: 'Jadwal', href: '/teacher/schedule' },
+    { label: 'Kelas', href: '/teacher/classes' },
+    { label: 'Profil', href: '/teacher/profile' },
 ]
 
-export default function JadwalPage() {
+export default function JadwalPembinaPage() {
     const router = useRouter()
+    const { showToast } = useToast()
     const [schedules, setSchedules] = useState<Schedule[]>([])
     const [loading, setLoading] = useState(true)
 
@@ -64,7 +66,7 @@ export default function JadwalPage() {
 
     // Handlers
     const handleView = (schedule: Schedule) => {
-        router.push(`/teacher/jadwal/${schedule.id}`)
+        router.push(`/teacher/schedule/${schedule.id}`)
     }
 
     const handleAddClick = () => {
@@ -99,7 +101,7 @@ export default function JadwalPage() {
             setSelectedSchedule(null)
             fetchSchedules()
         } else {
-            alert(result?.error || 'Gagal menyimpan jadwal')
+            showToast(result?.error || 'Gagal menyimpan jadwal', 'error')
         }
 
         setModalLoading(false)
@@ -115,11 +117,11 @@ export default function JadwalPage() {
             setScheduleToDelete(null)
             fetchSchedules()
         } else {
-            alert(result.error || 'Gagal menghapus jadwal')
+            showToast(result.error || 'Gagal menghapus jadwal', 'error')
         }
     }
 
-    const textColor = 'var(--primary-900)'
+    const textColor = '#E57526'
 
     // Month options
     const months = [

@@ -10,7 +10,7 @@ import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { revalidatePath } from 'next/cache'
 import type { ActionResponse, Product } from '@/types'
 
-export type { Product }
+
 
 function getAdminClient() {
     return createAdminClient(
@@ -166,7 +166,7 @@ export async function createProduct(data: {
 
         if (error) throw error
 
-        revalidatePath('/admin/hadiah')
+        revalidatePath('/admin/rewards')
 
         return {
             success: true,
@@ -233,7 +233,7 @@ export async function updateProduct(
 
         if (error) throw error
 
-        revalidatePath('/admin/hadiah')
+        revalidatePath('/admin/rewards')
 
         return {
             success: true,
@@ -262,7 +262,7 @@ export async function deleteProduct(id: number): Promise<ActionResponse> {
 
         if (error) throw error
 
-        revalidatePath('/admin/hadiah')
+        revalidatePath('/admin/rewards')
 
         return {
             success: true

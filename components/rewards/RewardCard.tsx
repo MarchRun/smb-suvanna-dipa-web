@@ -7,7 +7,7 @@
 
 'use client'
 
-import type { Product } from '@/actions/admin/products'
+import type { Product } from '@/types'
 
 interface RewardCardProps {
     reward: Product

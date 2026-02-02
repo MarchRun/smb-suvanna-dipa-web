@@ -8,9 +8,9 @@ import type { Profile } from '@/types'
 
 const pembinaMenuItems = [
     { label: 'Dashboard', href: '/teacher/dashboard' },
-    { label: 'Jadwal', href: '/teacher/jadwal' },
-    { label: 'Kelas', href: '/teacher/kelas' },
-    { label: 'Profil', href: '/teacher/profil' },
+    { label: 'Jadwal', href: '/teacher/schedule' },
+    { label: 'Kelas', href: '/teacher/classes' },
+    { label: 'Profil', href: '/teacher/profile' },
 ]
 
 export default function StudentDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -32,17 +32,27 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
                 setStudent(result.data)
             } else {
                 alert('Siswa tidak ditemukan')
-                router.push('/teacher/kelas')
+                router.push('/teacher/classes')
             }
         } catch (error) {
             console.error('Failed to load student:', error)
-            router.push('/teacher/kelas')
+            router.push('/teacher/classes')
         }
         setLoading(false)
     }
 
+    // Generate initials from full name (2 letters like sidebar)
+    const getInitials = (fullName: string | null | undefined): string => {
+        if (!fullName) return '?'
+        const names = fullName.split(' ')
+        if (names.length >= 2) {
+            return names[0].charAt(0) + names[names.length - 1].charAt(0)
+        }
+        return fullName.substring(0, 2)
+    }
+
     const textColor = '#E57526'
-    const dataTextColor = '#9a3412'
+    const dataTextColor = '#000000' // Changed to black for read-only fields
 
     return (
         <DashboardLayout role="Pembina" menuItems={pembinaMenuItems}>
@@ -57,7 +67,7 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
                     </h1>
 
                     <button
-                        onClick={() => router.push('/teacher/kelas')}
+                        onClick={() => router.push('/teacher/classes')}
                         className="px-6 py-3 rounded-xl font-bold text-white transition-all duration-200 hover:opacity-90 flex items-center gap-2"
                         style={{ backgroundColor: textColor }}
                     >
@@ -83,7 +93,7 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
                                     backgroundPosition: 'center'
                                 }}
                             >
-                                {!student.profile_picture && (student.full_name?.charAt(0)?.toUpperCase() || '?')}
+                                {!student.profile_picture && getInitials(student.full_name).toUpperCase()}
                             </div>
                         </div>
 
@@ -95,7 +105,7 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
                                     Nama Lengkap :
                                 </label>
                                 <div
-                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-100 dark:bg-gray-700"
                                     style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {student.full_name || '-'}
@@ -108,7 +118,7 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
                                     Nomor Telepon :
                                 </label>
                                 <div
-                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-100 dark:bg-gray-700"
                                     style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {student.phone || '-'}
@@ -121,7 +131,7 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
                                     Jenis Kelamin :
                                 </label>
                                 <div
-                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-100 dark:bg-gray-700"
                                     style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {student.gender || '-'}
@@ -134,7 +144,7 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
                                     Tanggal Lahir :
                                 </label>
                                 <div
-                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                    className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-100 dark:bg-gray-700"
                                     style={{ borderColor: textColor, color: dataTextColor }}
                                 >
                                     {student.birth_date || '-'}
@@ -148,7 +158,7 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
                                 Jumlah Poin :
                             </label>
                             <div
-                                className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-200 dark:bg-gray-600"
+                                className="px-4 py-3 rounded-full border-2 min-h-[48px] flex items-center bg-gray-100 dark:bg-gray-700"
                                 style={{ borderColor: textColor, color: dataTextColor }}
                             >
                                 <span className="font-bold">{student.points ?? 0}</span>
@@ -161,7 +171,7 @@ export default function StudentDetailPage({ params }: { params: Promise<{ id: st
                                 Alamat Rumah :
                             </label>
                             <div
-                                className="px-4 py-3 rounded-xl border-2 min-h-[100px] bg-gray-200 dark:bg-gray-600"
+                                className="px-4 py-3 rounded-xl border-2 min-h-[100px] bg-gray-100 dark:bg-gray-700"
                                 style={{ borderColor: textColor, color: dataTextColor }}
                             >
                                 {student.address || '-'}

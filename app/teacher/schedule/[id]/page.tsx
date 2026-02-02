@@ -53,7 +53,7 @@ export default function ScheduleDetailPage({ params }: { params: Promise<{ id: s
     }
 
     const textColor = '#E57526'
-    const dataTextColor = '#9a3412'
+    const dataTextColor = '#E57526'
 
     return (
         <DashboardLayout role="Pembina" menuItems={pembinaMenuItems}>

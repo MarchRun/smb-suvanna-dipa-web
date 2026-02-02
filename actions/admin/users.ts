@@ -61,7 +61,7 @@ export async function getUsers(
     try {
         let query = supabase
             .from('profiles')
-            .select('*')
+            .select('*, classes!profiles_class_id_fkey(name)')
 
         // Apply role filter (only siswa and pembina for this list)
         if (filters?.role && filters.role !== 'all') {
@@ -100,9 +100,16 @@ export async function getUsers(
             throw error
         }
 
+        // Map class_name from joined classes data
+        const profilesWithClassName = (data || []).map((profile: Record<string, unknown>) => ({
+            ...profile,
+            class_name: (profile.classes as { name: string } | null)?.name || null,
+            classes: undefined // Remove the nested classes object
+        })) as unknown as Profile[]
+
         return {
             success: true,
-            data: data || []
+            data: profilesWithClassName
         }
     } catch (error) {
         console.error('Error in getUsers:', error)
@@ -288,7 +295,7 @@ export async function getUsersForExport(filters?: UserFilters): Promise<ActionRe
     try {
         let query = supabase
             .from('profiles')
-            .select('*, classes(id, name)')
+            .select('*, classes!profiles_class_id_fkey(id, name)')
 
         // Apply role filter (only siswa and pembina for this list)
         if (filters?.role && filters.role !== 'all') {

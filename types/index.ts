@@ -22,6 +22,7 @@ export interface Profile {
     role: UserRole
     points: number | null
     class_id: number | null
+    class_name?: string | null  // Optional - populated when joined with classes
     created_at: string
     updated_at: string
 }

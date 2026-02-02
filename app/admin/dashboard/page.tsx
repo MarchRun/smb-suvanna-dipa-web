@@ -76,7 +76,7 @@ export default function AdminDashboardPage() {
 
                 {/* Grafik Widget - Matching StatCard styling */}
                 <div
-                    className="rounded-xl p-6 md:p-8 mt-8"
+                    className="rounded-xl p-6 md:p-8 mt-12"
                     style={{
                         backgroundColor: textColor,
                         boxShadow: '0 4px 15px rgba(124, 45, 18, 0.3)'
@@ -90,7 +90,7 @@ export default function AdminDashboardPage() {
                     </p>
 
                     {/* Visitor Chart */}
-                    <VisitorChart days={7} />
+                    <VisitorChart days={30} />
                 </div>
             </div>
         </DashboardLayout>

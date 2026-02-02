@@ -15,10 +15,9 @@ import type { Schedule } from '@/types'
 // Menu items for Student
 const studentMenuItems = [
     { label: 'Dashboard', href: '/student/dashboard' },
-    { label: 'Jadwal', href: '/student/jadwal' },
-    { label: 'Poin', href: '/student/poin' },
-    { label: 'Presensi', href: '/student/presensi' },
-    { label: 'Profil', href: '/student/profil' }
+    { label: 'Jadwal', href: '/student/schedule' },
+    { label: 'Poin', href: '/student/points' },
+    { label: 'Profil', href: '/student/profile' },
 ]
 
 export default function StudentJadwalPage() {
@@ -50,7 +49,7 @@ export default function StudentJadwalPage() {
         router.push(`/student/jadwal/${schedule.id}`)
     }
 
-    const textColor = 'var(--primary-900)'
+    const textColor = '#E57526'
 
     // Month options
     const months = [

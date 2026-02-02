@@ -135,7 +135,7 @@ export async function updateActivities(agenda: string[]): Promise<ActionResponse
             if (error) throw error
         }
 
-        revalidatePath('/admin/konten')
+        revalidatePath('/admin/content')
         revalidatePath('/') // Public homepage
 
         return {
@@ -202,7 +202,7 @@ export async function updateGallery(items: GalleryItem[]): Promise<ActionRespons
             if (error) throw error
         }
 
-        revalidatePath('/admin/konten')
+        revalidatePath('/admin/content')
         revalidatePath('/') // Public homepage
 
         return {
@@ -276,7 +276,7 @@ export async function updateTestimonials(items: TestimonialItem[]): Promise<Acti
             if (error) throw error
         }
 
-        revalidatePath('/admin/konten')
+        revalidatePath('/admin/content')
         revalidatePath('/') // Public homepage
 
         return {

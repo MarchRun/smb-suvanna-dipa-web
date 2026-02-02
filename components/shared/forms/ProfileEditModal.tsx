@@ -8,8 +8,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { updateProfile, type ProfileUpdateData } from '@/actions/profile/update'
 import { uploadProfilePicture, deleteOldProfilePicture } from '@/actions/profile/uploadPicture'
-import UniversalForm, { FieldConfig } from '@/components/shared/UniversalForm'
-import Modal from '@/components/shared/Modal'
+import UniversalForm, { FieldConfig } from '@/components/shared/forms/UniversalForm'
+import { Modal } from '@/components/shared/ui/Modals'
 
 interface ProfileEditModalProps {
     isOpen: boolean

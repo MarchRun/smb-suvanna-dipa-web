@@ -16,17 +16,18 @@ import {
     type StudentRedemption
 } from '@/actions/student/products'
 import type { OrderStatus } from '@/types'
+import { useToast } from '@/components/providers/ToastContext'
 
 const siswaMenuItems = [
     { label: 'Dashboard', href: '/student/dashboard' },
-    { label: 'Jadwal', href: '/student/jadwal' },
-    { label: 'Poin', href: '/student/poin' },
-    { label: 'Presensi', href: '/student/presensi' },
-    { label: 'Profil', href: '/student/profil' },
+    { label: 'Jadwal', href: '/student/schedule' },
+    { label: 'Poin', href: '/student/points' },
+    { label: 'Profil', href: '/student/profile' },
 ]
 
 export default function StatusTukarPoinPage() {
     const router = useRouter()
+    const { showToast } = useToast()
     const [redemptions, setRedemptions] = useState<StudentRedemption[]>([])
     const [studentPoints, setStudentPoints] = useState<number>(0)
     const [loading, setLoading] = useState(true)
@@ -114,12 +115,12 @@ export default function StatusTukarPoinPage() {
         setCanceling(false)
 
         if (result.success) {
-            alert('Permintaan tukar poin berhasil dibatalkan.')
+            showToast('Permintaan tukar poin berhasil dibatalkan.', 'success')
             setShowCancelConfirm(false)
             setSelectedRedemption(null)
             loadData()
         } else {
-            alert(result.error || 'Gagal membatalkan permintaan')
+            showToast(result.error || 'Gagal membatalkan permintaan', 'error')
         }
     }
 
@@ -144,7 +145,7 @@ export default function StatusTukarPoinPage() {
         const style = styles[status]
         return (
             <span
-                className="px-3 py-1 rounded-full text-sm font-semibold"
+                className="px-3 py-1 rounded-full text-sm font-semibold inline-block"
                 style={{ backgroundColor: style.bg, color: style.text }}
             >
                 {style.label}
@@ -163,7 +164,6 @@ export default function StatusTukarPoinPage() {
     const textColor = '#E57526'
     const bgColor = '#ffffff'
     const borderColor = '#e2e8f0'
-    const headerBg = '#f8fafc'
 
     return (
         <DashboardLayout role="Siswa" menuItems={siswaMenuItems}>
@@ -178,73 +178,42 @@ export default function StatusTukarPoinPage() {
                     </h1>
 
                     <button
-                        onClick={() => router.push('/student/poin')}
-                        className="px-6 py-3 rounded-xl font-bold text-white transition-all duration-200 hover:opacity-90"
+                        onClick={() => router.push('/student/points')}
+                        className="px-5 py-2.5 rounded-xl font-bold text-white transition-all duration-200 hover:opacity-90"
                         style={{ backgroundColor: textColor }}
                     >
                         Kembali ke Hadiah
                     </button>
                 </div>
 
-                {/* Points Display */}
-                <div
-                    className="mb-6 p-4 rounded-xl"
-                    style={{ backgroundColor: bgColor, border: `2px solid ${borderColor}` }}
-                >
-                    <p className="text-lg font-semibold" style={{ color: textColor }}>
-                        Poin Kamu Saat Ini: <span className="text-2xl">{studentPoints}</span>
-                    </p>
-                </div>
-
-                {/* Filter Tabs */}
-                <div className="flex gap-2 mb-6 flex-wrap">
-                    {[
-                        { value: 'all', label: 'Semua' },
-                        { value: 'pending', label: 'Pending' },
-                        { value: 'approved', label: 'Disetujui' },
-                        { value: 'rejected', label: 'Ditolak' }
-                    ].map((tab) => (
-                        <button
-                            key={tab.value}
-                            onClick={() => setStatusFilter(tab.value as OrderStatus | 'all')}
-                            className="px-4 py-2 rounded-full font-semibold transition-all duration-200"
-                            style={{
-                                backgroundColor: statusFilter === tab.value ? textColor : 'transparent',
-                                color: statusFilter === tab.value ? 'white' : textColor,
-                                border: `2px solid ${textColor}`
-                            }}
-                        >
-                            {tab.label}
-                        </button>
-                    ))}
-                </div>
+                {/* Points Display and Filter Tabs - Removed as per request */}
 
                 {/* Table */}
                 {loading ? (
-                    <div className="overflow-hidden border-2" style={{ borderColor: 'var(--primary-900)' }}>
+                    <div className="overflow-hidden border-2" style={{ borderColor: '#E57526' }}>
                         <div className="animate-pulse p-8">
-                            <div className="h-10 rounded mb-4" style={{ backgroundColor: 'var(--primary-900)', opacity: 0.3 }}></div>
+                            <div className="h-10 rounded mb-4" style={{ backgroundColor: '#E57526', opacity: 0.3 }}></div>
                             {[1, 2, 3, 4, 5].map((i) => (
                                 <div key={i} className="h-14 bg-gray-100 dark:bg-gray-700 rounded mb-2"></div>
                             ))}
                         </div>
                     </div>
                 ) : redemptions.length === 0 ? (
-                    <div className="border-2 p-8 text-center" style={{ borderColor: 'var(--primary-900)' }}>
+                    <div className="border-2 p-8 text-center" style={{ borderColor: '#E57526' }}>
                         <p className="text-gray-500 dark:text-gray-400">
                             Tidak ada riwayat tukar poin
                         </p>
                     </div>
                 ) : (
                     <div>
-                        <div className="overflow-hidden border-2" style={{ borderColor: 'var(--primary-900)' }}>
+                        <div className="overflow-hidden border-2 rounded-t-xl" style={{ borderColor: '#E57526' }}>
                             <table className="w-full border-collapse">
                                 <thead>
-                                    <tr style={{ backgroundColor: 'var(--primary-900)' }}>
+                                    <tr style={{ backgroundColor: '#E57526' }}>
                                         <th className="px-4 py-3 text-center text-sm font-bold text-white w-16 border-r-2 border-white/30">
                                             No
                                         </th>
-                                        <th className="px-4 py-3 text-left text-sm font-bold text-white border-r-2 border-white/30">
+                                        <th className="px-4 py-3 text-center text-sm font-bold text-white border-r-2 border-white/30">
                                             Hadiah yang Ditukar
                                         </th>
                                         <th className="px-4 py-3 text-center text-sm font-bold text-white w-28 border-r-2 border-white/30">
@@ -253,7 +222,7 @@ export default function StatusTukarPoinPage() {
                                         <th className="px-4 py-3 text-center text-sm font-bold text-white w-28 border-r-2 border-white/30">
                                             Harga Poin
                                         </th>
-                                        <th className="px-4 py-3 text-center text-sm font-bold text-white w-28 border-r-2 border-white/30">
+                                        <th className="px-4 py-3 text-center text-sm font-bold text-white w-32 border-r-2 border-white/30">
                                             Status
                                         </th>
                                         <th className="px-4 py-3 text-center text-sm font-bold text-white w-32">
@@ -266,29 +235,29 @@ export default function StatusTukarPoinPage() {
                                         <tr
                                             key={redemption.id}
                                             className="border-t-2 hover:bg-orange-50 dark:hover:bg-gray-700/50 transition-colors"
-                                            style={{ borderColor: 'var(--primary-900)' }}
+                                            style={{ borderColor: '#E57526' }}
                                         >
                                             <td
                                                 className="px-4 py-4 text-center text-gray-700 dark:text-gray-300 font-medium border-r-2"
-                                                style={{ borderColor: 'var(--primary-900)' }}
+                                                style={{ borderColor: '#E57526' }}
                                             >
                                                 {startIndex + index + 1}
                                             </td>
                                             <td
                                                 className="px-4 py-4 border-r-2"
-                                                style={{ borderColor: 'var(--primary-900)' }}
+                                                style={{ borderColor: '#E57526' }}
                                             >
                                                 <div className="flex items-center gap-3">
                                                     {redemption.product?.image_url ? (
                                                         <img
                                                             src={redemption.product.image_url}
                                                             alt={redemption.product?.name || 'Hadiah'}
-                                                            className="w-10 h-10 rounded-lg object-cover"
+                                                            className="w-10 h-10 rounded-lg object-cover flex-shrink-0"
                                                         />
                                                     ) : (
                                                         <div
-                                                            className="w-10 h-10 rounded-lg flex items-center justify-center"
-                                                            style={{ backgroundColor: 'var(--primary-900)' }}
+                                                            className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                                                            style={{ backgroundColor: '#E57526' }}
                                                         >
                                                             <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                                                                 <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
@@ -296,28 +265,30 @@ export default function StatusTukarPoinPage() {
                                                         </div>
                                                     )}
                                                     <div>
-                                                        <p className="font-semibold text-gray-900 dark:text-white">{redemption.product?.name || 'Hadiah tidak ditemukan'}</p>
-                                                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                                                        <p className="font-semibold text-gray-900 dark:text-white line-clamp-1">
+                                                            {redemption.product?.name || 'Hadiah tidak ditemukan'}
+                                                        </p>
+                                                        <p className="text-xs text-gray-500 dark:text-gray-400">
                                                             {formatDate(redemption.created_at)}
                                                         </p>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td
-                                                className="px-4 py-4 text-center text-gray-700 dark:text-gray-300 font-medium border-r-2"
-                                                style={{ borderColor: 'var(--primary-900)' }}
+                                                className="px-4 py-4 text-center font-bold text-gray-900 dark:text-gray-300 border-r-2"
+                                                style={{ borderColor: '#E57526' }}
                                             >
                                                 {studentPoints}
                                             </td>
                                             <td
-                                                className="px-4 py-4 text-center font-semibold text-gray-900 dark:text-white border-r-2"
-                                                style={{ borderColor: 'var(--primary-900)' }}
+                                                className="px-4 py-4 text-center font-bold text-orange-600 dark:text-orange-400 border-r-2"
+                                                style={{ borderColor: '#E57526' }}
                                             >
                                                 {redemption.total_points}
                                             </td>
                                             <td
                                                 className="px-4 py-4 text-center border-r-2"
-                                                style={{ borderColor: 'var(--primary-900)' }}
+                                                style={{ borderColor: '#E57526' }}
                                             >
                                                 {getStatusBadge(redemption.status)}
                                             </td>
@@ -325,7 +296,7 @@ export default function StatusTukarPoinPage() {
                                                 {redemption.status === 'pending' ? (
                                                     <button
                                                         onClick={() => handleCancelClick(redemption)}
-                                                        className="px-4 py-2 rounded-lg font-semibold text-white transition-all duration-200 hover:opacity-80"
+                                                        className="px-4 py-2 rounded-lg font-bold text-white text-xs transition-all duration-200 hover:opacity-80"
                                                         style={{ backgroundColor: '#dc2626' }}
                                                     >
                                                         Batalkan
@@ -343,14 +314,11 @@ export default function StatusTukarPoinPage() {
                         {/* Pagination */}
                         {totalPages > 0 && (
                             <div className="flex flex-col sm:flex-row items-center justify-between mt-4 gap-4 px-2">
-                                {/* Entries Info */}
                                 <div className="text-sm text-gray-600 dark:text-gray-400">
                                     Menampilkan {startIndex + 1} - {endIndex} dari {totalItems} entri
                                 </div>
 
-                                {/* Page Navigation */}
                                 <div className="flex items-center gap-1">
-                                    {/* Previous Button */}
                                     <button
                                         onClick={() => goToPage(currentPage - 1)}
                                         disabled={currentPage === 1}
@@ -361,7 +329,6 @@ export default function StatusTukarPoinPage() {
                                         &lt; Sebelumnya
                                     </button>
 
-                                    {/* Page Numbers */}
                                     {getPageNumbers().map((page, index) => (
                                         page === '...' ? (
                                             <span key={`ellipsis-${index}`} className="px-2 text-gray-500">...</span>
@@ -374,14 +341,13 @@ export default function StatusTukarPoinPage() {
                                                         ? 'text-white'
                                                         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                                                     }`}
-                                                style={currentPage === page ? { backgroundColor: 'var(--primary-900)' } : {}}
+                                                style={currentPage === page ? { backgroundColor: '#E57526' } : {}}
                                             >
                                                 {page}
                                             </button>
                                         )
                                     ))}
 
-                                    {/* Next Button */}
                                     <button
                                         onClick={() => goToPage(currentPage + 1)}
                                         disabled={currentPage === totalPages}

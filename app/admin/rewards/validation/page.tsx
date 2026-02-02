@@ -8,24 +8,22 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/shared/layout/Dashboard'
-import {
-    getPendingOrders,
-    approveOrder,
-    rejectOrder,
-    type ProductOrder
-} from '@/actions/admin/productOrders'
+import { approveOrder, rejectOrder, getPendingOrders } from '@/actions/admin/productOrders'
+import type { OrderWithDetails } from '@/types'
+import { useToast } from '@/components/providers/ToastContext'
 
 const adminMenuItems = [
     { label: 'Dashboard', href: '/admin/dashboard' },
-    { label: 'Pengguna', href: '/admin/pengguna' },
-    { label: 'Hadiah', href: '/admin/hadiah' },
-    { label: 'Konten Publik', href: '/admin/konten' },
-    { label: 'Profil', href: '/admin/profil' },
+    { label: 'Pengguna', href: '/admin/users' },
+    { label: 'Hadiah', href: '/admin/rewards' },
+    { label: 'Konten Publik', href: '/admin/content' },
+    { label: 'Profil', href: '/admin/profile' },
 ]
 
-export default function ValidasiPage() {
+export default function ValidasiHadiahPage() {
     const router = useRouter()
-    const [orders, setOrders] = useState<ProductOrder[]>([])
+    const { showToast } = useToast()
+    const [orders, setOrders] = useState<OrderWithDetails[]>([])
     const [loading, setLoading] = useState(true)
     const [processingId, setProcessingId] = useState<number | null>(null)
 
@@ -84,32 +82,32 @@ export default function ValidasiPage() {
         setLoading(false)
     }
 
-    const handleApprove = async (order: ProductOrder) => {
-        if (!confirm(`Setujui tukar poin untuk ${order.student_name}?`)) return
+    const handleApprove = async (order: OrderWithDetails) => {
+        if (!confirm(`Setujui tukar poin untuk ${order.user?.full_name || 'pengguna'}?`)) return
 
         setProcessingId(order.id)
         const result = await approveOrder(order.id)
 
         if (result.success) {
-            alert('Tukar poin berhasil disetujui!')
+            showToast('Tukar poin berhasil disetujui!', 'success')
             loadOrders()
         } else {
-            alert(result.error || 'Gagal menyetujui')
+            showToast(result.error || 'Gagal menyetujui', 'error')
         }
         setProcessingId(null)
     }
 
-    const handleReject = async (order: ProductOrder) => {
-        if (!confirm(`Tolak tukar poin untuk ${order.student_name}?`)) return
+    const handleReject = async (order: OrderWithDetails) => {
+        if (!confirm(`Tolak tukar poin untuk ${order.user?.full_name || 'pengguna'}?`)) return
 
         setProcessingId(order.id)
         const result = await rejectOrder(order.id)
 
         if (result.success) {
-            alert('Tukar poin ditolak')
+            showToast('Tukar poin ditolak', 'info')
             loadOrders()
         } else {
-            alert(result.error || 'Gagal menolak')
+            showToast(result.error || 'Gagal menolak', 'error')
         }
         setProcessingId(null)
     }
@@ -130,7 +128,7 @@ export default function ValidasiPage() {
                     </h1>
 
                     <button
-                        onClick={() => router.push('/admin/hadiah')}
+                        onClick={() => router.push('/admin/rewards')}
                         className="px-6 py-3 rounded-xl font-bold text-white transition-all duration-200 hover:opacity-90 flex items-center gap-2"
                         style={{ backgroundColor: textColor }}
                     >
@@ -143,26 +141,26 @@ export default function ValidasiPage() {
 
                 {/* Table */}
                 {loading ? (
-                    <div className="overflow-hidden border-2" style={{ borderColor: 'var(--primary-900)' }}>
+                    <div className="overflow-hidden border-2" style={{ borderColor: 'var(--primary-500)' }}>
                         <div className="animate-pulse p-8">
-                            <div className="h-10 rounded mb-4" style={{ backgroundColor: 'var(--primary-900)', opacity: 0.3 }}></div>
+                            <div className="h-10 rounded mb-4" style={{ backgroundColor: 'var(--primary-500)', opacity: 0.3 }}></div>
                             {[1, 2, 3, 4, 5].map((i) => (
                                 <div key={i} className="h-14 bg-gray-100 dark:bg-gray-700 rounded mb-2"></div>
                             ))}
                         </div>
                     </div>
                 ) : orders.length === 0 ? (
-                    <div className="border-2 p-8 text-center" style={{ borderColor: 'var(--primary-900)' }}>
+                    <div className="border-2 p-8 text-center" style={{ borderColor: 'var(--primary-500)' }}>
                         <p className="text-gray-500 dark:text-gray-400">
                             Tidak ada permintaan tukar poin
                         </p>
                     </div>
                 ) : (
                     <div>
-                        <div className="overflow-hidden border-2" style={{ borderColor: 'var(--primary-900)' }}>
+                        <div className="overflow-hidden border-2" style={{ borderColor: 'var(--primary-500)' }}>
                             <table className="w-full border-collapse">
                                 <thead>
-                                    <tr style={{ backgroundColor: 'var(--primary-900)' }}>
+                                    <tr style={{ backgroundColor: 'var(--primary-500)' }}>
                                         <th className="px-4 py-3 text-center text-sm font-bold text-white w-16 border-r-2 border-white/30">
                                             No
                                         </th>
@@ -188,37 +186,37 @@ export default function ValidasiPage() {
                                         <tr
                                             key={order.id}
                                             className="border-t-2 hover:bg-orange-50 dark:hover:bg-gray-700/50 transition-colors"
-                                            style={{ borderColor: 'var(--primary-900)' }}
+                                            style={{ borderColor: 'var(--primary-500)' }}
                                         >
                                             <td
                                                 className="px-4 py-4 text-center text-gray-700 dark:text-gray-300 font-medium border-r-2"
-                                                style={{ borderColor: 'var(--primary-900)' }}
+                                                style={{ borderColor: 'var(--primary-500)' }}
                                             >
                                                 {startIndex + index + 1}
                                             </td>
                                             <td
                                                 className="px-4 py-4 font-medium text-gray-900 dark:text-white border-r-2"
-                                                style={{ borderColor: 'var(--primary-900)' }}
+                                                style={{ borderColor: 'var(--primary-500)' }}
                                             >
-                                                {order.student_name}
+                                                {order.user?.full_name || '-'}
                                             </td>
                                             <td
                                                 className="px-4 py-4 text-gray-700 dark:text-gray-300 border-r-2"
-                                                style={{ borderColor: 'var(--primary-900)' }}
+                                                style={{ borderColor: 'var(--primary-500)' }}
                                             >
-                                                {order.product_name}
+                                                {order.product?.name || '-'}
                                             </td>
                                             <td
                                                 className="px-4 py-4 text-center text-gray-700 dark:text-gray-300 font-medium border-r-2"
-                                                style={{ borderColor: 'var(--primary-900)' }}
+                                                style={{ borderColor: 'var(--primary-500)' }}
                                             >
-                                                {order.student_points}
+                                                {order.total_points}
                                             </td>
                                             <td
                                                 className="px-4 py-4 text-center font-semibold text-gray-900 dark:text-white border-r-2"
-                                                style={{ borderColor: 'var(--primary-900)' }}
+                                                style={{ borderColor: 'var(--primary-500)' }}
                                             >
-                                                {order.product_price}
+                                                {order.product?.price || 0}
                                             </td>
                                             <td className="px-4 py-4">
                                                 <div className="flex justify-center gap-2">
@@ -289,7 +287,7 @@ export default function ValidasiPage() {
                                                         ? 'text-white'
                                                         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                                                     }`}
-                                                style={currentPage === page ? { backgroundColor: 'var(--primary-900)' } : {}}
+                                                style={currentPage === page ? { backgroundColor: 'var(--primary-500)' } : {}}
                                             >
                                                 {page}
                                             </button>
