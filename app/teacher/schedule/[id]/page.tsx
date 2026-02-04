@@ -64,7 +64,7 @@ export default function ScheduleDetailPage({ params }: { params: Promise<{ id: s
                         className="text-2xl md:text-3xl font-bold"
                         style={{ color: textColor }}
                     >
-                        Detail Kegiatan Bulanan
+                        Detail Jadwal Kegiatan
                     </h1>
 
                     <button

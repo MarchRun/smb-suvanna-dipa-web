@@ -66,7 +66,7 @@ export default function StudentProfilPage() {
                     className="text-2xl md:text-3xl font-bold mb-8"
                     style={{ color: textColor }}
                 >
-                    Profil Siswa
+                    Profil
                 </h1>
 
                 {loading ? (

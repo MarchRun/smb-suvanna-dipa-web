@@ -1,6 +1,7 @@
 /**
  * Student - Jadwal Page
- * Read-only schedule viewing for students with month filter
+ * Read-only schedule viewing for students with list card layout
+ * Simplified design matching wireframe
  */
 
 'use client'
@@ -8,7 +9,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/shared/layout/Dashboard'
-import ScheduleTable from '@/components/shared/specialized/ScheduleTable'
 import { getStudentSchedules } from '@/actions/student/schedule'
 import type { Schedule } from '@/types'
 
@@ -25,56 +25,30 @@ export default function StudentJadwalPage() {
     const [schedules, setSchedules] = useState<Schedule[]>([])
     const [loading, setLoading] = useState(true)
 
-    // Filter state
-    const currentDate = new Date()
-    const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth() + 1) // 1-12
-    const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear())
-
-    // Fetch schedules
+    // Fetch all schedules (no filter, sorted by newest)
     const fetchSchedules = useCallback(async () => {
         setLoading(true)
-        const result = await getStudentSchedules(selectedMonth, selectedYear)
+        const result = await getStudentSchedules()
         if (result.success && result.data) {
-            setSchedules(result.data)
+            // Sort by event_date descending (newest first)
+            const sorted = [...result.data].sort((a, b) =>
+                new Date(b.event_date).getTime() - new Date(a.event_date).getTime()
+            )
+            setSchedules(sorted)
         }
         setLoading(false)
-    }, [selectedMonth, selectedYear])
+    }, [])
 
     useEffect(() => {
         fetchSchedules()
     }, [fetchSchedules])
 
-    // Handlers
-    const handleView = (schedule: Schedule) => {
-        router.push(`/student/jadwal/${schedule.id}`)
+    // Navigate to detail page
+    const handleViewDetail = (schedule: Schedule) => {
+        router.push(`/student/schedule/${schedule.id}`)
     }
 
     const textColor = '#E57526'
-
-    // Month options
-    const months = [
-        { value: 1, label: 'Januari' },
-        { value: 2, label: 'Februari' },
-        { value: 3, label: 'Maret' },
-        { value: 4, label: 'April' },
-        { value: 5, label: 'Mei' },
-        { value: 6, label: 'Juni' },
-        { value: 7, label: 'Juli' },
-        { value: 8, label: 'Agustus' },
-        { value: 9, label: 'September' },
-        { value: 10, label: 'Oktober' },
-        { value: 11, label: 'November' },
-        { value: 12, label: 'Desember' }
-    ]
-
-    // Generate year options (current year ± 2)
-    const years = [
-        selectedYear - 2,
-        selectedYear - 1,
-        selectedYear,
-        selectedYear + 1,
-        selectedYear + 2
-    ]
 
     return (
         <DashboardLayout role="Siswa" menuItems={studentMenuItems}>
@@ -85,61 +59,46 @@ export default function StudentJadwalPage() {
                         className="text-2xl md:text-3xl font-bold"
                         style={{ color: textColor }}
                     >
-                        Jadwal Kegiatan Bulanan
+                        Jadwal
                     </h1>
                 </div>
 
-                {/* Month/Year Filter */}
-                <div className="flex gap-4 mb-6">
-                    <div className="flex-1">
-                        <label className="block text-sm font-bold mb-2" style={{ color: textColor }}>
-                            Bulan
-                        </label>
-                        <select
-                            value={selectedMonth}
-                            onChange={(e) => setSelectedMonth(Number(e.target.value))}
-                            className="w-full px-4 py-3 rounded-full border-2
-                                 bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                                 focus:outline-none focus:ring-2 focus:ring-orange-500
-                                 transition-all duration-200"
-                            style={{ borderColor: textColor }}
-                        >
-                            {months.map(month => (
-                                <option key={month.value} value={month.value}>
-                                    {month.label}
-                                </option>
-                            ))}
-                        </select>
+                {/* Schedule List */}
+                {loading ? (
+                    <div className="space-y-4">
+                        {[1, 2, 3, 4, 5].map((i) => (
+                            <div
+                                key={i}
+                                className="animate-pulse h-16 bg-gray-200 dark:bg-gray-700 rounded-lg"
+                            />
+                        ))}
                     </div>
-                    <div className="flex-1">
-                        <label className="block text-sm font-bold mb-2" style={{ color: textColor }}>
-                            Tahun
-                        </label>
-                        <select
-                            value={selectedYear}
-                            onChange={(e) => setSelectedYear(Number(e.target.value))}
-                            className="w-full px-4 py-3 rounded-full border-2
-                                 bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                                 focus:outline-none focus:ring-2 focus:ring-orange-500
-                                 transition-all duration-200"
-                            style={{ borderColor: textColor }}
-                        >
-                            {years.map(year => (
-                                <option key={year} value={year}>
-                                    {year}
-                                </option>
-                            ))}
-                        </select>
+                ) : schedules.length === 0 ? (
+                    <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+                        Tidak ada jadwal kegiatan
                     </div>
-                </div>
-
-                {/* Schedule Table */}
-                <ScheduleTable
-                    schedules={schedules}
-                    variant="student"
-                    onView={handleView}
-                    isLoading={loading}
-                />
+                ) : (
+                    <div className="space-y-4">
+                        {schedules.map((schedule) => (
+                            <div
+                                key={schedule.id}
+                                className="flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-700 rounded-lg border-2 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+                                style={{ borderColor: textColor }}
+                                onClick={() => handleViewDetail(schedule)}
+                            >
+                                <span className="font-medium text-gray-900 dark:text-white">
+                                    {schedule.name}
+                                </span>
+                                <button
+                                    className="font-bold transition-colors hover:opacity-80"
+                                    style={{ color: textColor }}
+                                >
+                                    Detail &gt;
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
         </DashboardLayout>
     )

@@ -45,14 +45,12 @@ export default function StudentDashboardPage() {
     return (
         <DashboardLayout role="Siswa" menuItems={siswaMenuItems}>
             <div className="p-6 md:p-8">
-                {/* Greeting with real user name */}
+                {/* Page Header */}
                 <h1
                     className="text-2xl md:text-3xl font-bold mb-6"
                     style={{ color: textColor }}
                 >
-                    Halo, <span className="text-gray-700 dark:text-gray-300">
-                        {loading ? '...' : userName}
-                    </span>
+                    Dashboard
                 </h1>
 
                 {/* Stat Cards - Real data from database */}

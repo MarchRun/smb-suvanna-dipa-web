@@ -66,7 +66,7 @@ export default function TeacherProfilPage() {
                     className="text-2xl md:text-3xl font-bold mb-8"
                     style={{ color: textColor }}
                 >
-                    Profil Pembina
+                    Profil
                 </h1>
 
                 {loading ? (

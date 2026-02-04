@@ -119,6 +119,9 @@ export default function ScheduleTable({
                             <th className="px-4 py-3 text-left text-sm font-bold text-white border-r-2 border-white/30">
                                 Nama Kegiatan
                             </th>
+                            <th className="px-4 py-3 text-center text-sm font-bold text-white w-48 border-r-2 border-white/30">
+                                Tanggal
+                            </th>
                             <th className={`px-4 py-3 text-center text-sm font-bold text-white ${variant === 'teacher' ? 'w-40' : 'w-24'}`}>
                                 Aksi
                             </th>
@@ -141,14 +144,17 @@ export default function ScheduleTable({
                                     className="px-4 py-4 border-r-2"
                                     style={{ borderColor: themeColor }}
                                 >
-                                    <div>
-                                        <span className="font-medium text-gray-900 dark:text-white">
-                                            {schedule.name}
-                                        </span>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                            {formatDate(schedule.event_date)}
-                                        </p>
-                                    </div>
+                                    <span className="font-medium text-gray-900 dark:text-white">
+                                        {schedule.name}
+                                    </span>
+                                </td>
+                                <td
+                                    className="px-4 py-4 text-center border-r-2"
+                                    style={{ borderColor: themeColor }}
+                                >
+                                    <span className="text-gray-700 dark:text-gray-300">
+                                        {formatDate(schedule.event_date)}
+                                    </span>
                                 </td>
                                 <td className="px-4 py-4">
                                     <div className="flex items-center justify-center gap-1">
